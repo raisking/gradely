@@ -885,7 +885,7 @@ function Header({ user, view, onHome, onLearning, onDashboard, onBadges, onReset
       <div style={styles.headerInner}>
         {/* Top row: logo | search | actions */}
         <div style={styles.headerTopRow}>
-          <button onClick={onLearning} style={styles.logo}>
+          <button onClick={onHome} style={styles.logo}>
             <span style={styles.logoMark}>
               <span style={styles.logoCapSection}>🎓</span>
               <span style={styles.logoWordmark}>Gradely</span>
@@ -1370,42 +1370,46 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
     <div>
       {/* Subject Tabs */}
       <div style={styles.lcSubjectBar}>
-        {subjectTabs.map(tab => {
-          const Icon = tab.icon;
-          const isActive = tab.id === activeSubject;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => !tab.disabled && setActiveSubject(tab.id)}
-              disabled={tab.disabled}
-              style={{
-                ...styles.lcSubjectTab,
-                ...(isActive ? { borderBottomColor: subjectColor, color: subjectColor, fontWeight: 700 } : {}),
-                ...(tab.disabled ? styles.lcSubjectTabDisabled : {}),
-              }}
-            >
-              {Icon && <Icon size={14} />}
-              {tab.label}
-            </button>
-          );
-        })}
+        <div style={{ ...styles.lcBarInner, alignItems: 'stretch' }}>
+          {subjectTabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = tab.id === activeSubject;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => !tab.disabled && setActiveSubject(tab.id)}
+                disabled={tab.disabled}
+                style={{
+                  ...styles.lcSubjectTab,
+                  ...(isActive ? { borderBottomColor: subjectColor, color: subjectColor, fontWeight: 700 } : {}),
+                  ...(tab.disabled ? styles.lcSubjectTabDisabled : {}),
+                }}
+              >
+                {Icon && <Icon size={14} />}
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* View By Bar */}
       <div style={styles.lcViewBar}>
-        <span style={styles.lcViewLabel}>View by:</span>
-        {viewTabs.map(v => (
-          <button
-            key={v}
-            onClick={() => setActiveView(v)}
-            style={{
-              ...styles.lcViewTab,
-              ...(activeView === v ? styles.lcViewTabActive : {}),
-            }}
-          >
-            {v}
-          </button>
-        ))}
+        <div style={{ ...styles.lcBarInner, gap: 2, padding: '6px 24px' }}>
+          <span style={styles.lcViewLabel}>View by:</span>
+          {viewTabs.map(v => (
+            <button
+              key={v}
+              onClick={() => setActiveView(v)}
+              style={{
+                ...styles.lcViewTab,
+                ...(activeView === v ? styles.lcViewTabActive : {}),
+              }}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Hero Banner */}
@@ -3816,10 +3820,14 @@ const styles = {
   lcSubjectBar: {
     background: 'white',
     borderBottom: '1px solid #E5E7EB',
-    display: 'flex',
-    alignItems: 'stretch',
     overflowX: 'auto',
-    paddingLeft: 24,
+  },
+  lcBarInner: {
+    maxWidth: 1120,
+    margin: '0 auto',
+    padding: '0 24px',
+    display: 'flex',
+    alignItems: 'center',
   },
   lcSubjectTab: {
     background: 'transparent',
@@ -3845,10 +3853,6 @@ const styles = {
   lcViewBar: {
     background: 'white',
     borderBottom: '1px solid #E5E7EB',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 2,
-    padding: '6px 24px',
     fontSize: 13,
   },
   lcViewLabel: {
