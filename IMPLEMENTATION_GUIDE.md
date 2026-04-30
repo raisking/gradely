@@ -1,6 +1,6 @@
-# LearnQuest Setup & Implementation Guide
+# Gradely Setup & Implementation Guide
 
-This guide helps you complete the implementation of LearnQuest with all necessary components and screens.
+This guide helps you complete the implementation of Gradely with all necessary components and screens.
 
 ## Phase 1: Core Setup (Already Done)
 
@@ -258,7 +258,7 @@ const mastery = calcMastery(progress[skillId]);
 
 1. Start dev server:
 ```bash
-cd learnquest
+cd Gradely
 npm start
 ```
 

@@ -1,9 +1,9 @@
-# LearnQuest - Complete Project Structure Overview
+# Gradely - Complete Project Structure Overview
 
 ## 📁 Final Directory Structure
 
 ```
-learnquest/
+Gradely/
 │
 ├── 📄 package.json                 # NPM dependencies and scripts
 ├── 📄 .gitignore                   # Git ignore rules

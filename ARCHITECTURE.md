@@ -1,4 +1,4 @@
-# LearnQuest Architecture at a Glance
+# Gradely Architecture at a Glance
 
 ## 🏗️ Visual Project Architecture
 

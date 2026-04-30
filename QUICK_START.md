@@ -1,6 +1,6 @@
-# LearnQuest Quick Start Guide
+# Gradely Quick Start Guide
 
-Get LearnQuest up and running in 5 minutes!
+Get Gradely up and running in 5 minutes!
 
 ## Prerequisites
 - Node.js 14+ installed
@@ -11,7 +11,7 @@ Get LearnQuest up and running in 5 minutes!
 
 ### 1. Navigate to Project
 ```bash
-cd c:\Users\raipr\Documents\prai\learnquest
+cd c:\Users\raipr\Documents\prai\Gradely
 ```
 
 ### 2. Install Dependencies
@@ -42,7 +42,7 @@ The app opens automatically at `http://localhost:3000`
 ## File Overview
 
 ```
-learnquest/
+Gradely/
 ├── public/index.html          → Main HTML page
 ├── src/
 │   ├── components/            → React components
@@ -201,7 +201,7 @@ npm install
 ```bash
 git init
 git add .
-git commit -m "Initial LearnQuest setup"
+git commit -m "Initial Gradely setup"
 git push origin main
 ```
 

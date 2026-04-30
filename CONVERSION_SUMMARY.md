@@ -1,8 +1,8 @@
-# ✅ LearnQuest Restructuring Complete!
+# ✅ Gradely Restructuring Complete!
 
 ## 📦 What Was Done
 
-Your single-file `learnquest.jsx` has been successfully converted into a **professional, production-ready React project structure** with:
+Your single-file `Gradely.jsx` has been successfully converted into a **professional, production-ready React project structure** with:
 
 ### ✨ Core Components Created
 - **Entry point** - `src/index.js` and `src/App.jsx`
@@ -38,7 +38,7 @@ Your single-file `learnquest.jsx` has been successfully converted into a **profe
 ## 📁 New Project Structure
 
 ```
-learnquest/
+Gradely/
 ├── 📄 package.json              # npm configuration
 ├── 📄 .gitignore                # git ignore rules
 ├── 📄 README.md                 # Full documentation
@@ -79,7 +79,7 @@ learnquest/
 
 ### Step 1: Navigate to Project
 ```bash
-cd c:\Users\raipr\Documents\prai\learnquest
+cd c:\Users\raipr\Documents\prai\Gradely
 ```
 
 ### Step 2: Install Dependencies
@@ -253,7 +253,7 @@ Each documentation file includes:
 
 ## 🎉 You're Ready!
 
-Your LearnQuest app is now:
+Your Gradely app is now:
 - ✅ Professionally structured
 - ✅ Well-documented
 - ✅ Ready to build upon
@@ -262,7 +262,7 @@ Your LearnQuest app is now:
 
 ### Start Here:
 ```bash
-cd c:\Users\raipr\Documents\prai\learnquest
+cd c:\Users\raipr\Documents\prai\Gradely
 npm install
 npm start
 ```
@@ -282,7 +282,7 @@ Then read **QUICK_START.md** for your first steps!
 
 ## 🚀 Happy Coding!
 
-The foundation is built. Now let's make LearnQuest amazing! 
+The foundation is built. Now let's make Gradely amazing! 
 
 Questions? Check the documentation files - they have answers to most common issues.
 
