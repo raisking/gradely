@@ -707,3 +707,176 @@ webpack compiled with [1m[33m1 warning[39m[22m
 Compiling...
 Compiled successfully!
 webpack compiled [1m[32msuccessfully[39m[22m
+Failed to compile.
+
+Module not found: Error: Can't resolve 'C:\Users\raipr\Documents\prai\learnquest\src\index.js' in 'C:\Users\raipr\Documents\prai\learnquest'
+[1m[31mERROR[39m[22m in [1m[32mmain[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'C:\Users\raipr\Documents\prai\learnquest\src\index.js' in 'C:\Users\raipr\Documents\prai\learnquest'[39m[22m
+
+[1m[31mERROR[39m[22m in [1m  [1m[31mError[39m[22m[1m: Child compilation [1m[31mfailed[39m[22m[1m:
+  Module [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'C:\Users\raipr\Documents\prai\learnque  st\public\index.html' in 'C:\Users\raipr\Documents\prai\learnquest'
+  ModuleNotFoundError: Module [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'C:\Users\raipr\Do  cuments\prai\learnquest\public\index.html' in 'C:\Users\raipr\Documents\prai\l  earnquest'
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Compi  lation.js:2143:28
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:1076:13
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:10:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:456:22
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:9:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:642:22
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:193:10
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:917:25
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:1162:8
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:1292:5
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\neo-async\async.j  s:6883:13
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\webpack\lib\Norma  lModuleFactory.js:1275:45
+      at finishWithoutResolve (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\enhanced-resolve\lib\Resolver.js:912:11)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1001:14
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:15:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:16:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\Resolver.js:1080:5
+      at eval (eval at create (C:\Users\raipr\Documents\prai\learnquest\node_mod  ules\tapable\lib\HookCodeFactory.js:31:10), <anonymous>:15:1)
+      at C:\Users\raipr\Documents\prai\learnquest\node_modules\enhanced-resolve\  lib\DirectoryExistsPlugin.js:43:15
+      at process.processTicksAndRejections (node:internal/process/task_queues:89  :21)
+  
+  - Compilation.js:2143 
+    [learnquest]/[webpack]/lib/Compilation.js:2143:28
+  
+  - NormalModuleFactory.js:1076 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:1076:13
+  
+  
+  - NormalModuleFactory.js:456 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:456:22
+  
+  
+  - NormalModuleFactory.js:642 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:642:22
+  
+  - NormalModuleFactory.js:193 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:193:10
+  
+  - NormalModuleFactory.js:917 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:917:25
+  
+  - NormalModuleFactory.js:1162 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:1162:8
+  
+  - NormalModuleFactory.js:1292 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:1292:5
+  
+  - async.js:6883 
+    [learnquest]/[neo-async]/async.js:6883:13
+  
+  - NormalModuleFactory.js:1275 
+    [learnquest]/[webpack]/lib/NormalModuleFactory.js:1275:45
+  
+  - Resolver.js:912 finishWithoutResolve
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:912:11
+  
+  - Resolver.js:1001 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1001:14
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - Resolver.js:1080 
+    [learnquest]/[enhanced-resolve]/lib/Resolver.js:1080:5
+  
+  
+  - DirectoryExistsPlugin.js:43 
+    [learnquest]/[enhanced-resolve]/lib/DirectoryExistsPlugin.js:43:15
+  
+  - task_queues:89 process.processTicksAndRejections
+    node:internal/process/task_queues:89:21
+  
+  - child-compiler.js:211 
+    [learnquest]/[html-webpack-plugin]/lib/child-compiler.js:211:18
+  
+  - Compiler.js:672 finalCallback
+    [learnquest]/[webpack]/lib/Compiler.js:672:5
+  
+  - Compiler.js:708 
+    [learnquest]/[webpack]/lib/Compiler.js:708:11
+  
+  - Compiler.js:1417 
+    [learnquest]/[webpack]/lib/Compiler.js:1417:17
+  
+  
+  - Hook.js:21 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [learnquest]/[tapable]/lib/Hook.js:21:14
+  
+  - Compiler.js:1413 
+    [learnquest]/[webpack]/lib/Compiler.js:1413:33
+  
+  - Compilation.js:3278 finalCallback
+    [learnquest]/[webpack]/lib/Compilation.js:3278:11
+  
+  - Compilation.js:3617 
+    [learnquest]/[webpack]/lib/Compilation.js:3617:11
+  
+  
+  - Hook.js:21 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [learnquest]/[tapable]/lib/Hook.js:21:14
+  
+  - Compilation.js:3610 
+    [learnquest]/[webpack]/lib/Compilation.js:3610:38
+  
+  
+  - Compilation.js:691 
+    [learnquest]/[webpack]/lib/Compilation.js:691:11
+  
+  - SourceMapDevToolPlugin.js:639 
+    [learnquest]/[webpack]/lib/SourceMapDevToolPlugin.js:639:10
+  
+  - async.js:2830 
+    [learnquest]/[neo-async]/async.js:2830:7
+  
+  - async.js:2857 Object.each
+    [learnquest]/[neo-async]/async.js:2857:9
+  
+  - SourceMapDevToolPlugin.js:430 
+    [learnquest]/[webpack]/lib/SourceMapDevToolPlugin.js:430:17
+  
+  - async.js:2830 
+    [learnquest]/[neo-async]/async.js:2830:7
+  
+[39m[22m
+
+[1m[31m1 ERROR in child compilations (Use 'stats.children: true' resp. '--stats-children' for more details)[39m[22m
+webpack compiled with [1m[31m3 errors[39m[22m
