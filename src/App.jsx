@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Sparkles, Trophy, Flame, Star, Target, BookOpen, Calculator, FlaskConical,
-  Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw,
+  Globe2, ChevronRight, ChevronLeft, ChevronDown, Check, X, Lightbulb, RotateCcw,
   TrendingUp, BarChart3, GraduationCap,
   Heart, Crown, ArrowRight, Brain,
   Lock, CheckCircle2, Circle, Play, Settings, Users, Search, UserCircle
 } from 'lucide-react';
+import {
+  clearSavedSession,
+  createAccount,
+  emptyStats,
+  loadSavedSession,
+  saveLearningState,
+  signInAccount,
+} from './services/accountStorage';
 
 /* =========================================================================
    Gradely — A complete educational platform inspired by Gradely
@@ -35,10 +43,10 @@ const GRADES = [
 ];
 
 const SUBJECTS = {
-  math:    { label: 'Math',           icon: Calculator,   color: '#3DB2FF', bg: '#E3F2FD', tagline: 'Numbers, shapes & patterns' },
-  ela:     { label: 'ELA',            icon: BookOpen,     color: '#F15BB5', bg: '#FCE4EC', tagline: 'Reading, writing & grammar' },
-  science: { label: 'Science',        icon: FlaskConical, color: '#7DCE82', bg: '#E8F5E9', tagline: 'Discover how the world works' },
-  social:  { label: 'Social Studies', icon: Globe2,       color: '#FFB627', bg: '#FFF8E1', tagline: 'History, geography & civics' },
+  math:    { label: 'Math',           icon: Calculator,   color: '#2563EB', bg: '#EFF6FF', tagline: 'Numbers, shapes & patterns' },
+  ela:     { label: 'ELA',            icon: BookOpen,     color: '#D946EF', bg: '#FDF4FF', tagline: 'Reading, writing & grammar' },
+  science: { label: 'Science',        icon: FlaskConical, color: '#059669', bg: '#ECFDF5', tagline: 'Discover how the world works' },
+  social:  { label: 'Social Studies', icon: Globe2,       color: '#D97706', bg: '#FFFBEB', tagline: 'History, geography & civics' },
 };
 
 // Skill catalog. Each skill has a curated set of questions across types.
@@ -645,6 +653,376 @@ const SKILLS = {
   },
 };
 
+const GRADE_8_MATH_GROUPS = [
+  {
+    letter: 'A',
+    title: 'Integers',
+    skills: [
+      'Compare and order integers',
+      'Integer addition and subtraction rules',
+      'Add and subtract integers using counters',
+      'Add and subtract integers',
+      'Add and subtract three or more integers',
+      'Add and subtract integers: word problems',
+      'Integer multiplication and division rules',
+      'Multiply and divide integers',
+      'Evaluate numerical expressions involving integers',
+    ],
+  },
+  {
+    letter: 'B',
+    title: 'Rational numbers',
+    skills: [
+      'Convert between repeating decimals and fractions',
+      'Convert between decimals and fractions or mixed numbers',
+      'Compare rational numbers',
+      'Put rational numbers in order',
+      'Reciprocals and multiplicative inverses',
+      'Add and subtract rational numbers',
+      'Add and subtract rational numbers: word problems',
+      'Apply addition and subtraction rules',
+      'Multiply and divide rational numbers',
+      'Multiply and divide rational numbers: word problems',
+    ],
+  },
+  {
+    letter: 'M',
+    title: 'One-variable equations',
+    skills: [
+      'Which x satisfies an equation?',
+      'Write an equation from words',
+      'Model and solve equations using algebra tiles',
+      'Write and solve equations that represent diagrams',
+      'Properties of equality',
+      'Identify equivalent equations',
+      'Solve one-step equations',
+      'Solve two-step equations',
+      'Solve two-step equations: complete the solution',
+      'Solve one-step and two-step equations: word problems',
+      'Solve equations involving like terms',
+      'Solve equations with variables on both sides',
+      'Solve equations with variables on both sides: fractional coefficients',
+      'Solve equations with variables on both sides: word problems',
+      'Solve equations using the distributive property',
+      'Solve multi-step equations',
+      'Solve multi-step equations with fractional coefficients',
+      'Solve equations: mixed review',
+    ],
+  },
+  {
+    letter: 'X',
+    title: 'Proportional relationships',
+    skills: [
+      'Find the constant of proportionality from a table',
+      'Write equations for proportional relationships from tables',
+      'Identify proportional relationships by graphing',
+      'Find the constant of proportionality from a graph',
+      'Write equations for proportional relationships from graphs',
+      'Identify proportional relationships from graphs and equations',
+      'Identify proportional relationships from tables',
+      'Identify proportional relationships: word problems',
+      'Graph proportional relationships and find the slope',
+      'Interpret graphs of proportional relationships',
+      'Write and solve equations for proportional relationships',
+      'Compare proportional relationships represented in different ways',
+    ],
+  },
+  {
+    letter: 'Y',
+    title: 'Direct variation',
+    skills: [
+      'Find the constant of variation',
+    ],
+  },
+];
+
+const GRADE_6_SCIENCE_GROUPS = [
+  {
+    letter: 'A',
+    title: 'Science practices and tools',
+    skills: [
+      'The process of scientific inquiry',
+      'Identify laboratory tools',
+      'Laboratory safety equipment',
+    ],
+  },
+  {
+    letter: 'B',
+    title: 'Designing experiments',
+    skills: [
+      'Identify control and experimental groups',
+      'Identify independent and dependent variables',
+      'Identify the experimental question',
+      'Identify questions that can be investigated with a set of materials',
+      'Understand an experimental protocol about plant growth',
+      'Understand an experimental protocol about diffusion',
+      'Understand an experimental protocol about evaporation',
+    ],
+  },
+  {
+    letter: 'C',
+    title: 'Engineering practices',
+    skills: [
+      'Identify parts of the engineering-design process',
+      'Evaluate tests of engineering-design solutions',
+      'Use data from tests to compare engineering-design solutions',
+      'Explore the engineering-design process: going to the Moon!',
+    ],
+  },
+  {
+    letter: 'D',
+    title: 'Matter and mass',
+    skills: [
+      'Compare the density of substances',
+      'Calculate density',
+      'Understand conservation of matter using graphs',
+    ],
+  },
+  {
+    letter: 'F',
+    title: 'Atoms and molecules',
+    skills: [
+      'What are atoms and chemical elements?',
+      'How are substances represented by chemical formulas and models?',
+      'Match chemical formulas to ball-and-stick models',
+      'Complete chemical formulas for ball-and-stick models',
+      'Describe the atomic composition of molecules',
+      'Classify elementary substances and compounds using chemical formulas',
+      'Identify elementary substances and compounds',
+    ],
+  },
+  {
+    letter: 'J',
+    title: 'Thermal energy',
+    skills: [
+      'Predict heat flow and temperature changes',
+      'How are temperature and mass related to thermal energy?',
+      'Compare thermal energy transfers',
+    ],
+  },
+  {
+    letter: 'K',
+    title: 'Particle motion and energy',
+    skills: [
+      'How does particle motion affect temperature?',
+      'Particle motion and changes of state',
+      'How does particle motion affect gas pressure?',
+      'Identify how particle motion affects temperature and pressure',
+    ],
+  },
+  {
+    letter: 'L',
+    title: 'Waves',
+    skills: [
+      'Transverse waves',
+      'Longitudinal waves',
+      'Compare amplitudes, wavelengths, and frequencies of waves',
+      'Compare energy of waves',
+      'Transmission, reflection, and absorption of waves',
+      'Electromagnetic waves',
+      'Applications of infrared waves',
+      'Effects of ultraviolet waves',
+    ],
+  },
+  {
+    letter: 'M',
+    title: 'Solutions',
+    skills: [
+      'Compare concentrations of solutions',
+      'Diffusion across membranes',
+    ],
+  },
+  {
+    letter: 'N',
+    title: 'Classification and scientific names',
+    skills: [
+      'Describe, classify, and compare kingdoms',
+      'Identify common and scientific names',
+      'Origins of scientific names',
+      'Use scientific names to classify organisms',
+    ],
+  },
+  {
+    letter: 'O',
+    title: 'Biochemistry',
+    skills: [
+      'Structure and function: carbohydrates, lipids, proteins, and nucleic acids',
+      'The chemistry of cellular respiration',
+    ],
+  },
+  {
+    letter: 'P',
+    title: 'Cells',
+    skills: [
+      'Identify functions of plant cell parts',
+      'Identify functions of animal cell parts',
+      'Compare plant and animal cells',
+    ],
+  },
+  {
+    letter: 'W',
+    title: 'Ecosystems',
+    skills: [
+      'Describe populations, communities, and ecosystems',
+      'Identify ecosystems',
+      'Describe ecosystems',
+    ],
+  },
+  {
+    letter: 'X',
+    title: 'Ecological interactions',
+    skills: [
+      'How does matter move in food chains?',
+      'Interpret food webs I',
+      'Interpret food webs II',
+      'Use food chains to predict changes in populations',
+      'Classify symbiotic relationships',
+      'Investigate primary succession on a volcanic island',
+    ],
+  },
+  {
+    letter: 'Y',
+    title: 'Conservation',
+    skills: [
+      'Coral reef biodiversity and human uses: explore a problem',
+      'Coral reef biodiversity and human uses: evaluate solutions',
+    ],
+  },
+  {
+    letter: 'Z',
+    title: 'Natural resources and human impacts',
+    skills: [
+      'Petroleum formation and distribution on Earth',
+      'Evaluate claims about natural resource use: groundwater',
+      'Evaluate claims about natural resource use: fossil fuels',
+    ],
+  },
+  {
+    letter: 'AA',
+    title: 'Rocks',
+    skills: [
+      'Identify rocks and minerals',
+      'Introduction to the rock cycle',
+      'Classify rocks as igneous, sedimentary, or metamorphic',
+      'How do rock layers form?',
+      'Label parts of rock cycle diagrams',
+      'Select parts of rock cycle diagrams',
+    ],
+  },
+  {
+    letter: 'BB',
+    title: "Earth's features",
+    skills: [
+      'Label Earth layers',
+    ],
+  },
+];
+
+const slugify = (value) =>
+  value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+const makeGrade8MathQuestions = (title, groupTitle) => [
+  {
+    id: 'q1',
+    type: 'mcq',
+    difficulty: 1,
+    prompt: `Which topic does "${title}" belong to?`,
+    options: [groupTitle, 'Geometry transformations', 'Data displays', 'Probability models'],
+    answer: groupTitle,
+    hint: `This skill is part of ${groupTitle}.`,
+  },
+  {
+    id: 'q2',
+    type: 'mcq',
+    difficulty: 2,
+    prompt: `What should you focus on when practicing "${title}"?`,
+    options: ['Choose a strategy and justify each step', 'Ignore signs and units', 'Guess from the largest number', 'Use only mental math'],
+    answer: 'Choose a strategy and justify each step',
+    hint: 'Eighth grade math rewards clear reasoning and checking each step.',
+  },
+  {
+    id: 'q3',
+    type: 'mcq',
+    difficulty: 3,
+    prompt: `A student is reviewing "${title}". What is the best next action?`,
+    options: ['Try examples, check work, and explain the rule', 'Skip all examples', 'Change the problem topic', 'Use the answer before reading'],
+    answer: 'Try examples, check work, and explain the rule',
+    hint: 'Practice, verification, and explanation build mastery.',
+  },
+];
+
+const GRADE_8_MATH_SKILLS = Object.fromEntries(
+  GRADE_8_MATH_GROUPS.flatMap(group =>
+    group.skills.map((title, index) => {
+      const id = `math-8-${group.letter.toLowerCase()}-${slugify(title)}`;
+      return [id, {
+        id,
+        subject: 'math',
+        grade: '8',
+        title,
+        description: `${group.title}: ${title}`,
+        explanation: `This eighth grade math skill is part of ${group.title}. Practice the concept, check each step, and explain why the result makes sense.`,
+        categoryLetter: group.letter,
+        categoryTitle: group.title,
+        categoryIndex: index + 1,
+        questions: makeGrade8MathQuestions(title, group.title),
+      }];
+    })
+  )
+);
+
+const makeGrade6ScienceQuestions = (title, groupTitle) => [
+  {
+    id: 'q1',
+    type: 'mcq',
+    difficulty: 1,
+    prompt: `Which science topic does "${title}" belong to?`,
+    options: [groupTitle, 'Ancient history', 'Sentence structure', 'Number patterns'],
+    answer: groupTitle,
+    hint: `This skill is part of ${groupTitle}.`,
+  },
+  {
+    id: 'q2',
+    type: 'mcq',
+    difficulty: 2,
+    prompt: `What is the best way to study "${title}"?`,
+    options: ['Use evidence and scientific vocabulary', 'Ignore observations', 'Guess without reading', 'Choose the longest answer'],
+    answer: 'Use evidence and scientific vocabulary',
+    hint: 'Science practice is strongest when you use evidence and precise terms.',
+  },
+  {
+    id: 'q3',
+    type: 'mcq',
+    difficulty: 3,
+    prompt: `A student is explaining "${title}". What should the explanation include?`,
+    options: ['A claim supported by evidence', 'Only an opinion', 'A random example', 'No reasoning'],
+    answer: 'A claim supported by evidence',
+    hint: 'Scientific explanations connect claims, evidence, and reasoning.',
+  },
+];
+
+const GRADE_6_SCIENCE_SKILLS = Object.fromEntries(
+  GRADE_6_SCIENCE_GROUPS.flatMap(group =>
+    group.skills.map((title, index) => {
+      const id = `science-6-${group.letter.toLowerCase()}-${slugify(title)}`;
+      return [id, {
+        id,
+        subject: 'science',
+        grade: '6',
+        title,
+        description: `${group.title}: ${title}`,
+        explanation: `This sixth grade science quiz is part of ${group.title}. Use observations, evidence, and scientific vocabulary as you practice.`,
+        categoryLetter: group.letter,
+        categoryTitle: group.title,
+        categoryIndex: index + 1,
+        questions: makeGrade6ScienceQuestions(title, group.title),
+      }];
+    })
+  )
+);
+
+Object.assign(SKILLS, GRADE_8_MATH_SKILLS, GRADE_6_SCIENCE_SKILLS);
+
 // Helper: get skills for a given grade + subject
 const getSkillsFor = (grade, subject) =>
   Object.values(SKILLS).filter(s => s.grade === grade && s.subject === subject);
@@ -672,10 +1050,10 @@ const calcMastery = (skillProgress) => {
 };
 
 const masteryLabel = (m) => {
-  if (m >= 85) return { label: 'Mastery', color: '#7DCE82', icon: Crown };
-  if (m >= 60) return { label: 'Proficient', color: '#3DB2FF', icon: Star };
-  if (m >= 30) return { label: 'Developing', color: '#FFB627', icon: TrendingUp };
-  if (m > 0)   return { label: 'Beginner', color: '#F15BB5', icon: Circle };
+  if (m >= 85) return { label: 'Mastery', color: '#059669', icon: Crown };
+  if (m >= 60) return { label: 'Proficient', color: '#2563EB', icon: Star };
+  if (m >= 30) return { label: 'Developing', color: '#D97706', icon: TrendingUp };
+  if (m > 0)   return { label: 'Beginner', color: '#D946EF', icon: Circle };
   return { label: 'Not Started', color: '#9CA3AF', icon: Circle };
 };
 
@@ -695,7 +1073,7 @@ const BADGES = [
 // ---------- MAIN APP ----------
 export default function GradelyApp() {
   // Persistent app state (in-memory only — instructions explicitly forbid storage APIs in artifacts)
-  const [view, setView] = useState('home'); // home | learning | grade | subject | skill | dashboard | badges
+  const [view, setView] = useState('home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
   const [user, setUser] = useState({ name: 'Learner', role: 'student' });
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -703,17 +1081,8 @@ export default function GradelyApp() {
 
   // Progress is keyed by skillId → { attempts, correct, history, asked }
   const [progress, setProgress] = useState({});
-  const [stats, setStats] = useState({
-    points: 0,
-    streak: 1, // simulated daily streak
-    bestStreak: 0,
-    currentRunStreak: 0,
-    totalAnswered: 0,
-    totalCorrect: 0,
-    masteredSkills: 0,
-    subjectsTried: 0,
-    earnedBadges: [],
-  });
+  const [stats, setStats] = useState(emptyStats);
+  const [authReady, setAuthReady] = useState(false);
 
   // Toast notifications
   const [toasts, setToasts] = useState([]);
@@ -722,6 +1091,22 @@ export default function GradelyApp() {
     setToasts(t => [...t, { id, msg, kind }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
   }, []);
+
+  useEffect(() => {
+    const saved = loadSavedSession();
+    if (saved) {
+      setUser(saved.user);
+      setProgress(saved.progress || {});
+      setStats({ ...emptyStats, ...(saved.stats || {}) });
+      pushToast(`Welcome back, ${saved.user.name || saved.user.username}!`, 'success');
+    }
+    setAuthReady(true);
+  }, [pushToast]);
+
+  useEffect(() => {
+    if (!authReady || !user?.username) return;
+    saveLearningState(user, progress, stats);
+  }, [authReady, user, progress, stats]);
 
   const recordAnswer = (skillId, questionId, correct, difficulty) => {
     // 1. Update skill progress
@@ -776,15 +1161,32 @@ export default function GradelyApp() {
   // ----- ROUTING HANDLERS -----
   const goHome = () => { setView('home'); setSelectedGrade(null); setSelectedSubject(null); setActiveSkill(null); };
   const goLearning = () => { setView('learning'); setSelectedGrade(null); setSelectedSubject(null); setActiveSkill(null); };
+  const goSignIn = () => { setView('signin'); setSelectedGrade(null); setSelectedSubject(null); setActiveSkill(null); };
+  const applyAccountSession = (session, verb = 'Signed in') => {
+    setUser(session.user);
+    setProgress(session.progress || {});
+    setStats({ ...emptyStats, ...(session.stats || {}) });
+    setView('dashboard');
+    pushToast(`${verb} as ${session.user.name || session.user.username}. Progress is saved.`, 'success');
+  };
+  const handleSignIn = async (credentials) => {
+    const session = await signInAccount(credentials);
+    applyAccountSession(session, 'Signed in');
+  };
+  const handleCreateAccount = async (details) => {
+    const session = await createAccount(details);
+    applyAccountSession(session, 'Account created');
+  };
   const handleRoleChange = (role) => {
     setUser(prev => ({ ...(prev || { name: 'Learner' }), role }));
     const name = user?.name;
     pushToast(`Welcome, ${name || 'Learner'}! 🎉`, 'success');
   };
   const handleLogout = () => {
+    clearSavedSession();
     setUser({ name: 'Learner', role: 'student' });
     setProgress({});
-    setStats({ points: 0, streak: 1, bestStreak: 0, currentRunStreak: 0, totalAnswered: 0, totalCorrect: 0, masteredSkills: 0, subjectsTried: 0, earnedBadges: [] });
+    setStats(emptyStats);
     goHome();
   };
 
@@ -798,8 +1200,15 @@ export default function GradelyApp() {
         view={view}
         onHome={goHome}
         onLearning={goLearning}
+        onSignIn={goSignIn}
+        onRoleChange={handleRoleChange}
+        onPractice={() => setView('practice')}
         onDashboard={() => setView('dashboard')}
+        onParent={() => setView('parent')}
+        onReports={() => setView('reports')}
+        onAdmin={() => setView('admin')}
         onBadges={() => setView('badges')}
+        onSubscribe={() => setView('subscription')}
         onReset={handleLogout}
       />
 
@@ -810,6 +1219,15 @@ export default function GradelyApp() {
                                       setSelectedGrade(grade);
                                       setSelectedSubject(subject);
                                       setView('subject');
+                                    }}
+                                  />}
+        {view === 'practice'  && <PracticeHub
+                                    progress={progress}
+                                    onPickSkill={(skill) => {
+                                      setSelectedGrade(GRADES.find(g => g.id === skill.grade));
+                                      setSelectedSubject(skill.subject);
+                                      setActiveSkill(skill);
+                                      setView('skill');
                                     }}
                                   />}
         {view === 'home'      && <HomeScreen
@@ -840,6 +1258,7 @@ export default function GradelyApp() {
                                     onComplete={(msg) => pushToast(msg, 'success')}
                                   />}
         {view === 'dashboard' && <Dashboard
+                                    title="Student Dashboard"
                                     stats={stats}
                                     progress={progress}
                                     onPickSkill={(skill) => {
@@ -849,7 +1268,27 @@ export default function GradelyApp() {
                                       setView('skill');
                                     }}
                                   />}
+        {view === 'parent'    && <ParentDashboard
+                                    stats={stats}
+                                    progress={progress}
+                                    onReports={() => setView('reports')}
+                                    onPractice={() => setView('practice')}
+                                  />}
+        {view === 'reports'   && <ProgressReports
+                                    stats={stats}
+                                    progress={progress}
+                                    onPractice={() => setView('practice')}
+                                  />}
+        {view === 'subscription' && <SubscriptionScreen
+                                    onBack={goHome}
+                                    onJoin={() => pushToast('Subscription selected. Payment flow ready for checkout.', 'success')}
+                                  />}
+        {view === 'admin'     && <AdminContentManagement
+                                    onPractice={() => setView('practice')}
+                                    onReports={() => setView('reports')}
+                                  />}
         {view === 'badges'    && <BadgesScreen stats={stats} onBack={goHome} />}
+        {view === 'signin'    && <SignInScreen onSignIn={handleSignIn} onCreateAccount={handleCreateAccount} onJoin={() => setView('subscription')} onBack={goHome} />}
       </main>
 
       {/* Toasts */}
@@ -857,7 +1296,7 @@ export default function GradelyApp() {
         {toasts.map(t => (
           <div key={t.id} style={{
             ...styles.toast,
-            background: t.kind === 'success' ? '#7DCE82' : t.kind === 'error' ? '#FF6B6B' : '#3DB2FF',
+            background: t.kind === 'success' ? '#059669' : t.kind === 'error' ? '#DC2626' : '#0891B2',
           }}>
             {t.msg}
           </div>
@@ -870,21 +1309,23 @@ export default function GradelyApp() {
 }
 
 // ---------- HEADER ----------
-function Header({ user, view, onHome, onLearning, onDashboard, onBadges, onReset }) {
+function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset }) {
   const learningViews = new Set(['learning', 'grade', 'subject', 'skill']);
   const navItems = [
     { label: 'Learning',   onClick: onLearning,  active: learningViews.has(view) },
-    { label: 'Assessment', onClick: onDashboard, active: view === 'dashboard' },
-    { label: 'Analytics',  onClick: onDashboard, active: false },
+    { label: 'Practice',   onClick: onPractice,  active: view === 'practice' },
+    { label: 'Student',    onClick: onDashboard, active: view === 'dashboard' },
+    { label: 'Parent',     onClick: onParent,    active: view === 'parent' },
+    { label: 'Reports',    onClick: onReports,   active: view === 'reports' },
+    { label: 'Admin',      onClick: onAdmin,     active: view === 'admin' },
     { label: 'Takeoff',    onClick: onBadges,    active: view === 'badges', icon: <Sparkles size={15} /> },
-    { label: 'Inspiration',onClick: onHome,      active: view === 'home' },
   ];
 
   return (
     <header style={styles.header}>
       <div style={styles.headerInner}>
         {/* Top row: logo | search | actions */}
-        <div style={styles.headerTopRow}>
+        <div style={styles.headerTopRow} className="header-top-row">
           <button onClick={onHome} style={styles.logo}>
             <span style={styles.logoMark}>
               <span style={styles.logoCapSection}>🎓</span>
@@ -899,10 +1340,33 @@ function Header({ user, view, onHome, onLearning, onDashboard, onBadges, onReset
           </label>
 
           <div style={styles.headerActions}>
-            <button onClick={onDashboard} style={styles.signInBtn}>
+            <div style={styles.topRoleGroup}>
+              {[
+                { id: 'student', label: 'Student', icon: GraduationCap, onClick: onDashboard },
+                { id: 'parent', label: 'Parent', icon: Heart, onClick: onParent },
+                { id: 'admin', label: 'Admin', icon: Settings, onClick: onAdmin },
+              ].map(role => {
+                const Icon = role.icon;
+                const active = user?.role === role.id;
+                return (
+                  <button
+                    key={role.id}
+                    onClick={() => {
+                      onRoleChange(role.id);
+                      role.onClick();
+                    }}
+                    style={{ ...styles.topRoleBtn, ...(active ? styles.topRoleBtnActive : {}) }}
+                  >
+                    <Icon size={13} />
+                    <span>{role.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button onClick={onSignIn} style={styles.signInBtn}>
               <UserCircle size={17} /> Sign in
             </button>
-            <button onClick={onBadges} style={styles.membershipBtn}>Membership</button>
+            <button onClick={onSubscribe} style={styles.membershipBtn}>Membership</button>
             <button onClick={onReset} style={styles.resetBtn} title="Reset session"><RotateCcw size={14} /></button>
           </div>
         </div>
@@ -967,9 +1431,9 @@ function LoginScreen({ onLogin }) {
           <label style={{ ...styles.fieldLabel, marginTop: 16 }}>I'm a...</label>
           <div style={styles.roleGrid}>
             {[
-              { id: 'student', label: 'Student', icon: GraduationCap, color: '#3DB2FF' },
-              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#F15BB5' },
-              { id: 'teacher', label: 'Teacher', icon: Users, color: '#7DCE82' },
+              { id: 'student', label: 'Student', icon: GraduationCap, color: '#0C5CA8' },
+              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#D946EF' },
+              { id: 'teacher', label: 'Teacher', icon: Users, color: '#059669' },
               { id: 'admin',   label: 'Admin',   icon: Settings, color: '#FFB627' },
             ].map(r => {
               const Icon = r.icon;
@@ -1003,10 +1467,10 @@ function LoginScreen({ onLogin }) {
       </div>
 
       <div style={styles.loginBg}>
-        <FloatingShape style={{ top: '10%', left: '8%', background: '#FF6B9D', size: 80 }} delay={0} />
-        <FloatingShape style={{ top: '20%', right: '12%', background: '#3DB2FF', size: 110 }} delay={1.5} />
-        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#FFB627', size: 70 }} delay={0.8} />
-        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#7DCE82', size: 95 }} delay={2.2} />
+        <FloatingShape style={{ top: '10%', left: '8%', background: '#0C5CA8', size: 80 }} delay={0} />
+        <FloatingShape style={{ top: '20%', right: '12%', background: '#0891B2', size: 110 }} delay={1.5} />
+        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#F59E0B', size: 70 }} delay={0.8} />
+        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#059669', size: 95 }} delay={2.2} />
       </div>
     </div>
   );
@@ -1064,7 +1528,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
             and track your mastery on every skill.
           </p>
           <div style={styles.heroStats}>
-            <HeroStat value={stats.points} label="Total Points" color="#9B5DE5" />
+            <HeroStat value={stats.points} label="Total Points" color="#D97706" />
             <HeroStat value={`${accuracy}%`} label="Accuracy" color="#7DCE82" />
             <HeroStat value={stats.streak} label="Day Streak" color="#FB5607" />
           </div>
@@ -1138,14 +1602,14 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Crown size={28} color="#9B5DE5" />
+          <Crown size={28} color="#059669" />
           <div>
             <div style={styles.motivLabel}>Skill Mastery</div>
             <div style={styles.motivSub}>Reach 85%+ to fully master a skill</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Brain size={28} color="#3DB2FF" />
+          <Brain size={28} color="#0891B2" />
           <div>
             <div style={styles.motivLabel}>Adaptive Practice</div>
             <div style={styles.motivSub}>Questions adjust to your skill level</div>
@@ -1158,10 +1622,10 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
 
 function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard }) {
   const supportCards = [
-    { icon: Brain,      title: 'Comprehensive curriculum', text: 'Pre-K through grade 12 skills across math, language arts, science, and social studies.', color: '#00A8E8', link: 'Browse skills ›' },
-    { icon: Settings,   title: 'Assessment suite',         text: 'Pinpoint exactly what students know and don\'t know with our adaptive diagnostic tools.', color: '#72B01D', link: 'Explore suite ›' },
+    { icon: Brain,      title: 'Comprehensive curriculum', text: 'Pre-K through grade 12 skills across math, language arts, science, and social studies.', color: '#0C5CA8', link: 'Browse skills ›' },
+    { icon: Settings,   title: 'Assessment suite',         text: 'Pinpoint exactly what students know and don\'t know with our adaptive diagnostic tools.', color: '#059669', link: 'Explore suite ›' },
     { icon: Target,     title: 'Personalized guidance',    text: 'Gradely\'s adaptive algorithm identifies each learner\'s strengths and fills their gaps.', color: '#7C3AED', link: 'Learn more ›' },
-    { icon: TrendingUp, title: 'Actionable analytics',     text: 'Get real-time data and actionable insights to help students reach their full potential.', color: '#F7941D', link: 'Explore analytics ›' },
+    { icon: TrendingUp, title: 'Actionable analytics',     text: 'Get real-time data and actionable insights to help students reach their full potential.', color: '#D97706', link: 'Explore analytics ›' },
   ];
   const impactCards = [
     { emoji: '📊', title: 'Proven effective',          text: 'Research consistently shows Gradely practice positively impacts student results.',          btn: 'View our research' },
@@ -1179,6 +1643,62 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
 
   return (
     <>
+      {/* ── Hero ── */}
+      <section style={styles.ixlHero}>
+        {/* Left decorations */}
+        <span style={{ ...styles.ixlDeco, left: '2%',  top: '7%',   fontSize: 54 }}>🎈</span>
+        <span style={{ ...styles.ixlDeco, left: '10%', top: '3%',   fontSize: 38 }}>☀️</span>
+        <span style={{ ...styles.ixlDeco, left: '0%',  top: '38%',  fontSize: 58 }}>🧒</span>
+        <span style={{ ...styles.ixlDeco, left: '12%', top: '54%',  fontSize: 52 }}>🚴</span>
+        <span style={{ ...styles.ixlDeco, left: '3%',  bottom: '24%', fontSize: 38 }}>🏢</span>
+        <span style={{ ...styles.ixlDeco, left: '19%', bottom: '16%', fontSize: 30 }}>🌲</span>
+        <span style={{ ...styles.ixlDeco, left: '7%',  bottom: '14%', fontSize: 28 }}>📘</span>
+        <span style={{ ...styles.ixlDeco, left: '17%', bottom: '9%',  fontSize: 26 }}>⛺</span>
+        {/* Right decorations */}
+        <span style={{ ...styles.ixlDeco, right: '15%', top: '5%',   fontSize: 48, transform: 'rotate(-18deg)' }}>✈️</span>
+        <span style={{ ...styles.ixlDeco, right: '4%',  top: '3%',   fontSize: 44 }}>🪁</span>
+        <span style={{ ...styles.ixlDeco, right: '5%',  top: '34%',  fontSize: 54 }}>🎊</span>
+        <span style={{ ...styles.ixlDeco, right: '20%', top: '22%',  fontSize: 36 }}>🏘️</span>
+        <span style={{ ...styles.ixlDeco, right: '2%',  bottom: '20%', fontSize: 48 }}>👩‍💻</span>
+        <span style={{ ...styles.ixlDeco, right: '22%', bottom: '12%', fontSize: 34 }}>📐</span>
+        <span style={{ ...styles.ixlDeco, right: '11%', bottom: '10%', fontSize: 32 }}>⛵</span>
+        <span style={{ ...styles.ixlDeco, right: '5%',  bottom: '14%', fontSize: 30 }}>🔭</span>
+
+        {/* Main content */}
+        <div style={styles.ixlHeroContent}>
+          <h1 style={styles.ixlHeroTitle}>
+            Gradely <em style={styles.ixlHeroIs}>is</em> personalized learning
+          </h1>
+
+          <div style={styles.ixlCloudsRow}>
+            <div style={styles.ixlCloud}>
+              <h3 style={{ ...styles.ixlCloudTitle, color: '#0C5CA8' }}>Comprehensive<br />K–12 curriculum</h3>
+              <p style={styles.ixlCloudBody}>Math • Language arts • Science<br />Social studies • Spanish</p>
+              <ChevronDown size={20} color="#0C5CA8" />
+            </div>
+            <div style={{ ...styles.ixlCloud, ...styles.ixlCloudCenter }}>
+              <h3 style={{ ...styles.ixlCloudTitle, color: '#9B5DE5' }}>Trusted by<br />educators and parents</h3>
+              <p style={styles.ixlCloudBody}>Over <strong>200 billion</strong> questions answered<br />More than <strong>18 million</strong> students use Gradely</p>
+              <ChevronDown size={20} color="#9B5DE5" />
+            </div>
+            <div style={styles.ixlCloud}>
+              <h3 style={{ ...styles.ixlCloudTitle, color: '#0891B2' }}>Immersive<br />learning experience</h3>
+              <p style={styles.ixlCloudBody}>Analytics • Recommendations<br />Real-Time Diagnostic • Awards</p>
+              <ChevronDown size={20} color="#0891B2" />
+            </div>
+          </div>
+
+          <button onClick={() => onSelectGrade(GRADES[0])} style={styles.ixlMemberBtn}>
+            Become a member!
+          </button>
+        </div>
+
+        {/* Landscape layers */}
+        <div style={styles.ixlWater} />
+        <div style={styles.ixlHillBack} />
+        <div style={styles.ixlHillFront} />
+      </section>
+
       {/* ── Promo band ── */}
       <div style={styles.homePromoBand}>
         <div style={styles.promoCards} className="promo-cards">
@@ -1263,9 +1783,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           ))}
         </div>
         <div style={styles.homeStats} className="home-stats">
-          <HeroStat value="18M+" label="Students worldwide" color="#118BCB" />
-          <HeroStat value="200B+" label="Questions answered" color="#72B01D" />
-          <HeroStat value={stats.points || 0} label="Your points" color="#F7941D" />
+          <HeroStat value="18M+" label="Students worldwide" color="#0C5CA8" />
+          <HeroStat value="200B+" label="Questions answered" color="#059669" />
+          <HeroStat value={stats.points || 0} label="Your points" color="#D97706" />
           <HeroStat value={stats.earnedBadges.length} label="Badges earned" color="#7C3AED" />
         </div>
       </section>
@@ -1283,6 +1803,218 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
         </div>
       </section>
     </>
+  );
+}
+
+// ---------- SIGN IN ----------
+function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
+  const [mode, setMode] = useState('signin');
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('student');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const submitAccount = async () => {
+    setError('');
+    setBusy(true);
+    try {
+      if (mode === 'create') {
+        await onCreateAccount({ username, password, name, role });
+      } else {
+        await onSignIn({ username, password });
+      }
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const features = [
+    { icon: '🌐', color: '#0C5CA8', title: 'Comprehensive K-12 Curriculum',
+      text: 'More than 17,000 adaptive skills designed to support and challenge every learner' },
+    { icon: '📊', color: '#0891B2', title: 'Real-Time Diagnostic',
+      text: "Up-to-date, accurate assessment of students' knowledge levels in math and language arts" },
+    { icon: '🎯', color: '#8B5CF6', title: 'Personalized Guidance',
+      text: 'Targeted skill recommendations help address learning gaps and accelerate growth' },
+    { icon: '📈', color: '#F59E0B', title: 'Actionable Analytics',
+      text: 'Easy-to-use reports provide real-time insight into student progress' },
+  ];
+
+  const footerLinks = ['Company','Membership','Blog','Help center','Tell us what you think','Testimonials','Careers','Contact us','Terms of service','Privacy policy'];
+
+  return (
+    <div>
+      {/* ── Hero with illustrated landscape ── */}
+      <div style={styles.siHero}>
+        {/* Left decorations */}
+        <span style={{ ...styles.siDeco, left: '7%',  top: '18%', fontSize: 52 }}>🌍</span>
+        <span style={{ ...styles.siDeco, left: '16%', top: '4%',  fontSize: 42 }}>🎈</span>
+        <span style={{ ...styles.siDeco, left: '4%',  bottom: '22%', fontSize: 48 }}>🎡</span>
+        <span style={{ ...styles.siDeco, left: '24%', bottom: '14%', fontSize: 36 }}>🌲</span>
+        <span style={{ ...styles.siDeco, left: '12%', bottom: '10%', fontSize: 32 }}>🏙️</span>
+        {/* Right decorations */}
+        <span style={{ ...styles.siDeco, right: '14%', top: '6%',   fontSize: 42 }}>✈️</span>
+        <span style={{ ...styles.siDeco, right: '6%',  top: '28%',  fontSize: 38 }}>📖</span>
+        <span style={{ ...styles.siDeco, right: '22%', top: '16%',  fontSize: 32 }}>🧬</span>
+        <span style={{ ...styles.siDeco, right: '18%', bottom: '14%', fontSize: 38 }}>🏠</span>
+        <span style={{ ...styles.siDeco, right: '5%',  bottom: '18%', fontSize: 42 }}>🔬</span>
+        <span style={{ ...styles.siDeco, right: '10%', bottom: '10%', fontSize: 36 }}>🔭</span>
+
+        {/* Sign-in card */}
+        <div style={styles.siCard}>
+          <h2 style={styles.siCardTitle}>{mode === 'create' ? 'Create your account' : 'Sign in'}</h2>
+          <p style={{ margin: '-8px 0 18px', color: '#64748B', fontSize: 14 }}>
+            {mode === 'create'
+              ? 'Choose a username and password to save your Gradely progress.'
+              : 'Log in to keep practicing where you left off.'}
+          </p>
+
+          {mode === 'create' && (
+            <>
+              <div style={styles.siField}>
+                <label style={styles.siLabel}>Display name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  style={styles.siInput}
+                  autoComplete="name"
+                  placeholder="Your name"
+                />
+              </div>
+              <div style={styles.siField}>
+                <label style={styles.siLabel}>Account type</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                  {['student', 'parent', 'admin'].map(option => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setRole(option)}
+                      style={{
+                        padding: '10px 8px',
+                        borderRadius: 10,
+                        border: role === option ? '2px solid #3DB2FF' : '1px solid #D1D5DB',
+                        background: role === option ? '#EFF8FF' : 'white',
+                        color: role === option ? '#0369A1' : '#334155',
+                        fontWeight: 800,
+                        textTransform: 'capitalize',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          <div style={styles.siField}>
+            <div style={styles.siFieldRow}>
+              <label style={styles.siLabel}>Username</label>
+              {mode === 'signin' && <span style={styles.siForgot}>Forgot username?</span>}
+            </div>
+            <input
+              type="text"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              style={styles.siInput}
+              autoComplete="username"
+              placeholder="Choose a username"
+            />
+          </div>
+
+          <div style={styles.siField}>
+            <div style={styles.siFieldRow}>
+              <label style={styles.siLabel}>Password</label>
+              <span style={styles.siForgot}>Forgot password?</span>
+            </div>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && submitAccount()}
+              style={styles.siInput}
+              autoComplete={mode === 'create' ? 'new-password' : 'current-password'}
+              placeholder={mode === 'create' ? 'At least 6 characters' : ''}
+            />
+          </div>
+
+          {error && (
+            <div style={{ padding: 10, borderRadius: 10, background: '#FEF2F2', color: '#B91C1C', fontSize: 13, marginBottom: 12 }}>
+              {error}
+            </div>
+          )}
+
+          <div style={styles.siBtnRow}>
+            <button onClick={submitAccount} disabled={busy} style={{ ...styles.siBtn, opacity: busy ? 0.65 : 1 }}>
+              {busy ? 'Please wait...' : mode === 'create' ? 'Create account' : 'Sign in'}
+            </button>
+            <label style={styles.siRemember}>
+              <input type="checkbox" style={{ marginRight: 5 }} />
+              Remember
+            </label>
+          </div>
+
+          <div style={styles.siLaunchCard}>
+            {mode === 'create' ? 'Already have an account?' : 'New to Gradely?'}{' '}
+            <button
+              type="button"
+              onClick={() => { setMode(mode === 'create' ? 'signin' : 'create'); setError(''); }}
+              style={{ border: 0, background: 'transparent', color: '#0076C0', fontWeight: 800, cursor: 'pointer' }}
+            >
+              {mode === 'create' ? 'Sign in' : 'Create account'}
+            </button>
+          </div>
+        </div>
+
+        {/* Green hills at base */}
+        <div style={styles.siHills} />
+      </div>
+
+      {/* ── Not a member yet? ── */}
+      <div style={styles.siMemberSection}>
+        <h2 style={styles.siNotMemberTitle}>Not a member yet?</h2>
+        <p style={styles.siNotMemberSub}>Experience personalized learning with Gradely!</p>
+
+        <div style={styles.siFeatureList}>
+          {features.map(f => (
+            <div key={f.title} style={styles.siFeatureRow}>
+              <div style={{ ...styles.siFeatureIcon, background: f.color + '18', border: `2px solid ${f.color}33` }}>
+                <span style={{ fontSize: 26 }}>{f.icon}</span>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ ...styles.siFeatureTitle, color: f.color }}>{f.title}</div>
+                <div style={styles.siFeatureText}>{f.text}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p style={styles.siCelebrate}>
+          Plus, celebrate success with <strong>fun awards</strong>, and much more!
+        </p>
+        <button onClick={onJoin} style={styles.siJoinBtn}>Join Gradely today</button>
+      </div>
+
+      {/* ── Sign-in footer ── */}
+      <div style={styles.siFooter}>
+        <div style={styles.siFooterLinks}>
+          {footerLinks.map((link, i) => (
+            <span key={link}>
+              {i > 0 && <span style={{ color: '#D1D5DB', margin: '0 5px' }}>|</span>}
+              <span style={styles.siFooterLink}>{link}</span>
+            </span>
+          ))}
+        </div>
+        <div style={styles.siFooterCopy}>
+          🎓 &nbsp;Gradely &nbsp;·&nbsp; © {new Date().getFullYear()} Gradely, LLC. All rights reserved.
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1484,6 +2216,7 @@ function GradeSkillRow({ grade, display, skills, onSelect }) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function LearningCloud({ title, color, lines }) {
   return (
     <div style={{ ...styles.learningCloud, borderColor: color }}>
@@ -1538,6 +2271,7 @@ function GradeCatalogCard({ grade, index, progress, onSelectGrade }) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function SkillTile({ skill, index }) {
   const subject = SUBJECTS[skill.subject];
   const Icon = subject.icon;
@@ -1566,6 +2300,7 @@ function SupportCard({ card }) {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function ImpactCard({ card }) {
   return (
     <div style={styles.impactCard}>
@@ -1613,11 +2348,11 @@ function DashboardPreview({ stats, progress, onClick }) {
         </div>
         <div style={styles.dashStatRow}>
           <span style={{ color: '#6B7280', fontSize: 13 }}>Mastered</span>
-          <strong style={{ color: '#7DCE82' }}>{stats.masteredSkills}</strong>
+          <strong style={{ color: '#059669' }}>{stats.masteredSkills}</strong>
         </div>
         <div style={styles.dashStatRow}>
           <span style={{ color: '#6B7280', fontSize: 13 }}>Best run</span>
-          <strong style={{ color: '#9B5DE5' }}>{stats.bestStreak} in a row</strong>
+          <strong style={{ color: '#0C5CA8' }}>{stats.bestStreak} in a row</strong>
         </div>
       </div>
       <div style={styles.dashCTA}>View full dashboard <ChevronRight size={14} /></div>
@@ -1625,7 +2360,7 @@ function DashboardPreview({ stats, progress, onClick }) {
   );
 }
 
-function ProgressRing({ percentage, size = 80, stroke = 10, color = '#7DCE82' }) {
+function ProgressRing({ percentage, size = 80, stroke = 10, color = '#059669' }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const offset = c - (percentage / 100) * c;
@@ -1717,6 +2452,40 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress }) {
   const skills = getSkillsFor(grade.id, subject);
   const Icon = sub.icon;
 
+  if (grade.id === '8' && subject === 'math') {
+    return (
+      <EighthGradeMathScreen
+        grade={grade}
+        subject={sub}
+        skills={skills}
+        progress={progress}
+        onBack={onBack}
+        onSelectSkill={onSelectSkill}
+      />
+    );
+  }
+
+  if (grade.id === '6' && subject === 'science') {
+    return (
+      <GroupedSkillPlanScreen
+        title="Sixth grade science"
+        intro="Explore sixth grade science skills by category. Select a skill to begin a short adaptive Gradely science quiz."
+        accent="#F97316"
+        groups={GRADE_6_SCIENCE_GROUPS}
+        skills={skills}
+        progress={progress}
+        onBack={onBack}
+        onSelectSkill={onSelectSkill}
+        backLabel={`Back to ${grade.label}`}
+        stats={[
+          { icon: <GemIcon />, value: skills.length, label: 'skills' },
+          { icon: <BookOpen size={22} />, value: Math.max(30, Math.round(skills.length * 1.3)), label: 'lessons' },
+          { icon: <Play size={22} />, value: Math.max(100, skills.length * 5), label: 'videos' },
+        ]}
+      />
+    );
+  }
+
   return (
     <div style={styles.container}>
       <BackBtn onClick={onBack} label={`Back to ${grade.label}`} />
@@ -1776,6 +2545,91 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress }) {
       </div>
     </div>
   );
+}
+
+function EighthGradeMathScreen({ grade, subject, skills, progress, onBack, onSelectSkill }) {
+  return (
+    <GroupedSkillPlanScreen
+      title="Eighth grade math"
+      intro="Explore eighth grade math skills by category. Select a skill to begin a short adaptive Gradely practice quiz."
+      accent="#E6B400"
+      groups={GRADE_8_MATH_GROUPS}
+      skills={skills}
+      progress={progress}
+      onBack={onBack}
+      onSelectSkill={onSelectSkill}
+      backLabel={`Back to ${grade.label}`}
+      stats={[
+        { icon: <GemIcon />, value: skills.length, label: 'skills' },
+        { icon: <BookOpen size={22} />, value: Math.max(24, Math.round(skills.length * 1.5)), label: 'lessons' },
+        { icon: <Play size={22} />, value: Math.max(120, skills.length * 6), label: 'videos' },
+      ]}
+    />
+  );
+}
+
+function GroupedSkillPlanScreen({ title, intro, accent, groups, skills, progress, onBack, onSelectSkill, backLabel, stats }) {
+  const grouped = groups.map(group => ({
+    ...group,
+    skills: skills
+      .filter(skill => skill.categoryLetter === group.letter)
+      .sort((a, b) => a.categoryIndex - b.categoryIndex),
+  })).filter(group => group.skills.length > 0);
+
+  return (
+    <div style={styles.grade8MathPage}>
+      <BackBtn onClick={onBack} label={backLabel} />
+
+      <div style={styles.grade8TopTabs}>
+        {['Grades', 'Topics', 'Week by week', 'Skill plans'].map((tab, index) => (
+          <span key={tab} style={index === 0 ? { ...styles.grade8TabActive, background: '#3DB2FF' } : styles.grade8Tab}>{tab}</span>
+        ))}
+      </div>
+
+      <div style={styles.grade8Header}>
+        <div>
+          <h1 style={{ ...styles.grade8Title, color: accent }}>{title}</h1>
+          <p style={styles.grade8Intro}>{intro}</p>
+          <p style={styles.grade8Switch}>Prefer to view by week? <span>Switch now</span> <ChevronRight size={14} /></p>
+        </div>
+        <div style={styles.grade8Stats}>
+          {stats.map(stat => (
+            <div key={stat.label} style={{ ...styles.grade8StatPill, color: accent, borderColor: accent }}>
+              {stat.icon} <strong>{stat.value}</strong><span>{stat.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={styles.grade8SkillColumns} className="grade8-skill-columns">
+        {grouped.map(group => (
+          <section key={group.letter} style={styles.grade8Group}>
+            <h2 style={styles.grade8GroupTitle}>
+              <span>{group.letter}.</span> {group.title}
+            </h2>
+            <ol style={styles.grade8SkillList}>
+              {group.skills.map(skill => {
+                const mastery = calcMastery(progress[skill.id]);
+                return (
+                  <li key={skill.id} style={styles.grade8SkillItem}>
+                    <button onClick={() => onSelectSkill(skill)} style={styles.grade8SkillLink}>
+                      {skill.categoryIndex} <span>{skill.title}</span>
+                      <span style={styles.grade8Icons}>✎ ⊙</span>
+                      {mastery > 0 && <strong style={styles.grade8Mastery}>{mastery}%</strong>}
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GemIcon() {
+  return <span style={{ fontSize: 22, lineHeight: 1 }}>◇</span>;
 }
 
 // ---------- SKILL PRACTICE SCREEN ----------
@@ -1873,7 +2727,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
               <Target size={16} color="#3DB2FF" /> <span>{questionsToAnswer} questions</span>
             </div>
             <div style={styles.skillMetaItem}>
-              <Brain size={16} color="#9B5DE5" /> <span>Adaptive difficulty</span>
+              <Brain size={16} color="#0891B2" /> <span>Adaptive difficulty</span>
             </div>
             <div style={styles.skillMetaItem}>
               <Lightbulb size={16} color="#FFB627" /> <span>Hints available</span>
@@ -1897,7 +2751,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                   style={{
                     ...styles.progressDot,
                     background: i < sessionStats.total
-                      ? (history[i] ? '#7DCE82' : '#FF6B6B')
+                      ? (history[i] ? '#059669' : '#DC2626')
                       : i === sessionStats.total ? sub.color : '#E5E7EB',
                     transform: i === sessionStats.total ? 'scale(1.2)' : 'scale(1)',
                   }}
@@ -1936,14 +2790,14 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                       onClick={() => setUserAnswer(opt)}
                       style={{
                         ...styles.mcqBtn,
-                        borderColor: isCorrect ? '#7DCE82' : isWrong ? '#FF6B6B' : isSelected ? sub.color : '#E5E7EB',
+                        borderColor: isCorrect ? '#059669' : isWrong ? '#DC2626' : isSelected ? sub.color : '#E5E7EB',
                         background: isCorrect ? '#F0FDF4' : isWrong ? '#FEF2F2' : isSelected ? `${sub.color}15` : 'white',
-                        color: isCorrect ? '#15803D' : isWrong ? '#B91C1C' : '#1F2937',
+                        color: isCorrect ? '#065F46' : isWrong ? '#991B1B' : '#1F2937',
                       }}
                     >
                       <span style={{ flex: 1, textAlign: 'left' }}>{opt}</span>
-                      {isCorrect && <Check size={20} color="#7DCE82" />}
-                      {isWrong && <X size={20} color="#FF6B6B" />}
+                      {isCorrect && <Check size={20} color="#059669" />}
+                      {isWrong && <X size={20} color="#DC2626" />}
                     </button>
                   );
                 })}
@@ -1960,7 +2814,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                   placeholder="Type your answer..."
                   style={{
                     ...styles.fillInput,
-                    borderColor: feedback ? (feedback.correct ? '#7DCE82' : '#FF6B6B') : '#E5E7EB',
+                    borderColor: feedback ? (feedback.correct ? '#059669' : '#DC2626') : '#E5E7EB',
                     background: feedback ? (feedback.correct ? '#F0FDF4' : '#FEF2F2') : 'white',
                   }}
                   onKeyDown={e => e.key === 'Enter' && !feedback && submit()}
@@ -1981,12 +2835,12 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
               <div style={{
                 ...styles.feedback,
                 background: feedback.correct ? '#F0FDF4' : '#FEF2F2',
-                borderColor: feedback.correct ? '#7DCE82' : '#FF6B6B',
+                borderColor: feedback.correct ? '#059669' : '#DC2626',
               }}>
                 <div style={styles.feedbackTop}>
                   <div style={{
                     ...styles.feedbackIcon,
-                    background: feedback.correct ? '#7DCE82' : '#FF6B6B',
+                    background: feedback.correct ? '#059669' : '#DC2626',
                   }}>
                     {feedback.correct ? <Check size={20} color="white" /> : <X size={20} color="white" />}
                   </div>
@@ -2082,7 +2936,7 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
         </div>
         <div style={styles.resultDivider} />
         <div style={styles.resultStat}>
-          <div style={{ ...styles.resultStatValue, color: '#7DCE82' }}>{accuracy}%</div>
+          <div style={{ ...styles.resultStatValue, color: '#059669' }}>{accuracy}%</div>
           <div style={styles.resultStatLabel}>Accuracy</div>
         </div>
       </div>
@@ -2099,8 +2953,313 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
   );
 }
 
+// ---------- PRACTICE HUB ----------
+function PracticeHub({ progress, onPickSkill }) {
+  const featured = Object.values(SKILLS).slice(0, 12);
+  const started = Object.entries(progress)
+    .map(([id, p]) => ({ skill: SKILLS[id], progress: p }))
+    .filter(x => x.skill)
+    .slice(-4)
+    .reverse();
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.productHero}>
+        <div>
+          <div style={styles.eyebrow}>QUIZ PRACTICE</div>
+          <h1 style={styles.dashHeroTitle}>Practice skills by grade and subject</h1>
+          <p style={styles.dashHeroSub}>Start a short adaptive quiz, review hints, and earn points as you go.</p>
+        </div>
+        <div style={styles.heroMiniPanel}>
+          <strong>5-question sessions</strong>
+          <span>Adaptive difficulty, instant feedback, and step-by-step support.</span>
+        </div>
+      </div>
+
+      {started.length > 0 && (
+        <section style={{ marginTop: 28 }}>
+          <SectionHeader title="Continue practicing" subtitle="Pick up from recent skills" />
+          <div style={styles.responsiveGrid} className="responsive-grid">
+            {started.map(({ skill, progress: p }) => (
+              <SkillActionCard key={skill.id} skill={skill} meta={`${calcMastery(p)}% mastery`} action="Resume quiz" onClick={() => onPickSkill(skill)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section style={{ marginTop: 36 }}>
+        <SectionHeader title="Quiz library" subtitle="A curated set of skills ready for practice" />
+        <div style={styles.responsiveGrid} className="responsive-grid">
+          {featured.map(skill => (
+            <SkillActionCard
+              key={skill.id}
+              skill={skill}
+              meta={`${GRADES.find(g => g.id === skill.grade)?.label} · ${SUBJECTS[skill.subject].label}`}
+              action="Start quiz"
+              onClick={() => onPickSkill(skill)}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function SkillActionCard({ skill, meta, action, onClick }) {
+  const subject = SUBJECTS[skill.subject];
+  const Icon = subject.icon;
+  return (
+    <button onClick={onClick} style={styles.actionCard}>
+      <div style={{ ...styles.actionIcon, background: subject.color }}>
+        <Icon size={22} color="white" />
+      </div>
+      <div style={{ textAlign: 'left', flex: 1 }}>
+        <h3 style={styles.actionTitle}>{skill.title}</h3>
+        <p style={styles.actionText}>{skill.description}</p>
+        <div style={styles.actionMeta}>{meta}</div>
+      </div>
+      <span style={styles.actionCta}>{action} <ChevronRight size={15} /></span>
+    </button>
+  );
+}
+
+// ---------- PARENT DASHBOARD ----------
+function ParentDashboard({ stats, progress, onReports, onPractice }) {
+  const accuracy = stats.totalAnswered ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : 0;
+  const activeSkills = Object.keys(progress).length;
+  const weeklyRows = [
+    ['Mon', 12, '#0C5CA8'],
+    ['Tue', 18, '#0891B2'],
+    ['Wed', 8, '#F59E0B'],
+    ['Thu', 24, '#059669'],
+    ['Fri', 15, '#8B5CF6'],
+  ];
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.productHero}>
+        <div>
+          <div style={styles.eyebrow}>PARENT DASHBOARD</div>
+          <h1 style={styles.dashHeroTitle}>Family progress overview</h1>
+          <p style={styles.dashHeroSub}>See what your learner is practicing, where they are growing, and what to try next.</p>
+        </div>
+        <div style={styles.parentSummary}>
+          <div style={styles.parentAvatar}>L</div>
+          <div>
+            <strong>Learner</strong>
+            <span>Grade path: mixed · Plan: Family</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={styles.dashHeroStats}>
+        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#0C5CA8" />
+        <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Accuracy" color="#059669" />
+        <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#0891B2" />
+        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#F59E0B" />
+      </div>
+
+      <section style={{ marginTop: 36 }}>
+        <SectionHeader title="Weekly activity" subtitle="Practice volume by day" />
+        <div style={styles.reportPanel}>
+          {weeklyRows.map(([day, value, color]) => (
+          <div key={day} style={styles.activityRow} className="activity-row">
+              <span>{day}</span>
+              <div style={styles.activityTrack}>
+                <div style={{ ...styles.activityFill, width: `${value * 3}%`, background: color }} />
+              </div>
+              <strong>{value} min</strong>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div style={styles.quickActions}>
+        <button onClick={onReports} style={styles.primaryAction}>Open progress reports</button>
+        <button onClick={onPractice} style={styles.secondaryAction}>Assign practice</button>
+      </div>
+    </div>
+  );
+}
+
+// ---------- PROGRESS REPORTS ----------
+function ProgressReports({ stats, progress, onPractice }) {
+  const subjectRows = Object.entries(SUBJECTS).map(([key, subject]) => {
+    const skills = Object.values(SKILLS).filter(s => s.subject === key);
+    const attempted = skills.filter(s => progress[s.id]?.attempts > 0);
+    const mastered = attempted.filter(s => calcMastery(progress[s.id]) >= 85);
+    const attempts = attempted.reduce((sum, s) => sum + (progress[s.id]?.attempts || 0), 0);
+    return { key, subject, attempted: attempted.length, mastered: mastered.length, total: skills.length, attempts };
+  });
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.productHero}>
+        <div>
+          <div style={styles.eyebrow}>PROGRESS REPORTS</div>
+          <h1 style={styles.dashHeroTitle}>Progress reports</h1>
+          <p style={styles.dashHeroSub}>Printable-style summaries for mastery, activity, and subject coverage.</p>
+        </div>
+        <button onClick={onPractice} style={styles.primaryAction}>Practice recommended skills</button>
+      </div>
+
+      <div style={styles.reportPanel}>
+        <div style={styles.reportHeader}>
+          <strong>Overall summary</strong>
+          <span>{new Date().toLocaleDateString()}</span>
+        </div>
+        <div style={styles.dashHeroStats}>
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#0C5CA8" />
+          <BigStat icon={<CheckCircle2 size={22}/>} value={stats.totalCorrect} label="Correct" color="#059669" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#F59E0B" />
+          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#8B5CF6" />
+        </div>
+      </div>
+
+      <section style={{ marginTop: 32 }}>
+        <SectionHeader title="Subject report" subtitle="Coverage and mastery by curriculum area" />
+        <div style={styles.reportTable}>
+          <div style={{ ...styles.reportRow, ...styles.reportRowHead }} className="report-row">
+            <span>Subject</span><span>Started</span><span>Mastered</span><span>Attempts</span><span>Coverage</span>
+          </div>
+          {subjectRows.map(row => (
+            <div key={row.key} style={styles.reportRow} className="report-row">
+              <span style={{ fontWeight: 800, color: row.subject.color }}>{row.subject.label}</span>
+              <span>{row.attempted}</span>
+              <span>{row.mastered}</span>
+              <span>{row.attempts}</span>
+              <span>{row.total ? Math.round((row.attempted / row.total) * 100) : 0}%</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function AwardIcon() {
+  return <Trophy size={22} />;
+}
+
+// ---------- SUBSCRIPTION / PAYMENT ----------
+function SubscriptionScreen({ onBack, onJoin }) {
+  const plans = [
+    { name: 'Learner', price: '$9', desc: 'For one student practicing at home.', features: ['Adaptive quizzes', 'Progress dashboard', 'Badges and streaks'] },
+    { name: 'Family', price: '$19', desc: 'For parents supporting multiple learners.', features: ['Parent dashboard', 'Progress reports', 'Practice assignments'], featured: true },
+    { name: 'School', price: '$49', desc: 'For classrooms and content teams.', features: ['Admin management', 'Class analytics', 'Curriculum tools'] },
+  ];
+
+  return (
+    <div style={styles.container}>
+      <BackBtn onClick={onBack} label="Back home" />
+      <div style={styles.productHero}>
+        <div>
+          <div style={styles.eyebrow}>SUBSCRIPTION</div>
+          <h1 style={styles.dashHeroTitle}>Choose a Gradely plan</h1>
+          <p style={styles.dashHeroSub}>A payment-ready subscription page with plan selection and checkout details.</p>
+        </div>
+      </div>
+
+      <div style={styles.pricingGrid} className="responsive-grid">
+        {plans.map(plan => (
+          <div key={plan.name} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}) }}>
+            {plan.featured && <div style={styles.planBadge}>Best value</div>}
+            <h2 style={styles.planName}>{plan.name}</h2>
+            <div style={styles.planPrice}>{plan.price}<span>/mo</span></div>
+            <p style={styles.actionText}>{plan.desc}</p>
+            {plan.features.map(feature => (
+              <div key={feature} style={styles.planFeature}><Check size={16} /> {feature}</div>
+            ))}
+            <button onClick={onJoin} style={plan.featured ? styles.primaryAction : styles.secondaryAction}>
+              Select {plan.name}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <section style={{ marginTop: 34 }}>
+        <SectionHeader title="Payment details" subtitle="Demo checkout fields for card billing" />
+        <div style={styles.paymentForm} className="payment-form">
+          <label>Cardholder name<input placeholder="Alex Learner" /></label>
+          <label>Card number<input placeholder="4242 4242 4242 4242" /></label>
+          <label>Expiration<input placeholder="MM / YY" /></label>
+          <label>CVC<input placeholder="123" /></label>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ---------- ADMIN CONTENT MANAGEMENT ----------
+function AdminContentManagement({ onPractice, onReports }) {
+  const catalogStats = [
+    ['Grades', GRADES.length],
+    ['Subjects', Object.keys(SUBJECTS).length],
+    ['Skills', Object.keys(SKILLS).length],
+    ['Questions', Object.values(SKILLS).reduce((sum, skill) => sum + skill.questions.length, 0)],
+  ];
+  const sampleSkills = Object.values(SKILLS).slice(0, 6);
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.productHero}>
+        <div>
+          <div style={styles.eyebrow}>ADMIN CONTENT MANAGEMENT</div>
+          <h1 style={styles.dashHeroTitle}>Curriculum control center</h1>
+          <p style={styles.dashHeroSub}>Review content coverage, manage skill status, and prepare quizzes for learners.</p>
+        </div>
+        <div style={styles.quickActions}>
+          <button onClick={onPractice} style={styles.primaryAction}>Preview practice</button>
+          <button onClick={onReports} style={styles.secondaryAction}>View reports</button>
+        </div>
+      </div>
+
+      <div style={styles.dashHeroStats}>
+        {catalogStats.map(([label, value], idx) => (
+          <BigStat
+            key={label}
+            icon={[<GraduationCap size={22}/>, <BookOpen size={22}/>, <Target size={22}/>, <CheckCircle2 size={22}/>][idx]}
+            value={value}
+            label={label}
+            color={['#0C5CA8', '#0891B2', '#059669', '#F59E0B'][idx]}
+          />
+        ))}
+      </div>
+
+      <section style={{ marginTop: 36 }}>
+        <SectionHeader title="Content queue" subtitle="Sample administrative skill table" />
+        <div style={styles.reportTable}>
+          <div style={{ ...styles.reportRow, ...styles.reportRowHead }} className="report-row">
+            <span>Skill</span><span>Grade</span><span>Subject</span><span>Questions</span><span>Status</span>
+          </div>
+          {sampleSkills.map(skill => (
+            <div key={skill.id} style={styles.reportRow} className="report-row">
+              <span style={{ fontWeight: 800 }}>{skill.title}</span>
+              <span>{GRADES.find(g => g.id === skill.grade)?.label}</span>
+              <span>{SUBJECTS[skill.subject].label}</span>
+              <span>{skill.questions.length}</span>
+              <span style={styles.statusPill}>Published</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section style={{ marginTop: 34 }}>
+        <SectionHeader title="Create content" subtitle="Fast editor controls for future API integration" />
+        <div style={styles.adminForm} className="admin-form">
+          <label>Skill title<input placeholder="Add a new skill title" /></label>
+          <label>Grade<select><option>Pre-K</option><option>Grade 1</option><option>Grade 6</option><option>Grade 12</option></select></label>
+          <label>Subject<select><option>Math</option><option>Language arts</option><option>Science</option><option>Social studies</option></select></label>
+          <label>Question prompt<textarea placeholder="Write a quiz prompt..." /></label>
+          <button style={styles.primaryAction}>Save draft</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 // ---------- DASHBOARD ----------
-function Dashboard({ stats, progress, onPickSkill }) {
+function Dashboard({ title = 'Dashboard', stats, progress, onPickSkill }) {
   const accuracy = stats.totalAnswered > 0
     ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100)
     : 0;
@@ -2141,14 +3300,14 @@ function Dashboard({ stats, progress, onPickSkill }) {
     <div style={styles.container}>
       <div style={styles.dashHero}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#9B5DE5', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
-          <h1 style={styles.dashHeroTitle}>Dashboard</h1>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#0C5CA8', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
+          <h1 style={styles.dashHeroTitle}>{title}</h1>
           <p style={styles.dashHeroSub}>Track your progress and find what to learn next.</p>
         </div>
         <div style={styles.dashHeroStats}>
           <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#3DB2FF" />
           <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#7DCE82" />
-          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#9B5DE5" />
+          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#059669" />
           <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#FB5607" />
         </div>
       </div>
@@ -2191,7 +3350,7 @@ function Dashboard({ stats, progress, onPickSkill }) {
         <SectionHeader
           title="Recommended for you"
           subtitle="Based on your weak areas and unexplored skills"
-          icon={<Brain size={20} color="#9B5DE5" />}
+          icon={<Brain size={20} color="#0891B2" />}
         />
         <div style={styles.recList}>
           {recommendations.length === 0 ? (
@@ -2388,7 +3547,7 @@ function Footer() {
 
 // ---------- HELPERS ----------
 function difficultyLabel(d) { return d === 1 ? 'Easy' : d === 2 ? 'Medium' : 'Hard'; }
-function difficultyColor(d) { return d === 1 ? '#7DCE82' : d === 2 ? '#FFB627' : '#FF6B6B'; }
+function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#D97706' : '#DC2626'; }
 function randomCheer() {
   const cheers = ['Great job! 🎉', 'Awesome! ⭐', 'You got it! 🌟', 'Excellent! 💯', 'Nailed it! 🚀', 'Brilliant! ✨'];
   return cheers[Math.floor(Math.random() * cheers.length)];
@@ -2433,7 +3592,7 @@ function StyleInjector() {
         transform: translateY(-1px);
       }
       input:focus, button:focus-visible {
-        outline: 3px solid #9B5DE544;
+        outline: 3px solid #0C5CA844;
         outline-offset: 2px;
       }
       button { font-family: inherit; }
@@ -2481,28 +3640,72 @@ function StyleInjector() {
         color: #008C2E;
         font-weight: 700;
       }
+      .payment-form label,
+      .admin-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 800;
+        color: #334155;
+      }
+      label input,
+      label select,
+      label textarea {
+        width: 100%;
+        border: 2px solid #D9E7FF;
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-family: ${FONT_BODY};
+        font-size: 14px;
+        background: #F8FBFF;
+      }
+      label textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
 
       @media (max-width: 768px) {
         .grade-card { min-width: 0 !important; }
         input { min-width: 0; }
+        header nav {
+          overflow-x: auto;
+          justify-content: flex-start !important;
+          padding-bottom: 8px !important;
+        }
       }
       @media (max-width: 900px) {
         .hero-clouds,
         .grade-catalog-grid,
+        .grade8-skill-columns,
         .support-grid,
         .impact-grid,
         .home-stats,
-        .promo-cards {
+        .promo-cards,
+        .responsive-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
       }
       @media (max-width: 640px) {
+        .header-top-row {
+          grid-template-columns: 1fr !important;
+        }
         .hero-clouds,
         .grade-catalog-grid,
+        .grade8-skill-columns,
         .support-grid,
         .impact-grid,
         .home-stats,
-        .promo-cards {
+        .promo-cards,
+        .responsive-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .payment-form,
+        .admin-form {
+          grid-template-columns: 1fr !important;
+        }
+        .report-row,
+        .activity-row {
           grid-template-columns: 1fr !important;
         }
       }
@@ -2518,22 +3721,293 @@ const styles = {
   app: {
     minHeight: '100vh',
     fontFamily: FONT_BODY,
-    background: '#F3F7F8',
-    color: '#1F2937',
+    background: '#F0F6FF',
+    color: '#0D2040',
     display: 'flex',
     flexDirection: 'column',
   },
   main: { flex: 1, paddingBottom: 0 },
   container: { maxWidth: 1200, margin: '0 auto', padding: '32px 24px' },
+  productHero: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 24,
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 16,
+    padding: 24,
+    boxShadow: '0 12px 30px rgba(12,92,168,0.08)',
+    flexWrap: 'wrap',
+  },
+  eyebrow: {
+    fontSize: 12,
+    fontWeight: 900,
+    letterSpacing: 1.2,
+    color: '#0C5CA8',
+    textTransform: 'uppercase',
+  },
+  heroMiniPanel: {
+    minWidth: 240,
+    maxWidth: 320,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    background: '#EFF6FF',
+    border: '1px solid #BFDBFE',
+    borderRadius: 14,
+    padding: 16,
+    color: '#1E3A8A',
+  },
+  responsiveGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: 16,
+  },
+  actionCard: {
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 14,
+    padding: 16,
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 14,
+    cursor: 'pointer',
+    textAlign: 'left',
+    boxShadow: '0 8px 18px rgba(12,92,168,0.06)',
+  },
+  actionIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  actionTitle: {
+    margin: 0,
+    fontSize: 17,
+    fontWeight: 900,
+    color: '#0D2040',
+  },
+  actionText: {
+    margin: '6px 0',
+    fontSize: 13,
+    lineHeight: 1.45,
+    color: '#64748B',
+  },
+  actionMeta: {
+    fontSize: 12,
+    color: '#0C5CA8',
+    fontWeight: 800,
+  },
+  actionCta: {
+    marginLeft: 'auto',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
+    color: '#0C5CA8',
+    fontSize: 12,
+    fontWeight: 900,
+    whiteSpace: 'nowrap',
+  },
+  parentSummary: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    background: '#EFF6FF',
+    borderRadius: 14,
+    padding: 14,
+    minWidth: 240,
+  },
+  parentAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: '50%',
+    background: '#0C5CA8',
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 900,
+  },
+  reportPanel: {
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 16,
+    padding: 20,
+    boxShadow: '0 8px 22px rgba(12,92,168,0.06)',
+  },
+  reportHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 16,
+    color: '#334155',
+  },
+  activityRow: {
+    display: 'grid',
+    gridTemplateColumns: '48px 1fr 64px',
+    gap: 12,
+    alignItems: 'center',
+    padding: '10px 0',
+  },
+  activityTrack: {
+    height: 12,
+    borderRadius: 999,
+    background: '#E2E8F0',
+    overflow: 'hidden',
+  },
+  activityFill: {
+    height: '100%',
+    borderRadius: 999,
+  },
+  quickActions: {
+    display: 'flex',
+    gap: 12,
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 24,
+  },
+  primaryAction: {
+    background: '#0C5CA8',
+    color: 'white',
+    border: 'none',
+    borderRadius: 10,
+    padding: '12px 18px',
+    fontSize: 14,
+    fontWeight: 900,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  secondaryAction: {
+    background: 'white',
+    color: '#0C5CA8',
+    border: '2px solid #BFDBFE',
+    borderRadius: 10,
+    padding: '10px 16px',
+    fontSize: 14,
+    fontWeight: 900,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  reportTable: {
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 16,
+    overflow: 'hidden',
+    boxShadow: '0 8px 22px rgba(12,92,168,0.06)',
+  },
+  reportRow: {
+    display: 'grid',
+    gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
+    gap: 12,
+    alignItems: 'center',
+    padding: '14px 18px',
+    borderTop: '1px solid #E2E8F0',
+    fontSize: 14,
+  },
+  reportRowHead: {
+    borderTop: 'none',
+    background: '#EFF6FF',
+    color: '#0C5CA8',
+    fontWeight: 900,
+  },
+  pricingGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: 18,
+    marginTop: 28,
+  },
+  planCard: {
+    position: 'relative',
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 18,
+    padding: 24,
+    boxShadow: '0 8px 24px rgba(12,92,168,0.08)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+  },
+  planFeatured: {
+    border: '2px solid #0C5CA8',
+    transform: 'translateY(-4px)',
+  },
+  planBadge: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    background: '#F59E0B',
+    color: 'white',
+    borderRadius: 999,
+    padding: '4px 10px',
+    fontSize: 11,
+    fontWeight: 900,
+  },
+  planName: {
+    margin: 0,
+    fontFamily: FONT_DISPLAY,
+    fontSize: 28,
+    color: '#0C5CA8',
+  },
+  planPrice: {
+    fontSize: 42,
+    fontWeight: 900,
+    color: '#0D2040',
+  },
+  planFeature: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    color: '#334155',
+    fontSize: 14,
+  },
+  paymentForm: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: 14,
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 16,
+    padding: 20,
+  },
+  adminForm: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: 14,
+    background: 'white',
+    border: '1px solid #D9E7FF',
+    borderRadius: 16,
+    padding: 20,
+  },
+  statusPill: {
+    display: 'inline-flex',
+    width: 'fit-content',
+    borderRadius: 999,
+    background: '#DCFCE7',
+    color: '#15803D',
+    padding: '4px 10px',
+    fontSize: 12,
+    fontWeight: 900,
+  },
 
   // Header
   header: {
-    background: '#43B900',
+    background: '#0C5CA8',
     borderBottom: 'none',
     position: 'sticky',
     top: 0,
     zIndex: 50,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+    boxShadow: '0 2px 12px rgba(12,92,168,0.35)',
   },
   headerInner: {
     maxWidth: 1120, margin: '0 auto', padding: '10px 20px 0',
@@ -2559,15 +4033,15 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.28)',
   },
   logoCapSection: {
-    background: '#0D47A1',
+    background: '#06397A',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: '0 9px',
     fontSize: 18,
-    borderRight: '2px solid rgba(255,255,255,0.18)',
+    borderRight: '2px solid rgba(255,255,255,0.15)',
     flexShrink: 0,
   },
   logoWordmark: {
-    background: 'linear-gradient(135deg, #1565C0 0%, #1976D2 100%)',
+    background: 'linear-gradient(135deg, #0A4F8A 0%, #1668C7 100%)',
     display: 'flex', alignItems: 'center',
     padding: '0 14px 0 9px',
     color: '#FFD740',
@@ -2578,10 +4052,10 @@ const styles = {
   },
   logoIcon: {
     width: 40, height: 40, borderRadius: 12,
-    background: 'linear-gradient(135deg, #9B5DE5 0%, #F15BB5 100%)',
+    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 4px 12px rgba(155,93,229,0.3)',
+    boxShadow: '0 4px 12px rgba(12,92,168,0.3)',
   },
   logoText: { fontFamily: FONT_BODY, fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1 },
   logoTag: { fontSize: 11, color: '#6B7280', marginTop: 2, fontWeight: 500 },
@@ -2749,7 +4223,7 @@ const styles = {
     minHeight: '100vh',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 24, position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #FFF8F0 0%, #F5F0FF 50%, #F0F8FF 100%)',
+    background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #E0F2FE 100%)',
   },
   loginBg: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 },
   loginCard: {
@@ -2761,10 +4235,10 @@ const styles = {
   loginHero: { textAlign: 'center' },
   loginLogo: {
     width: 72, height: 72, margin: '0 auto', borderRadius: 20,
-    background: 'linear-gradient(135deg, #9B5DE5 0%, #F15BB5 100%)',
+    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 8px 24px rgba(155,93,229,0.4)',
+    boxShadow: '0 8px 24px rgba(12,92,168,0.35)',
   },
   loginTitle: {
     fontFamily: FONT_DISPLAY, fontSize: 42, fontWeight: 900,
@@ -2785,11 +4259,11 @@ const styles = {
   },
   primaryBtn: {
     width: '100%', marginTop: 24, padding: '14px 20px',
-    background: 'linear-gradient(135deg, #9B5DE5 0%, #F15BB5 100%)',
+    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
     color: 'white', border: 'none', borderRadius: 14,
     fontSize: 16, fontWeight: 700, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    boxShadow: '0 8px 20px rgba(155,93,229,0.3)',
+    boxShadow: '0 8px 20px rgba(12,92,168,0.35)',
     transition: 'transform 0.1s',
   },
   loginNote: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 16 },
@@ -2803,8 +4277,8 @@ const styles = {
   heroBadge: {
     display: 'inline-flex', alignItems: 'center', gap: 6,
     padding: '6px 12px', borderRadius: 999,
-    background: 'linear-gradient(135deg, #FEE440 0%, #FFB627 100%)',
-    fontSize: 12, fontWeight: 700, color: '#7C2D12',
+    background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
+    fontSize: 12, fontWeight: 700, color: '#1E40AF',
     marginBottom: 16,
   },
   heroTitle: {
@@ -2813,7 +4287,7 @@ const styles = {
     margin: 0, color: '#1F2937',
   },
   heroName: {
-    background: 'linear-gradient(135deg, #9B5DE5 0%, #F15BB5 100%)',
+    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
   },
@@ -2835,7 +4309,7 @@ const styles = {
   redesignHero: {
     position: 'relative',
     minHeight: 398,
-    background: 'linear-gradient(180deg, #BDF8D7 0%, #D5FBC8 70%, #86DCEF 71%, #68CDE9 82%, #51B454 83%, #51B454 100%)',
+    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 55%, #BAE6FD 70%, #7DD3FC 80%, #0C5CA8 83%, #094987 100%)',
     overflow: 'hidden',
     borderBottom: 'none',
   },
@@ -2846,8 +4320,8 @@ const styles = {
     width: '38%',
     height: 120,
     opacity: 1,
-    background: 'linear-gradient(120deg, transparent 0 22%, #8FD7F4 22% 30%, transparent 30%), linear-gradient(90deg, #D9F3FF 0 22%, transparent 22% 28%, #D9F3FF 28% 50%, transparent 50% 56%, #D9F3FF 56% 78%, transparent 78%)',
-    borderBottom: '12px solid #5CAA48',
+    background: 'linear-gradient(120deg, transparent 0 22%, #BAE6FD 22% 30%, transparent 30%), linear-gradient(90deg, #DBEAFE 0 22%, transparent 22% 28%, #DBEAFE 28% 50%, transparent 50% 56%, #DBEAFE 56% 78%, transparent 78%)',
+    borderBottom: '12px solid #0C5CA8',
   },
   heroHills: {
     position: 'absolute',
@@ -2855,7 +4329,7 @@ const styles = {
     right: -90,
     bottom: -54,
     height: 150,
-    background: 'radial-gradient(ellipse at 20% 68%, #50AE45 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #8DCB43 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #83C63E 0 28%, transparent 29%)',
+    background: 'radial-gradient(ellipse at 20% 68%, #094987 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #0C5CA8 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #1A73C8 0 28%, transparent 29%)',
   },
   heroBalloon: {
     position: 'absolute',
@@ -2911,7 +4385,7 @@ const styles = {
   },
   heroKicker: {
     margin: '0 0 26px',
-    color: '#00A8E8',
+    color: '#0C5CA8',
     fontSize: 42,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -2942,11 +4416,11 @@ const styles = {
   heroGreeting: {
     margin: '10px 0 12px',
     fontSize: 13,
-    color: '#287680',
+    color: '#0C5CA8',
     fontWeight: 700,
   },
   heroCta: {
-    background: '#54B900',
+    background: '#0C5CA8',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -2954,10 +4428,125 @@ const styles = {
     fontSize: 16,
     fontWeight: 800,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #2F9600',
+    boxShadow: '0 2px 0 #094987',
+  },
+  ixlHero: {
+    position: 'relative',
+    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 35%, #BAE6FD 70%, #7DD3FC 100%)',
+    overflow: 'hidden',
+    padding: '48px 220px 110px',
+    minHeight: 360,
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  ixlDeco: {
+    position: 'absolute',
+    lineHeight: 1,
+    pointerEvents: 'none',
+    userSelect: 'none',
+    zIndex: 1,
+    filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))',
+  },
+  ixlHeroContent: {
+    position: 'relative',
+    zIndex: 4,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  ixlHeroTitle: {
+    fontFamily: FONT_DISPLAY,
+    fontSize: 46,
+    fontWeight: 400,
+    color: '#0C5CA8',
+    textAlign: 'center',
+    margin: '0 0 28px',
+    letterSpacing: '-0.01em',
+  },
+  ixlHeroIs: {
+    fontWeight: 900,
+    fontStyle: 'italic',
+    color: '#0C5CA8',
+  },
+  ixlCloudsRow: {
+    display: 'flex',
+    gap: 18,
+    justifyContent: 'center',
+    marginBottom: 28,
+    alignItems: 'flex-start',
+  },
+  ixlCloud: {
+    background: 'rgba(255,255,255,0.94)',
+    borderRadius: 20,
+    padding: '22px 22px 16px',
+    textAlign: 'center',
+    width: 228,
+    boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
+  },
+  ixlCloudCenter: {
+    marginTop: 24,
+  },
+  ixlCloudTitle: {
+    fontFamily: FONT_DISPLAY,
+    fontSize: 19,
+    fontWeight: 700,
+    margin: '0 0 10px',
+    lineHeight: 1.3,
+  },
+  ixlCloudBody: {
+    fontSize: 13,
+    color: '#374151',
+    margin: '0 0 12px',
+    lineHeight: 1.6,
+  },
+  ixlMemberBtn: {
+    background: '#F59E0B',
+    color: 'white',
+    border: 'none',
+    borderRadius: 4,
+    padding: '13px 38px',
+    fontSize: 16,
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 3px 0 #B45309',
+    position: 'relative',
+    zIndex: 4,
+  },
+  ixlWater: {
+    position: 'absolute',
+    bottom: 58,
+    left: '35%',
+    right: '35%',
+    height: 28,
+    background: '#38BDF8',
+    borderRadius: '50%',
+    opacity: 0.7,
+    zIndex: 2,
+  },
+  ixlHillBack: {
+    position: 'absolute',
+    bottom: 0,
+    left: '-15%',
+    right: '-15%',
+    height: 85,
+    background: '#0C5CA8',
+    borderRadius: '55% 55% 0 0',
+    zIndex: 2,
+  },
+  ixlHillFront: {
+    position: 'absolute',
+    bottom: 0,
+    left: '-25%',
+    right: '-25%',
+    height: 58,
+    background: '#1A73C8',
+    borderRadius: '45% 45% 0 0',
+    zIndex: 3,
   },
   homePromoBand: {
-    background: '#F4F4F4',
+    background: '#EFF6FF',
     borderBottom: 'none',
     padding: '30px 16px',
   },
@@ -2969,17 +4558,18 @@ const styles = {
     gap: 14,
   },
   promoCard: {
-    background: 'linear-gradient(90deg, #E5FFD4 0%, #D1FDD4 100%)',
-    border: '1px solid #7CE087',
-    borderRadius: '70px 14px 14px 70px',
+    background: '#FFFFFF',
+    border: '1px solid #E5E7EB',
+    borderRadius: 14,
     minHeight: 132,
-    padding: '18px 30px',
+    padding: '22px 28px',
     display: 'flex',
     alignItems: 'center',
-    gap: 24,
+    gap: 20,
     textAlign: 'left',
-    color: '#008C2E',
+    color: '#1F2937',
     cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   },
   promoIcon: {
     width: 52,
@@ -3130,7 +4720,7 @@ const styles = {
     justifyContent: 'center',
   },
   greenCta: {
-    background: '#54B900',
+    background: '#0C5CA8',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -3140,7 +4730,7 @@ const styles = {
     cursor: 'pointer',
   },
   supportBand: {
-    background: 'linear-gradient(180deg, #08AEEA 0%, #04A8D7 100%)',
+    background: 'linear-gradient(180deg, #0C5CA8 0%, #094987 100%)',
     padding: '32px 16px 38px',
     textAlign: 'center',
     color: 'white',
@@ -3183,7 +4773,7 @@ const styles = {
   },
   supportCta: {
     marginTop: 18,
-    background: '#54B900',
+    background: '#F59E0B',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -3273,8 +4863,8 @@ const styles = {
   },
   dashCTA: {
     marginTop: 12, padding: '10px 14px', borderRadius: 10,
-    background: 'linear-gradient(135deg, #9B5DE515, #F15BB515)',
-    color: '#9B5DE5', fontWeight: 700, fontSize: 13,
+    background: 'linear-gradient(135deg, #DBEAFE, #E0F2FE)',
+    color: '#0C5CA8', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
 
@@ -3376,6 +4966,140 @@ const styles = {
   },
   subjectBannerTitle: { fontFamily: FONT_DISPLAY, fontSize: 32, fontWeight: 900, margin: '4px 0' },
   subjectBannerSub: { fontSize: 14, color: '#6B7280', margin: 0 },
+
+  grade8MathPage: {
+    maxWidth: 1220,
+    margin: '0 auto',
+    padding: '16px 24px 42px',
+    background: 'white',
+  },
+  grade8TopTabs: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    borderTop: '1px solid #D1D5DB',
+    background: '#F3F4F6',
+    margin: '-16px -24px 24px',
+    paddingLeft: 48,
+    overflowX: 'auto',
+  },
+  grade8Tab: {
+    padding: '11px 18px',
+    color: '#0088D2',
+    fontSize: 14,
+    whiteSpace: 'nowrap',
+  },
+  grade8TabActive: {
+    padding: '11px 24px',
+    color: 'white',
+    background: '#3DB2FF',
+    fontSize: 14,
+    fontWeight: 800,
+    clipPath: 'polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)',
+    whiteSpace: 'nowrap',
+  },
+  grade8Header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 24,
+    alignItems: 'flex-start',
+    marginBottom: 26,
+  },
+  grade8Title: {
+    margin: 0,
+    fontFamily: FONT_DISPLAY,
+    fontSize: 48,
+    fontWeight: 500,
+    color: '#E6B400',
+  },
+  grade8Intro: {
+    maxWidth: 790,
+    margin: '10px 0 20px',
+    fontSize: 14,
+    lineHeight: 1.45,
+    color: '#374151',
+  },
+  grade8Switch: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
+    margin: 0,
+    color: '#374151',
+    fontSize: 14,
+  },
+  grade8Stats: {
+    display: 'flex',
+    gap: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+  },
+  grade8StatPill: {
+    minWidth: 126,
+    minHeight: 52,
+    border: '1.5px solid #E6B400',
+    borderRadius: 999,
+    color: '#E6B400',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    padding: '8px 14px',
+    fontSize: 12,
+    fontWeight: 700,
+  },
+  grade8SkillColumns: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    columnGap: 52,
+    rowGap: 28,
+  },
+  grade8Group: {
+    minWidth: 0,
+    breakInside: 'avoid',
+  },
+  grade8GroupTitle: {
+    margin: '0 0 8px',
+    fontFamily: FONT_BODY,
+    fontSize: 20,
+    lineHeight: 1.2,
+    color: '#169000',
+  },
+  grade8SkillList: {
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 7,
+  },
+  grade8SkillItem: {
+    minWidth: 0,
+  },
+  grade8SkillLink: {
+    width: '100%',
+    display: 'grid',
+    gridTemplateColumns: '22px 1fr auto auto',
+    alignItems: 'start',
+    gap: 6,
+    background: 'transparent',
+    border: 'none',
+    padding: 0,
+    textAlign: 'left',
+    color: '#315800',
+    fontSize: 14,
+    lineHeight: 1.25,
+    cursor: 'pointer',
+  },
+  grade8Icons: {
+    color: '#668A50',
+    whiteSpace: 'nowrap',
+    fontSize: 12,
+  },
+  grade8Mastery: {
+    color: '#0C5CA8',
+    fontSize: 11,
+    whiteSpace: 'nowrap',
+  },
 
   skillList: { display: 'flex', flexDirection: 'column', gap: 12 },
   skillCard: {
@@ -3590,7 +5314,7 @@ const styles = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
-  recReason: { fontSize: 11, fontWeight: 700, color: '#9B5DE5', textTransform: 'uppercase', letterSpacing: 0.5 },
+  recReason: { fontSize: 11, fontWeight: 700, color: '#0891B2', textTransform: 'uppercase', letterSpacing: 0.5 },
   recTitle: { fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 800, color: '#1F2937', marginTop: 2 },
   recMeta: { fontSize: 12, color: '#6B7280', marginTop: 4 },
 
@@ -3632,7 +5356,7 @@ const styles = {
   badgeEarned: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
     padding: '4px 10px', borderRadius: 999,
-    background: '#7DCE82', color: 'white', fontSize: 11, fontWeight: 700,
+    background: '#059669', color: 'white', fontSize: 11, fontWeight: 700,
   },
   badgeLocked: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -3645,6 +5369,208 @@ const styles = {
     padding: 32, textAlign: 'center', borderRadius: 14,
     background: '#F9FAFB', border: '1px dashed #E5E7EB',
     color: '#6B7280', fontSize: 14,
+  },
+
+  // Sign In page
+  siHero: {
+    position: 'relative',
+    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 55%, #0C5CA8 100%)',
+    minHeight: 320,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '44px 24px 80px',
+    overflow: 'hidden',
+  },
+  siDeco: {
+    position: 'absolute',
+    lineHeight: 1,
+    pointerEvents: 'none',
+    userSelect: 'none',
+    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.12))',
+  },
+  siCard: {
+    background: 'white',
+    borderRadius: 10,
+    padding: '28px 32px 0',
+    width: 340,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+    position: 'relative',
+    zIndex: 2,
+    flexShrink: 0,
+  },
+  siCardTitle: {
+    textAlign: 'center',
+    color: '#0C5CA8',
+    fontFamily: FONT_DISPLAY,
+    fontSize: 26,
+    fontWeight: 700,
+    margin: '0 0 22px',
+  },
+  siField: { marginBottom: 14 },
+  siFieldRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  siLabel: {
+    fontSize: 13,
+    color: '#374151',
+    fontWeight: 500,
+  },
+  siForgot: {
+    fontSize: 12,
+    color: '#F59E0B',
+    cursor: 'pointer',
+    fontWeight: 500,
+  },
+  siInput: {
+    width: '100%',
+    height: 34,
+    border: '1px solid #D1D5DB',
+    borderRadius: 3,
+    padding: '0 9px',
+    fontSize: 14,
+    fontFamily: FONT_BODY,
+    outline: 'none',
+    display: 'block',
+    boxSizing: 'border-box',
+  },
+  siBtnRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 16,
+    margin: '18px 0 0',
+  },
+  siBtn: {
+    background: '#0C5CA8',
+    color: 'white',
+    border: 'none',
+    borderRadius: 4,
+    padding: '10px 28px',
+    fontSize: 15,
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 2px 0 #094987',
+  },
+  siRemember: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 13,
+    color: '#374151',
+    cursor: 'pointer',
+    fontWeight: 500,
+  },
+  siLaunchCard: {
+    borderTop: '1px dashed #E5E7EB',
+    margin: '18px -32px 0',
+    padding: '13px 32px',
+    textAlign: 'center',
+    fontSize: 13,
+    color: '#0070CC',
+    cursor: 'pointer',
+    borderRadius: '0 0 10px 10px',
+    background: '#FAFAFA',
+  },
+  siHills: {
+    position: 'absolute',
+    bottom: 0,
+    left: '-10%',
+    right: '-10%',
+    height: 56,
+    background: '#094987',
+    borderRadius: '60% 60% 0 0',
+  },
+  siMemberSection: {
+    background: 'white',
+    padding: '52px 24px 48px',
+    textAlign: 'center',
+  },
+  siNotMemberTitle: {
+    color: '#0C5CA8',
+    fontFamily: FONT_DISPLAY,
+    fontSize: 30,
+    fontWeight: 700,
+    margin: '0 0 6px',
+  },
+  siNotMemberSub: {
+    color: '#6B7280',
+    fontSize: 14,
+    margin: '0 0 36px',
+  },
+  siFeatureList: {
+    maxWidth: 520,
+    margin: '0 auto 28px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 28,
+  },
+  siFeatureRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 20,
+    textAlign: 'left',
+  },
+  siFeatureIcon: {
+    width: 68,
+    height: 68,
+    borderRadius: '50%',
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  siFeatureTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    marginBottom: 5,
+    fontFamily: FONT_DISPLAY,
+  },
+  siFeatureText: {
+    fontSize: 13,
+    color: '#6B7280',
+    lineHeight: 1.55,
+  },
+  siCelebrate: {
+    fontSize: 14,
+    color: '#374151',
+    margin: '0 0 22px',
+  },
+  siJoinBtn: {
+    background: '#F59E0B',
+    color: 'white',
+    border: 'none',
+    borderRadius: 4,
+    padding: '13px 44px',
+    fontSize: 16,
+    fontWeight: 700,
+    cursor: 'pointer',
+    boxShadow: '0 2px 0 #B45309',
+  },
+  siFooter: {
+    background: '#F9FAFB',
+    borderTop: '1px solid #E5E7EB',
+    padding: '18px 24px',
+    textAlign: 'center',
+  },
+  siFooterLinks: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  siFooterLink: {
+    color: '#0070CC',
+    cursor: 'pointer',
+    fontSize: 12,
+  },
+  siFooterCopy: {
+    fontSize: 11,
+    color: '#9CA3AF',
   },
 
   // Skill plan cards (exact-skills band)
@@ -3727,9 +5653,9 @@ const styles = {
   },
   testimonialLink: {
     background: 'transparent',
-    border: '1.5px solid #43B900',
+    border: '1.5px solid #0C5CA8',
     borderRadius: 4,
-    color: '#43B900',
+    color: '#0C5CA8',
     fontSize: 13,
     fontWeight: 700,
     padding: '7px 18px',
@@ -3772,7 +5698,7 @@ const styles = {
     maxWidth: 180,
   },
   footerJoinBtn: {
-    background: '#43B900',
+    background: '#F59E0B',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -4042,4 +5968,3 @@ const styles = {
     borderTop: 'none',
   },
 };
-
