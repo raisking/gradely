@@ -35,3 +35,12 @@ Thumbs.db
 # IDE
 .vs
 *.iml
+
+node_modules/
+.cache/
+dist/
+build/
+*.log
+npm-debug.log*
+.env
+.vercel
