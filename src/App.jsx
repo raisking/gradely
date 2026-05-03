@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Sparkles, Trophy, Flame, Star, Target, BookOpen, Calculator, FlaskConical,
-  Globe2, ChevronRight, ChevronLeft, ChevronDown, Check, X, Lightbulb, RotateCcw,
+  Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw,
   TrendingUp, BarChart3, GraduationCap,
   Heart, Crown, ArrowRight, Brain,
   Lock, CheckCircle2, Circle, Play, Settings, Users, Search, UserCircle
@@ -2876,49 +2876,6 @@ function LearningCloud({ title, color, lines }) {
   );
 }
 
-function GradeCatalogCard({ grade, index, progress, onSelectGrade }) {
-  const skills = Object.values(SKILLS).filter(s => s.grade === grade.id);
-  const started = skills.filter(s => calcMastery(progress[s.id]) > 0).length;
-  const subjects = [
-    { key: 'math', label: 'Math' },
-    { key: 'ela', label: 'Language arts' },
-    { key: 'science', label: 'Science' },
-    { key: 'social', label: 'Social studies' },
-  ];
-
-  return (
-    <button
-      onClick={() => onSelectGrade(grade)}
-      style={{ ...styles.catalogCard, borderColor: grade.color }}
-      className="grade-card"
-    >
-      <div style={styles.catalogHead}>
-        <span style={{ ...styles.catalogNumber, background: grade.color }}>{grade.id === 'prek' ? 'P' : grade.id === 'k' ? 'K' : index - 1}</span>
-        <span style={{ ...styles.catalogTitle, color: grade.color }}>{grade.label}</span>
-      </div>
-      <p style={styles.catalogDesc}>
-        {skills.length ? skills.slice(0, 2).map(s => s.title.toLowerCase()).join(', ') : 'New learning paths coming soon'}
-      </p>
-      <div style={styles.catalogRows}>
-        {subjects.map(subject => {
-          const count = skills.filter(skill => skill.subject === subject.key).length;
-          const skillCount = count ? 60 + count * 37 + index * 11 : 65 + index;
-          const videoCount = count ? 40 + count * 31 + index * 7 : 0;
-          return (
-            <div key={subject.key} style={styles.catalogRow}>
-              <span>{subject.label}</span>
-              <span style={{ color: '#0088D2' }}>{count ? `${skillCount} skills ›   |   ${videoCount} videos ›` : `${skillCount} skills ›`}</span>
-            </div>
-          );
-        })}
-      </div>
-      <div style={styles.catalogProgress}>
-        <span>{started}/{skills.length || 1} started</span>
-        <ChevronRight size={14} />
-      </div>
-    </button>
-  );
-}
 
 // eslint-disable-next-line no-unused-vars
 function SkillTile({ skill, index }) {
@@ -2935,19 +2892,6 @@ function SkillTile({ skill, index }) {
   );
 }
 
-function SupportCard({ card }) {
-  const Icon = card.icon;
-  return (
-    <div style={styles.supportCard}>
-      <div style={{ ...styles.supportIcon, color: card.color, borderColor: card.color }}>
-        <Icon size={24} />
-      </div>
-      <h3>{card.title}</h3>
-      <p>{card.text}</p>
-      <span style={{ color: card.color }}>Learn more</span>
-    </div>
-  );
-}
 
 // eslint-disable-next-line no-unused-vars
 function ImpactCard({ card }) {
