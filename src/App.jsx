@@ -651,6 +651,595 @@ const SKILLS = {
       { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'What is the Bill of Rights?', options: ['A list of taxes','First 10 amendments','A type of court','A speech by Lincoln'], answer: 'First 10 amendments', hint: 'It protects individual freedoms.' },
     ],
   },
+
+  // ============ MATH — GRADE 4 ============
+  'math-4-fractions': {
+    id: 'math-4-fractions', subject: 'math', grade: '4',
+    title: 'Fractions & Decimals', description: 'Compare, order, and convert fractions and decimals',
+    explanation: 'A fraction like 3/4 means 3 parts out of 4. Decimals like 0.75 represent the same value. To compare fractions, find a common denominator or convert to decimals.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which fraction is equivalent to 2/4?', options: ['1/2','1/4','3/4','2/3'], answer: '1/2', hint: 'Divide both top and bottom by 2.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What decimal equals 1/2?', options: ['0.25','0.5','0.75','1.0'], answer: '0.5', hint: '1 divided by 2.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which is greater: 3/4 or 1/2?', options: ['3/4','1/2'], answer: '3/4', hint: 'Compare with a common denominator of 4.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '1/4 + 2/4 = ?', options: ['1/4','2/4','3/4','4/4'], answer: '3/4', hint: 'Add numerators; keep denominator.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What is 3/5 as a decimal?', options: ['0.3','0.35','0.6','0.65'], answer: '0.6', hint: '3 ÷ 5.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Order from least to greatest: 1/4, 1/2, 1/3', options: ['1/4, 1/3, 1/2','1/2, 1/3, 1/4','1/3, 1/2, 1/4','1/4, 1/2, 1/3'], answer: '1/4, 1/3, 1/2', hint: 'Convert to decimals: 0.25, 0.33, 0.5.' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: '5/8 − 3/8 = ?', options: ['1/4','1/8','2/8','3/8'], answer: '2/8', hint: 'Subtract numerators; keep denominator.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Which is equivalent to 0.75?', options: ['1/2','2/3','3/4','4/5'], answer: '3/4', hint: '0.75 = 75/100 = 3/4.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'A recipe uses 2/3 cup sugar. Doubled, you need:', options: ['1 cup','4/3 cups','1 1/3 cups','2 cups'], answer: '4/3 cups', hint: '2 × 2/3 = 4/3.' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Which is larger: 0.6 or 5/9?', options: ['0.6','5/9'], answer: '0.6', hint: '5/9 ≈ 0.556, which is less than 0.6.' },
+    ],
+  },
+  'math-4-multiplication': {
+    id: 'math-4-multiplication', subject: 'math', grade: '4',
+    title: 'Multi-Digit Multiplication', description: 'Multiply 2- and 3-digit numbers using place value',
+    explanation: 'To multiply multi-digit numbers, break them into parts. 23 × 4 = (20 × 4) + (3 × 4) = 80 + 12 = 92. This is the distributive property.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '12 × 4 = ?', options: ['44','48','52','56'], answer: '48', hint: '10 × 4 = 40, plus 2 × 4 = 8.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '25 × 3 = ?', options: ['60','65','75','85'], answer: '75', hint: '25 + 25 + 25.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '14 × 5 = ?', options: ['60','65','70','75'], answer: '70', hint: '10 × 5 = 50, plus 4 × 5 = 20.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '36 × 7 = ?', options: ['242','252','256','266'], answer: '252', hint: '30 × 7 = 210, plus 6 × 7 = 42.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: '45 × 6 = ?', options: ['240','250','260','270'], answer: '270', hint: '40 × 6 + 5 × 6.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '23 × 15 = ?', options: ['285','325','345','365'], answer: '345', hint: '23 × 10 = 230, plus 23 × 5 = 115.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: '124 × 3 = ?', options: ['362','372','382','392'], answer: '372', hint: '100 × 3 + 24 × 3.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A school orders 48 boxes with 25 crayons each. How many crayons total?', options: ['1,100','1,200','1,300','1,400'], answer: '1,200', hint: '48 × 25.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: '203 × 4 = ?', options: ['802','812','820','832'], answer: '812', hint: '200 × 4 = 800, plus 3 × 4 = 12.' },
+    ],
+  },
+  'math-4-geometry': {
+    id: 'math-4-geometry', subject: 'math', grade: '4',
+    title: 'Angles & 2D Shapes', description: 'Classify angles and identify polygon properties',
+    explanation: 'Angles are measured in degrees. A right angle = 90°, acute angle < 90°, obtuse angle > 90°. The angles in any triangle always sum to 180°.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A right angle measures:', options: ['45°','60°','90°','180°'], answer: '90°', hint: 'Think of the corner of a square.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'An acute angle is:', options: ['Exactly 90°','Greater than 90°','Less than 90°','Exactly 180°'], answer: 'Less than 90°', hint: '"Acute" means sharp and small.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'How many sides does a pentagon have?', options: ['4','5','6','8'], answer: '5', hint: '"Penta" means five.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The sum of angles in a triangle equals:', options: ['90°','180°','270°','360°'], answer: '180°', hint: 'A flat straight line is 180°.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A triangle with all equal sides is:', options: ['Isosceles','Scalene','Equilateral','Right'], answer: 'Equilateral', hint: '"Equi" means equal.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A quadrilateral with exactly one pair of parallel sides is a:', options: ['Rectangle','Parallelogram','Trapezoid','Rhombus'], answer: 'Trapezoid', hint: 'Only one pair of parallel sides.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'In a triangle, two angles are 60° and 80°. The third angle is:', options: ['30°','40°','50°','60°'], answer: '40°', hint: '180 − 60 − 80 = 40.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'How many degrees are in a full rotation?', options: ['90°','180°','270°','360°'], answer: '360°', hint: 'Think of a full circle.' },
+    ],
+  },
+
+  // ============ MATH — GRADE 6 ============
+  'math-6-ratios': {
+    id: 'math-6-ratios', subject: 'math', grade: '6',
+    title: 'Ratios & Proportions', description: 'Understand and apply ratios, rates, and unit rates',
+    explanation: 'A ratio compares two quantities. 3 cats and 5 dogs → ratio is 3:5. A unit rate shows the rate per 1 unit, like 60 miles per hour. Proportions are equivalent ratios.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the ratio of stars to circles? ⭐⭐⭐🔵🔵', options: ['2:3','3:2','3:5','5:3'], answer: '3:2', hint: 'Stars:circles = 3:2.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A car travels 120 miles in 2 hours. What is the unit rate?', options: ['40 mph','60 mph','80 mph','100 mph'], answer: '60 mph', hint: '120 ÷ 2 = 60 miles per hour.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which ratio is equivalent to 4:6?', options: ['1:2','2:3','3:4','4:5'], answer: '2:3', hint: 'Divide both by 2.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'If 5 pencils cost $2.50, how much is one pencil?', options: ['$0.40','$0.50','$0.60','$0.75'], answer: '$0.50', hint: '2.50 ÷ 5.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Scale: 1 cm = 5 m. A map shows 4 cm. The real distance is:', options: ['4 m','9 m','16 m','20 m'], answer: '20 m', hint: '4 × 5.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A recipe uses 3 cups flour for 24 cookies. For 48 cookies, use:', options: ['4 cups','5 cups','6 cups','8 cups'], answer: '6 cups', hint: 'Double the recipe.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'In a class of 30, the ratio of girls to boys is 2:3. How many girls?', options: ['10','12','15','18'], answer: '12', hint: 'Girls = 2/5 × 30.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'You earn $42 in 6 hours. How much in 10 hours?', options: ['$60','$70','$75','$80'], answer: '$70', hint: 'Unit rate: $7/hr × 10.' },
+    ],
+  },
+  'math-6-integers': {
+    id: 'math-6-integers', subject: 'math', grade: '6',
+    title: 'Integers & Number Line', description: 'Work with positive and negative integers',
+    explanation: 'Integers include positive numbers, negative numbers, and zero. On a number line, negative numbers are left of zero. −3 is less than −1 because it is further left.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which is the lowest temperature? −5°, 0°, 3°, −2°', options: ['−5°','0°','3°','−2°'], answer: '−5°', hint: 'The most negative number is the lowest.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the opposite of −7?', options: ['−14','0','7','14'], answer: '7', hint: 'Opposite means switch the sign.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '−3 + 5 = ?', options: ['−8','−2','2','8'], answer: '2', hint: 'Move 5 steps right from −3.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '−4 + (−6) = ?', options: ['−10','−2','2','10'], answer: '−10', hint: 'Adding two negatives gives a more negative result.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: '8 − (−3) = ?', options: ['5','8','11','16'], answer: '11', hint: 'Subtracting a negative = adding a positive.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'What is the absolute value of −9?', options: ['−9','0','9','81'], answer: '9', hint: 'Absolute value is always the positive distance from 0.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Order from least to greatest: −6, 2, −1, 4', options: ['−6, −1, 2, 4','2, −1, 4, −6','4, 2, −1, −6','−6, 2, −1, 4'], answer: '−6, −1, 2, 4', hint: 'Start from farthest left on the number line.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A submarine at −200 m rises 75 m. New depth?', options: ['−275 m','−125 m','−75 m','275 m'], answer: '−125 m', hint: '−200 + 75 = −125.' },
+    ],
+  },
+  'math-6-expressions': {
+    id: 'math-6-expressions', subject: 'math', grade: '6',
+    title: 'Variable Expressions', description: 'Write, evaluate, and simplify algebraic expressions',
+    explanation: 'A variable is a letter standing for an unknown number. In 3x + 5, if x = 4, the expression equals 3(4) + 5 = 17. Like terms (same variable, same exponent) can be combined.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'If x = 3, what is 2x + 1?', options: ['4','5','7','9'], answer: '7', hint: '2(3) + 1 = 6 + 1.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What expression means "5 more than n"?', options: ['5n','n − 5','n + 5','5 − n'], answer: 'n + 5', hint: '"More than" means add.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Evaluate 4a when a = 6:', options: ['10','14','24','46'], answer: '24', hint: '4 × 6.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Simplify: 3x + 2x', options: ['5','6x','5x','3x²'], answer: '5x', hint: 'Combine like terms.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'If y = 5, evaluate 2y² − 3:', options: ['22','37','47','97'], answer: '47', hint: '2(25) − 3 = 50 − 3.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Which expression means "four less than three times k"?', options: ['4 − 3k','3k − 4','3k + 4','4 + 3k'], answer: '3k − 4', hint: '3 times k, then subtract 4.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Simplify: 5m + 3 − 2m + 7', options: ['3m + 10','7m + 10','3m + 4','7m + 4'], answer: '3m + 10', hint: 'Group m terms: 5m − 2m = 3m; constants: 3 + 7 = 10.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A store sells items for $p each. You buy 4 and use a $3 coupon. Total cost expression:', options: ['4p + 3','4p − 3','p + 3','4(p − 3)'], answer: '4p − 3', hint: '4 items at price p, minus $3 off.' },
+    ],
+  },
+
+  // ============ MATH — GRADE 8 ============
+  'math-8-linear-equations': {
+    id: 'math-8-linear-equations', subject: 'math', grade: '8',
+    title: 'Linear Equations', description: 'Solve one- and two-step equations and inequalities',
+    explanation: 'To solve an equation, perform inverse operations to isolate the variable. For 2x + 3 = 11: subtract 3 → 2x = 8, then divide by 2 → x = 4. For inequalities, flip the sign when multiplying or dividing by a negative.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Solve: x + 7 = 15', options: ['7','8','9','22'], answer: '8', hint: 'Subtract 7 from both sides.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Solve: 3x = 18', options: ['3','5','6','54'], answer: '6', hint: 'Divide both sides by 3.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Solve: 2x − 4 = 10', options: ['3','5','7','9'], answer: '7', hint: 'Add 4, then divide by 2.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Solve: x/5 + 3 = 8', options: ['20','25','35','40'], answer: '25', hint: 'Subtract 3, then multiply by 5.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which inequality means "x is at least 5"?', options: ['x < 5','x ≤ 5','x ≥ 5','x > 5'], answer: 'x ≥ 5', hint: '"At least" includes 5 itself.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Solve: 4(x − 2) = 20', options: ['5','6','7','8'], answer: '7', hint: 'Distribute: 4x − 8 = 20, then solve.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Solve: 3x + 5 = 2x + 9', options: ['1','2','3','4'], answer: '4', hint: 'Move x terms to one side: x = 9 − 5.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A gym charges $25/month plus a $50 join fee. At what month does total cost equal $175?', options: ['4','5','6','7'], answer: '5', hint: '50 + 25m = 175 → m = 5.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Solve: 5 − 2x > 1', options: ['x > 2','x < 2','x > −2','x < −2'], answer: 'x < 2', hint: 'Subtract 5, divide by −2 (flip the inequality sign).' },
+    ],
+  },
+  'math-8-pythagorean': {
+    id: 'math-8-pythagorean', subject: 'math', grade: '8',
+    title: 'Pythagorean Theorem', description: 'Find missing side lengths in right triangles',
+    explanation: 'The Pythagorean Theorem: a² + b² = c², where c is the hypotenuse (longest side, opposite the right angle). To find a missing leg: a = √(c² − b²).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In a right triangle with legs 3 and 4, the hypotenuse is:', options: ['5','6','7','8'], answer: '5', hint: '3² + 4² = 9 + 16 = 25. √25 = 5.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which set forms a right triangle?', options: ['2, 3, 4','3, 4, 5','4, 5, 6','5, 6, 7'], answer: '3, 4, 5', hint: '9 + 16 = 25 ✓.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A ladder 10 m long rests 6 m up a wall. How far from the wall is its base?', options: ['4 m','6 m','8 m','10 m'], answer: '8 m', hint: '6² + b² = 10² → b² = 64.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Legs are 5 and 12. Hypotenuse is:', options: ['13','14','15','17'], answer: '13', hint: '25 + 144 = 169. √169 = 13.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Hypotenuse = 17, one leg = 8. Find the other leg.', options: ['9','12','13','15'], answer: '15', hint: '17² − 8² = 289 − 64 = 225. √225 = 15.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A square has side length 5. Its diagonal is closest to:', options: ['5','7','8','10'], answer: '7', hint: '5² + 5² = 50. √50 ≈ 7.07.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Two streets meet at 90°. One is 9 m and another is 40 m. The diagonal path is:', options: ['41 m','43 m','45 m','49 m'], answer: '41 m', hint: '9² + 40² = 81 + 1600 = 1681. √1681 = 41.' },
+    ],
+  },
+  'math-8-functions': {
+    id: 'math-8-functions', subject: 'math', grade: '8',
+    title: 'Functions & Graphs', description: 'Understand slope, y-intercept, and linear equations y = mx + b',
+    explanation: 'A linear function graphs as a straight line: y = mx + b, where m is the slope (steepness) and b is the y-intercept (where the line crosses the y-axis). Slope = rise/run = (y₂ − y₁)/(x₂ − x₁).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In y = 3x + 2, the slope is:', options: ['−2','2','3','5'], answer: '3', hint: 'm is the coefficient of x.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'In y = 3x + 2, the y-intercept is:', options: ['−2','2','3','5'], answer: '2', hint: 'b is the constant term.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Is (3, 7) a solution to y = 2x + 1?', options: ['Yes','No'], answer: 'Yes', hint: '2(3) + 1 = 7 ✓.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Slope between points (2, 5) and (4, 11) is:', options: ['2','3','4','6'], answer: '3', hint: '(11−5)/(4−2) = 6/2 = 3.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A line through (0, −3) with slope 2. Its equation is:', options: ['y = 2x − 3','y = −3x + 2','y = 2x + 3','y = −2x − 3'], answer: 'y = 2x − 3', hint: 'y = mx + b; b = −3, m = 2.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is a function? (Each x has exactly one y)', options: ['x² + y² = 9','y = 3x + 1','x = 4','y = ±x'], answer: 'y = 3x + 1', hint: 'Each x gives exactly one y value.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'A phone plan: $20 flat + $0.05/text. 100 texts = total cost:', options: ['$22','$25','$27','$30'], answer: '$25', hint: '20 + 0.05 × 100 = 20 + 5.' },
+    ],
+  },
+
+  // ============ MATH — GRADE 10 ============
+  'math-10-algebra2': {
+    id: 'math-10-algebra2', subject: 'math', grade: '10',
+    title: 'Quadratic Functions', description: 'Solve quadratic equations and analyze parabolas',
+    explanation: 'A quadratic has the form ax² + bx + c = 0. Solutions can be found by factoring or the quadratic formula: x = (−b ± √(b²−4ac)) / 2a. The vertex is at x = −b/2a.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The graph of a quadratic function is called a:', options: ['Line','Parabola','Circle','Hyperbola'], answer: 'Parabola', hint: 'It is U-shaped (or ∩-shaped).' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Solve: x² − 9 = 0', options: ['x = 3','x = ±3','x = 9','x = ±9'], answer: 'x = ±3', hint: 'x² = 9; take the square root of both sides.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Solve by factoring: x² + 5x + 6 = 0', options: ['x = 2, 3','x = −2, −3','x = −2, 3','x = 2, −3'], answer: 'x = −2, −3', hint: 'Find two numbers that multiply to 6 and add to 5.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'In y = x² − 4x + 4, the vertex is at:', options: ['(0, 4)','(2, 0)','(4, 4)','(−2, 0)'], answer: '(2, 0)', hint: 'x = −b/2a = 4/2 = 2; y(2) = 4 − 8 + 4 = 0.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'When the discriminant b²−4ac = 0, there is/are:', options: ['Two real solutions','One real solution','No real solutions','Infinite solutions'], answer: 'One real solution', hint: 'The parabola touches the x-axis at exactly one point.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Solve using the quadratic formula: x² − 5x + 6 = 0', options: ['x = 2, 3','x = −2, 3','x = 2, −3','x = −2, −3'], answer: 'x = 2, 3', hint: 'a=1, b=−5, c=6. Discriminant = 25−24=1.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Height h = −16t² + 32t. When does the ball hit the ground?', options: ['t = 1 s','t = 2 s','t = 3 s','t = 4 s'], answer: 't = 2 s', hint: 'Set h = 0: −16t(t − 2) = 0. t = 0 (launch) or t = 2.' },
+    ],
+  },
+
+  // ============ MATH — GRADE 11 ============
+  'math-11-trigonometry': {
+    id: 'math-11-trigonometry', subject: 'math', grade: '11',
+    title: 'Trigonometry', description: 'Use sine, cosine, and tangent in right triangles and the unit circle',
+    explanation: 'In a right triangle: sin(θ) = opposite/hypotenuse, cos(θ) = adjacent/hypotenuse, tan(θ) = opposite/adjacent. Remember SOH-CAH-TOA.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'SOH in SOH-CAH-TOA stands for:', options: ['Sine = Opposite / Hypotenuse','Sine = Opposite × Hypotenuse','Sum Of Hypotenuse','Sine Over Hyperbola'], answer: 'Sine = Opposite / Hypotenuse', hint: 'SOH = Sine, Opposite, Hypotenuse.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'sin(30°) = ?', options: ['0.25','0.5','0.75','1'], answer: '0.5', hint: 'A key angle to memorize.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'cos(60°) = ?', options: ['0.25','0.5','0.75','0.866'], answer: '0.5', hint: 'cos(60°) = sin(30°) = 0.5.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'tan(45°) = ?', options: ['0','0.5','1','√2'], answer: '1', hint: 'At 45°, opposite = adjacent, so tan = 1.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'In a right triangle, opposite = 3, hypotenuse = 5. Find sin(θ):', options: ['3/5','4/5','3/4','5/3'], answer: '3/5', hint: 'sin = opposite/hypotenuse.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A ramp is 10 m long at 30° to the ground. Its height is:', options: ['4 m','5 m','6 m','8 m'], answer: '5 m', hint: 'height = 10 × sin(30°) = 10 × 0.5.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'The Law of Cosines is used when:', options: ['You have a right triangle','You know all three angles','You know two sides and the included angle','You only know one side'], answer: 'You know two sides and the included angle', hint: 'c² = a² + b² − 2ab·cos(C).' },
+    ],
+  },
+
+  // ============ MATH — GRADE 12 ============
+  'math-12-calculus': {
+    id: 'math-12-calculus', subject: 'math', grade: '12',
+    title: 'Intro to Calculus', description: 'Understand limits, derivatives, and basic integrals',
+    explanation: 'A derivative measures instantaneous rate of change (slope of a curve). Power rule: d/dx(xⁿ) = n·xⁿ⁻¹. An integral finds area under a curve. ∫xⁿdx = xⁿ⁺¹/(n+1) + C.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A derivative measures:', options: ['Area under a curve','Rate of change','Total distance','Sum of a series'], answer: 'Rate of change', hint: 'It gives the instantaneous slope at any point.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Using the power rule, d/dx(x³) = ?', options: ['x²','3x²','3x³','x⁴/4'], answer: '3x²', hint: 'Bring down the exponent, reduce by 1.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'd/dx(5x² + 3x − 2) = ?', options: ['5x + 3','10x + 3','10x − 2','5x² + 3'], answer: '10x + 3', hint: 'Differentiate term by term; constants disappear.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The limit as x→2 of (x² − 4)/(x − 2) is:', options: ['0','2','4','Undefined'], answer: '4', hint: 'Factor: (x+2)(x−2)/(x−2) = x+2. At x=2: 4.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: '∫x dx = ?', options: ['1','x','x²','x²/2 + C'], answer: 'x²/2 + C', hint: 'Reverse power rule: add 1 to exponent, divide.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'If f(x) = 3x² − 6x, find f\'(2):', options: ['0','3','6','12'], answer: '6', hint: 'f\'(x) = 6x − 6. f\'(2) = 12 − 6 = 6.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'The definite integral ∫₀² x² dx equals:', options: ['4/3','8/3','4','8'], answer: '8/3', hint: '[x³/3]₀² = 8/3 − 0 = 8/3.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 4 ============
+  'ela-4-figurative-language': {
+    id: 'ela-4-figurative-language', subject: 'ela', grade: '4',
+    title: 'Figurative Language', description: 'Identify and interpret similes, metaphors, and idioms',
+    explanation: 'Figurative language goes beyond literal meaning. A simile compares using "like" or "as." A metaphor says something IS something else. An idiom is a phrase with a special cultural meaning. Hyperbole is an extreme exaggeration.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '"She ran like the wind." This is a:', options: ['Metaphor','Simile','Idiom','Hyperbole'], answer: 'Simile', hint: 'Uses "like" to compare.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '"The classroom was a zoo." This is a:', options: ['Simile','Idiom','Metaphor','Alliteration'], answer: 'Metaphor', hint: 'No "like" or "as" — it says the room IS a zoo.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '"It\'s raining cats and dogs" is an:', options: ['Simile','Metaphor','Idiom','Onomatopoeia'], answer: 'Idiom', hint: 'Animals are not literally falling from the sky!' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Her smile was as bright as the sun." This uses:', options: ['Metaphor','Simile','Alliteration','Hyperbole'], answer: 'Simile', hint: '"As … as" is a simile structure.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What does "break a leg" mean?', options: ['Get hurt','Good luck','Run fast','Sit down'], answer: 'Good luck', hint: 'A common theater idiom meaning good luck.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '"I\'ve told you a million times!" is an example of:', options: ['Simile','Metaphor','Hyperbole','Alliteration'], answer: 'Hyperbole', hint: 'An extreme exaggeration for emphasis.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: '"The stars are diamonds scattered across the sky." This is a:', options: ['Simile','Metaphor','Idiom','Personification'], answer: 'Metaphor', hint: 'The stars ARE diamonds (no "like" or "as").' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: '"The wind whispered through the trees." What is this?', options: ['Simile','Hyperbole','Personification','Idiom'], answer: 'Personification', hint: 'The wind is given a human action (whispering).' },
+    ],
+  },
+  'ela-4-reading-comprehension': {
+    id: 'ela-4-reading-comprehension', subject: 'ela', grade: '4',
+    title: 'Reading Comprehension', description: 'Identify main ideas, details, and text structure',
+    explanation: 'When reading, ask: What is the main idea? What details support it? Texts can be structured as sequence, cause/effect, compare/contrast, or problem/solution. Theme is the big life lesson.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The main idea of a paragraph is:', options: ['A supporting detail','The most important point','The title','The first sentence'], answer: 'The most important point', hint: 'All other sentences support the main idea.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A text describing events in time order uses which structure?', options: ['Compare/Contrast','Cause/Effect','Sequence','Problem/Solution'], answer: 'Sequence', hint: 'Sequence = events in order.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Words like "because," "as a result," and "therefore" signal:', options: ['Compare/Contrast','Sequence','Cause/Effect','Problem/Solution'], answer: 'Cause/Effect', hint: 'These words connect a reason to its outcome.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A biography is BEST described as:', options: ['A made-up story','A poem','The story of a real person\'s life','A set of instructions'], answer: 'The story of a real person\'s life', hint: '"Bio" = life; "graphy" = writing.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What question helps find the THEME of a story?', options: ['Who is the main character?','What is the setting?','What lesson does the story teach?','What happens first?'], answer: 'What lesson does the story teach?', hint: 'Theme is the big message or universal lesson.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'An author uses bold font for a word. Why?', options: ['To show it is a verb','To highlight an important or key term','To show the setting','To show dialogue'], answer: 'To highlight an important or key term', hint: 'Text features like bold draw the reader\'s attention.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which text feature helps a reader find information quickly?', options: ['Introduction','Table of contents','Conclusion','Dialogue'], answer: 'Table of contents', hint: 'Lists chapters and their page numbers.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 5 ============
+  'ela-5-vocabulary': {
+    id: 'ela-5-vocabulary', subject: 'ela', grade: '5',
+    title: 'Context Clues & Vocabulary', description: 'Use context clues and word parts to determine meaning',
+    explanation: 'When you find an unfamiliar word, look at surrounding sentences for clues. Prefixes (un-, re-, pre-) and suffixes (-ful, -less, -tion) also hint at meaning.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '"The gigantic bear towered over the trees." What does GIGANTIC mean?', options: ['Small','Very large','Angry','Friendly'], answer: 'Very large', hint: 'It towered over trees — it must be enormous!' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The prefix "un-" means:', options: ['Again','Before','Not','After'], answer: 'Not', hint: 'Unhappy = not happy.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'The suffix "-less" means:', options: ['Full of','Without','The act of','To do again'], answer: 'Without', hint: 'Careless = without care.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Despite being reluctant, she agreed to go." RELUCTANT means:', options: ['Excited','Willing','Unwilling','Confused'], answer: 'Unwilling', hint: '"Despite" signals contrast — she did NOT want to go.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What is a synonym for COURAGEOUS?', options: ['Timid','Brave','Reckless','Curious'], answer: 'Brave', hint: 'Synonyms share the same meaning.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '"The benevolent teacher helped every struggling student." BENEVOLENT means:', options: ['Strict','Careless','Kind and generous','Confused'], answer: 'Kind and generous', hint: '"Bene-" means good/well.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'What is an antonym for TRANSPARENT?', options: ['Clear','See-through','Opaque','Bright'], answer: 'Opaque', hint: 'Antonyms are opposites. Opaque = not see-through.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: '"The intricate lace took months to create." INTRICATE means:', options: ['Simple','Detailed and complex','Large','Old-fashioned'], answer: 'Detailed and complex', hint: 'It took months — it must be very detailed.' },
+    ],
+  },
+  'ela-5-writing': {
+    id: 'ela-5-writing', subject: 'ela', grade: '5',
+    title: 'Essay Structure & Writing', description: 'Plan and write structured paragraphs and essays',
+    explanation: 'A paragraph has a topic sentence, supporting details, and a concluding sentence. An essay adds an introduction (with a thesis statement) and a conclusion that restates the main idea.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The sentence that states the main idea of a paragraph is the:', options: ['Concluding sentence','Topic sentence','Detail sentence','Transition'], answer: 'Topic sentence', hint: 'It usually comes first and sets up the paragraph.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A concluding sentence in a paragraph should:', options: ['Introduce a new topic','Restate the main idea','Give a new example','Ask a question'], answer: 'Restate the main idea', hint: 'It wraps up what the paragraph said.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which transition word shows contrast?', options: ['Furthermore','In addition','However','For example'], answer: 'However', hint: '"However" = but; it introduces an opposing idea.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The purpose of an introduction is to:', options: ['Summarize the conclusion','Introduce the topic and thesis','List all evidence','Explain each body paragraph'], answer: 'Introduce the topic and thesis', hint: 'It hooks the reader and states the main argument.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A thesis statement is:', options: ['A supporting detail','The title','The writer\'s main argument','The final sentence'], answer: 'The writer\'s main argument', hint: 'Everything in the essay supports this claim.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is the BEST topic sentence for a paragraph about dogs?', options: ['Dogs bark.','There are many types of dogs.','Dogs make ideal pets because they are loyal, trainable, and loving.','My dog is named Max.'], answer: 'Dogs make ideal pets because they are loyal, trainable, and loving.', hint: 'A good topic sentence is specific and states a claim.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Body paragraphs of a persuasive essay should contain:', options: ['Only personal opinions','Unrelated stories','Evidence and reasoning supporting the thesis','Summaries of other essays'], answer: 'Evidence and reasoning supporting the thesis', hint: 'You need facts and logic, not just feelings.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 6 ============
+  'ela-6-literary-devices': {
+    id: 'ela-6-literary-devices', subject: 'ela', grade: '6',
+    title: 'Literary Devices', description: 'Identify foreshadowing, flashback, irony, and allusion',
+    explanation: 'Authors use literary devices to deepen meaning. Foreshadowing hints at future events. Flashback revisits earlier events. Irony is when the opposite of what is expected occurs. Allusion references something well-known.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'When an author hints about what will happen later, it is called:', options: ['Flashback','Foreshadowing','Irony','Allusion'], answer: 'Foreshadowing', hint: '"Fore" means before — a hint of things to come.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A scene that interrupts the story to show an earlier event is a:', options: ['Foreshadowing','Climax','Flashback','Resolution'], answer: 'Flashback', hint: 'You "flash back" to a past moment in time.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A character says "Great, another rainy day" with a frustrated tone. This is:', options: ['Sarcasm/Verbal Irony','Simile','Foreshadowing','Alliteration'], answer: 'Sarcasm/Verbal Irony', hint: 'They say the opposite of what they mean.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Situational irony is when:', options: ['A character says the opposite of what they mean','The audience knows more than characters','The opposite of what is expected happens','The story jumps to the past'], answer: 'The opposite of what is expected happens', hint: 'Reality surprises us by contradicting expectations.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A reference to Spider-Man in a novel would be an example of:', options: ['Alliteration','An allusion','Onomatopoeia','A simile'], answer: 'An allusion', hint: 'An allusion is a reference to a well-known story, person, or event.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"Dark, stormy clouds gathered as the hero began his journey." This is:', options: ['Flashback','Allusion','Foreshadowing','Irony'], answer: 'Foreshadowing', hint: 'Dark clouds hint that trouble lies ahead.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Dramatic irony means:', options: ['The audience knows more than the characters','Characters say the opposite of what they mean','An unexpected event occurs','Comparing two unlike things'], answer: 'The audience knows more than the characters', hint: 'Like knowing a villain is sneaking up on a character who is unaware.' },
+    ],
+  },
+  'ela-6-grammar': {
+    id: 'ela-6-grammar', subject: 'ela', grade: '6',
+    title: 'Advanced Grammar', description: 'Master subject-verb agreement, clauses, and pronoun usage',
+    explanation: 'Subject-verb agreement: singular subjects take singular verbs ("He runs"), plural subjects take plural verbs ("They run"). An independent clause can stand alone; a dependent clause cannot.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which sentence has correct subject-verb agreement?', options: ['The dogs runs fast.','The dog run fast.','The dog runs fast.','The dogs run fastly.'], answer: 'The dog runs fast.', hint: 'Singular subject + singular verb.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '"Although it rained" is a:', options: ['Independent clause','Dependent clause','Complete sentence','Simple sentence'], answer: 'Dependent clause', hint: '"Although" makes it incomplete — it needs more.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which pronoun correctly completes: "Each of the students must bring ___ book."', options: ['their','his or her','its','our'], answer: 'his or her', hint: '"Each" is singular, so use a singular pronoun.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The independent clause in "She smiled when she saw the surprise" is:', options: ['When she saw the surprise','She smiled','She smiled when','Saw the surprise'], answer: 'She smiled', hint: 'An independent clause can stand alone as a complete sentence.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A run-on sentence is:', options: ['Too short','Two sentences incorrectly joined without punctuation','A sentence with many adjectives','A dependent clause'], answer: 'Two sentences incorrectly joined without punctuation', hint: 'Two independent clauses need a period, semicolon, or conjunction.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Correct verb: "Neither the students nor the teacher ___ ready."', options: ['are','were','was','been'], answer: 'was', hint: 'With neither/nor, the verb agrees with the subject closest to it (teacher = singular).' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which sentence uses a semicolon correctly?', options: ['I love pizza; but not anchovies.','She was tired; however, she kept running.','We went to; the store.','He said; "hello."'], answer: 'She was tired; however, she kept running.', hint: 'A semicolon + conjunctive adverb joins two independent clauses.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 7 ============
+  'ela-7-argumentative': {
+    id: 'ela-7-argumentative', subject: 'ela', grade: '7',
+    title: 'Argumentative Writing', description: 'Build arguments with claims, evidence, and counterclaims',
+    explanation: 'An effective argument has: a clear claim (your position), supporting evidence (facts, data, quotes), and addresses counterclaims (opposing views) to show balanced thinking.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The main position in an argument is called the:', options: ['Evidence','Counterclaim','Claim','Conclusion'], answer: 'Claim', hint: 'It is the statement you are trying to prove.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A counterclaim is:', options: ['Your main argument','An opposing viewpoint','A supporting fact','A rhetorical question'], answer: 'An opposing viewpoint', hint: '"Counter" means against.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which type of evidence is strongest in an argument?', options: ['Personal feelings','Statistics from a reliable study','A friend\'s opinion','A rumor'], answer: 'Statistics from a reliable study', hint: 'Evidence should be factual and verifiable.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Why should an argumentative essay address counterclaims?', options: ['To confuse readers','To make the essay longer','To show balanced thinking and refute opposing views','To change the topic'], answer: 'To show balanced thinking and refute opposing views', hint: 'Acknowledging and countering other views strengthens your argument.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'An author who appeals to emotion to persuade is using:', options: ['Logos','Ethos','Pathos','Kairos'], answer: 'Pathos', hint: 'Pathos = emotional appeal.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Logos in an argument refers to:', options: ['Emotional appeal','Appeal to credibility','Logical appeal using facts and reasoning','Timing of the argument'], answer: 'Logical appeal using facts and reasoning', hint: 'Logos = logic and reasoning.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 8 ============
+  'ela-8-literary-analysis': {
+    id: 'ela-8-literary-analysis', subject: 'ela', grade: '8',
+    title: 'Literary Analysis', description: 'Analyze theme, character development, and author\'s craft',
+    explanation: 'Literary analysis goes beyond plot to examine HOW and WHY an author makes choices. Dynamic characters change; static characters don\'t. Theme is the central message. Tone is the author\'s attitude.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A dynamic character is one who:', options: ['Never appears again','Stays exactly the same','Changes significantly during the story','Is always positive'], answer: 'Changes significantly during the story', hint: '"Dynamic" = changing, evolving.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A static character is one who:', options: ['Changes throughout the story','Remains essentially unchanged','Appears in every scene','Has special powers'], answer: 'Remains essentially unchanged', hint: '"Static" = unchanging.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"First person" point of view means:', options: ['Three narrators tell the story','The narrator uses "I" and is a character','An omniscient narrator knows everything','A "you" narrative'], answer: 'The narrator uses "I" and is a character', hint: '"I went to the store" — the narrator participates in the story.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'In literature, "tone" refers to:', options: ['The main conflict','The author\'s attitude toward the subject','The rhyme scheme','The setting'], answer: 'The author\'s attitude toward the subject', hint: 'Tone can be serious, humorous, critical, nostalgic, etc.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: '"The Great Gatsby" is said to explore the corruption of the American Dream. This is its:', options: ['Plot','Setting','Theme','Character'], answer: 'Theme', hint: 'Theme is the universal idea beneath the surface story.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'An author repeats a symbol (like a green light) throughout a novel to:', options: ['Fill word count','Show character movement','Reinforce a theme','Provide comic relief'], answer: 'Reinforce a theme', hint: 'Repeated symbols carry deeper meaning and emphasize the author\'s message.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 9 ============
+  'ela-9-rhetoric': {
+    id: 'ela-9-rhetoric', subject: 'ela', grade: '9',
+    title: 'Rhetoric & Persuasion', description: 'Analyze rhetorical appeals and persuasive techniques',
+    explanation: 'Rhetoric is the art of persuasion. The three main appeals: Ethos (credibility/authority), Pathos (emotion), Logos (logic/facts). Rhetorical devices include anaphora (repetition at clause start) and rhetorical questions.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A doctor saying "As a physician, I recommend..." uses:', options: ['Pathos','Logos','Ethos','Kairos'], answer: 'Ethos', hint: 'Establishing authority or credibility.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'An ad showing a crying child to raise charity funds uses:', options: ['Logos','Ethos','Pathos','Anaphora'], answer: 'Pathos', hint: 'Emotional appeal targeting the audience\'s feelings.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Ask not what your country can do for you; ask what you can do for your country" repeats "ask." This is:', options: ['Antithesis','Anaphora','Alliteration','Hyperbole'], answer: 'Anaphora', hint: 'Repetition of a word/phrase at the beginning of successive clauses.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A rhetorical question is one that:', options: ['Requires a detailed answer','Has no answer','Is meant to make a point, not get an answer','Only experts can answer'], answer: 'Is meant to make a point, not get an answer', hint: '"Is that really what we want for our children?" — the answer is implied.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Analyzing a speech for "purpose, audience, and context" is part of:', options: ['STEAL analysis','SOAPSTone analysis','SWOT analysis','CRAAP analysis'], answer: 'SOAPSTone analysis', hint: 'Speaker, Occasion, Audience, Purpose, Subject, Tone.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 10 ============
+  'ela-10-shakespeare': {
+    id: 'ela-10-shakespeare', subject: 'ela', grade: '10',
+    title: 'Shakespeare & Drama', description: 'Understand dramatic structure and Shakespeare\'s language',
+    explanation: 'Shakespeare wrote in Elizabethan English using iambic pentameter (10 syllables/line: da-DUM × 5). Five-act plays follow: exposition, rising action, climax, falling action, resolution. A soliloquy reveals inner thoughts.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Iambic pentameter has how many syllables per line?', options: ['8','10','12','14'], answer: '10', hint: '5 iambs × 2 syllables each = 10.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A soliloquy is when a character:', options: ['Speaks to another character','Speaks alone on stage to reveal inner thoughts','Sings a song','Argues in court'], answer: 'Speaks alone on stage to reveal inner thoughts', hint: 'Like Hamlet\'s "To be or not to be..."' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Star-crossed lovers" in Romeo and Juliet suggests their fate is controlled by:', options: ['Their families','Destiny/chance','The Prince','Their wealth'], answer: 'Destiny/chance', hint: '"Star-crossed" = opposed by the stars (fate).' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The moment of highest tension in a play is the:', options: ['Exposition','Falling action','Climax','Resolution'], answer: 'Climax', hint: 'The turning point where everything changes.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A tragic hero\'s "fatal flaw" is called:', options: ['Hubris','Nemesis','Catharsis','Hamartia'], answer: 'Hamartia', hint: 'Greek for the character flaw that leads to a hero\'s downfall.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 11 ============
+  'ela-11-american-literature': {
+    id: 'ela-11-american-literature', subject: 'ela', grade: '11',
+    title: 'American Literature', description: 'Analyze major periods and works of American literary history',
+    explanation: 'American literature spans Puritan writings, Romanticism (Emerson, Thoreau), Realism (Twain), Modernism (Fitzgerald, Hemingway), and the Harlem Renaissance (Hughes, Hurston).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Harlem Renaissance was primarily associated with:', options: ['Western expansion','African American cultural expression','Puritan religious writing','The Industrial Revolution'], answer: 'African American cultural expression', hint: 'A flowering of Black art, literature, and music in 1920s Harlem, New York.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: '"Self-Reliance" by Emerson promotes:', options: ['Dependence on government','Conformity to society','Individual thought and trust in oneself','Religious devotion above all'], answer: 'Individual thought and trust in oneself', hint: 'Transcendentalism valued self-reliance and nature.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The "Lost Generation" writers (Hemingway, Fitzgerald) were disillusioned by:', options: ['The Civil War','World War I','The Great Depression','World War II'], answer: 'World War I', hint: 'They felt abandoned by a world that promised progress but delivered carnage.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In "The Great Gatsby," the green light symbolizes:', options: ['Money','Jealousy','The unattainable American Dream','Environmental ideals'], answer: 'The unattainable American Dream', hint: 'Gatsby reaches toward a dream he can never quite grasp.' },
+    ],
+  },
+
+  // ============ ELA — GRADE 12 ============
+  'ela-12-ap-skills': {
+    id: 'ela-12-ap-skills', subject: 'ela', grade: '12',
+    title: 'AP Language & Composition', description: 'Master rhetorical analysis, synthesis essays, and diction',
+    explanation: 'AP Language focuses on analyzing how writers use rhetorical strategies. Key terms: diction (word choice), syntax (sentence structure), anaphora (repeated phrases), and juxtaposition (placing contrasting ideas side by side).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'In a rhetorical analysis, your primary job is to:', options: ['Agree or disagree with the author','Explain the plot','Analyze HOW the author uses language to achieve their purpose','Summarize the text'], answer: 'Analyze HOW the author uses language to achieve their purpose', hint: 'Focus on strategies (how), not content (what).' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A synthesis essay requires you to:', options: ['Write a personal narrative','Analyze a single text deeply','Combine multiple sources to support your argument','Summarize an argument'], answer: 'Combine multiple sources to support your argument', hint: 'You weave cited sources together to build your own argument.' },
+      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'Diction refers to:', options: ['Sentence length','Word choice','Paragraph structure','Punctuation patterns'], answer: 'Word choice', hint: 'Diction = the specific words an author selects.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Syntax refers to:', options: ['Word choice','Sentence structure and arrangement','The tone of a piece','The use of imagery'], answer: 'Sentence structure and arrangement', hint: 'How sentences are built and ordered affects meaning and rhythm.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Short, fragmented sentences create a tone of:', options: ['Calm reflection','Urgency or tension','Humor','Formality'], answer: 'Urgency or tension', hint: 'Short sentences speed up the reader\'s pace and heighten tension.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 2 ============
+  'science-2-weather': {
+    id: 'science-2-weather', subject: 'science', grade: '2',
+    title: 'Weather & Seasons', description: 'Observe weather patterns and understand seasonal change',
+    explanation: 'Weather is the daily atmospheric condition: sunny, cloudy, rainy, snowy. Seasons change because Earth\'s axis tilts as it orbits the Sun. In summer, your hemisphere tilts toward the Sun.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which tool measures temperature?', options: ['Rain gauge','Thermometer','Wind vane','Barometer'], answer: 'Thermometer', hint: 'It measures how hot or cold the air is.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What type of weather brings snow?', options: ['Hot and sunny','Warm and rainy','Cold and wet','Hot and windy'], answer: 'Cold and wet', hint: 'Snow needs freezing temperatures and moisture.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'In which season do many trees lose their leaves?', options: ['Spring','Summer','Fall/Autumn','Winter'], answer: 'Fall/Autumn', hint: 'Leaves change color and fall in autumn.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What causes day and night?', options: ['The Moon orbiting Earth','Earth\'s rotation on its axis','The Sun moving','Clouds blocking sunlight'], answer: 'Earth\'s rotation on its axis', hint: 'Earth spins once every 24 hours.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Dark gray, low clouds usually mean:', options: ['Sunny weather coming','Rain or storms are coming','A hot day','Extreme cold'], answer: 'Rain or storms are coming', hint: 'Dark clouds hold a lot of water.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Why is summer hotter than winter in the United States?', options: ['Earth is closer to the Sun','The Sun moves north','Earth tilts toward the Sun','Days and nights are equal'], answer: 'Earth tilts toward the Sun', hint: 'Earth\'s axial tilt determines how directly sunlight hits each hemisphere.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 4 ============
+  'science-4-ecosystems': {
+    id: 'science-4-ecosystems', subject: 'science', grade: '4',
+    title: 'Ecosystems & Food Chains', description: 'Understand how organisms interact in ecosystems',
+    explanation: 'An ecosystem includes all living things and their environment. Food chains show energy flow. Producers (plants) make food via photosynthesis. Consumers eat other organisms. Decomposers recycle nutrients.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Plants are called PRODUCERS because they:', options: ['Eat other animals','Make their own food through photosynthesis','Break down dead matter','Pollinate flowers'], answer: 'Make their own food through photosynthesis', hint: 'They produce food from sunlight, water, and CO₂.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'In grass → rabbit → fox, the rabbit is a:', options: ['Producer','Primary consumer','Secondary consumer','Decomposer'], answer: 'Primary consumer', hint: 'It eats the producer (grass) directly.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Fungi that break down fallen logs are:', options: ['Producers','Primary consumers','Decomposers','Predators'], answer: 'Decomposers', hint: 'They recycle nutrients back into the soil.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What would happen if all plants disappeared from an ecosystem?', options: ['Only herbivores would survive','All consumers would eventually die','Decomposers would take over','Nothing would change'], answer: 'All consumers would eventually die', hint: 'Without producers, there is no energy source for the food chain.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A habitat provides animals with:', options: ['Only food','Only water','Food, water, shelter, and space','Just a place to sleep'], answer: 'Food, water, shelter, and space', hint: 'All four are needed for animal survival.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A predator-prey relationship means:', options: ['Both animals help each other','One hunts and the other is hunted','Animals compete for the same food','Two animals living peacefully'], answer: 'One hunts and the other is hunted', hint: 'The predator hunts; the prey is hunted.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 6 ============
+  'science-6-chemistry': {
+    id: 'science-6-chemistry', subject: 'science', grade: '6',
+    title: 'Matter & Chemistry', description: 'Classify matter and distinguish physical from chemical changes',
+    explanation: 'Physical changes alter form but not substance (cutting, melting). Chemical changes create new substances (burning, rusting). Elements contain one type of atom. Compounds chemically combine two or more elements.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A physical change:', options: ['Creates a new substance','Changes form but not composition','Cannot be reversed','Always produces a gas'], answer: 'Changes form but not composition', hint: 'Cutting paper is physical — it\'s still paper.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which is a chemical change?', options: ['Cutting wood','Melting ice','Burning paper','Tearing cloth'], answer: 'Burning paper', hint: 'Burning creates ash — a new substance.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'An element is a pure substance made of:', options: ['Two or more types of atoms','Only one type of atom','Molecules and compounds','Water and air'], answer: 'Only one type of atom', hint: 'Gold, oxygen, carbon are elements — only one atom type each.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Water (H₂O) is an example of a:', options: ['Element','Mixture','Compound','Pure element'], answer: 'Compound', hint: 'Two or more elements chemically combined in a fixed ratio.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A mixture differs from a compound because:', options: ['Mixtures contain only one element','Mixtures can be separated physically','Compounds are easily separated','Compounds have no fixed composition'], answer: 'Mixtures can be separated physically', hint: 'Saltwater can be separated by evaporation — no chemical change needed.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Signs of a chemical reaction include:', options: ['Only temperature change','Color change, gas, light/heat, precipitate','Melting and freezing only','Change in shape'], answer: 'Color change, gas, light/heat, precipitate', hint: 'New substances form with multiple observable changes.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 7 ============
+  'science-7-physics': {
+    id: 'science-7-physics', subject: 'science', grade: '7',
+    title: 'Force & Motion', description: 'Apply Newton\'s Laws to real-world motion problems',
+    explanation: 'Newton\'s 3 Laws: (1) Inertia — objects stay at rest or in motion unless a net force acts. (2) F = ma — force equals mass times acceleration. (3) Every action has an equal and opposite reaction.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Newton\'s First Law is called the law of:', options: ['Action-Reaction','Acceleration','Inertia','Gravity'], answer: 'Inertia', hint: 'Objects resist changes in their state of motion.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'F = ma means force equals:', options: ['Mass × Acceleration','Mass + Acceleration','Mass − Acceleration','Mass / Acceleration'], answer: 'Mass × Acceleration', hint: 'Newton\'s Second Law.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A ball rolling on a floor slows due to:', options: ['Gravity','Inertia','Friction','Newton\'s Third Law'], answer: 'Friction', hint: 'The floor resists the ball\'s motion.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A 10 kg object accelerates at 3 m/s². The force is:', options: ['3 N','7 N','13 N','30 N'], answer: '30 N', hint: 'F = 10 × 3 = 30 N.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A gun recoils when fired. This is Newton\'s:', options: ['First Law','Second Law','Third Law','Law of Gravity'], answer: 'Third Law', hint: 'Every action has an equal and opposite reaction.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'On the Moon, gravity is weaker. An object\'s MASS would:', options: ['Decrease','Increase','Stay the same','Become zero'], answer: 'Stay the same', hint: 'Mass is the amount of matter — it doesn\'t change with gravity. Weight does.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 9 ============
+  'science-9-biology': {
+    id: 'science-9-biology', subject: 'science', grade: '9',
+    title: 'Cell Biology & Genetics', description: 'Understand cell structure, DNA, and Mendelian genetics',
+    explanation: 'Cells are the basic unit of life. DNA stores genetic information in the nucleus. Genes determine traits. Dominant alleles mask recessive ones. Mitosis creates identical daughter cells; meiosis creates sex cells.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The "powerhouse of the cell" is the:', options: ['Nucleus','Ribosome','Mitochondria','Cell wall'], answer: 'Mitochondria', hint: 'It produces ATP through cellular respiration.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'DNA is stored in the:', options: ['Mitochondria','Ribosome','Nucleus','Cell membrane'], answer: 'Nucleus', hint: 'The nucleus is the cell\'s control center.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'In a Punnett square, if both parents are Bb, the probability of BB offspring is:', options: ['0%','25%','50%','75%'], answer: '25%', hint: 'Bb × Bb gives BB, Bb, Bb, bb. Only 1 in 4 is BB.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Mitosis results in:', options: ['2 identical daughter cells','4 cells with half the chromosomes','Genetic variation only','Sex cells'], answer: '2 identical daughter cells', hint: 'Mitosis = growth and repair; meiosis = sex cells.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A plant with genotype Tt (tall dominant over short) has which phenotype?', options: ['Short','Tall','Medium','Cannot determine'], answer: 'Tall', hint: 'One dominant allele (T) is enough to express the dominant trait.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 10 ============
+  'science-10-chemistry': {
+    id: 'science-10-chemistry', subject: 'science', grade: '10',
+    title: 'Chemical Reactions & Stoichiometry', description: 'Balance equations and calculate moles and mass',
+    explanation: 'A balanced chemical equation has equal numbers of atoms on each side. Stoichiometry uses molar ratios to calculate products/reactants. One mole = 6.02 × 10²³ particles (Avogadro\'s number).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In a chemical equation, coefficients represent:', options: ['Number of atoms in one molecule','Number of molecules or moles','Type of bond','Energy released'], answer: 'Number of molecules or moles', hint: '2H₂ + O₂ → 2H₂O: 2 moles of H₂ react with 1 mole of O₂.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Balance: H₂ + O₂ → H₂O. Correct coefficients are:', options: ['1, 1, 1','2, 1, 2','1, 2, 2','2, 2, 1'], answer: '2, 1, 2', hint: '2H₂ + O₂ → 2H₂O: 4 H and 2 O on each side.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'One mole of any substance contains approximately:', options: ['6.02 × 10²³ particles','1000 particles','6.02 × 10¹² particles','1 × 10⁶ particles'], answer: '6.02 × 10²³ particles', hint: 'Avogadro\'s number.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In 2H₂ + O₂ → 2H₂O, how many moles of water form from 4 moles of H₂?', options: ['2','4','6','8'], answer: '4', hint: 'Ratio is 2H₂ : 2H₂O = 1:1, so 4 mol H₂ → 4 mol H₂O.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 11 ============
+  'science-11-physics': {
+    id: 'science-11-physics', subject: 'science', grade: '11',
+    title: 'Kinematics & Dynamics', description: 'Analyze motion, velocity, acceleration, and energy',
+    explanation: 'Velocity = displacement/time (vector). Acceleration = Δvelocity/time. Kinetic energy KE = ½mv². Potential energy PE = mgh. The Law of Conservation of Energy: total energy remains constant.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Velocity is:', options: ['Speed in any direction','Speed with a specific direction','Just distance','Just time'], answer: 'Speed with a specific direction', hint: 'Velocity is a vector — it includes both magnitude and direction.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A car goes from 0 to 60 m/s in 10 s. Its acceleration is:', options: ['6 m/s²','60 m/s²','600 m/s²','0.6 m/s²'], answer: '6 m/s²', hint: 'a = Δv/t = 60/10 = 6 m/s².' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Kinetic energy depends on:', options: ['Mass and height','Mass and velocity','Weight and speed','Force and distance'], answer: 'Mass and velocity', hint: 'KE = ½mv².' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A 2 kg ball at 3 m/s has kinetic energy of:', options: ['6 J','9 J','12 J','18 J'], answer: '9 J', hint: 'KE = ½ × 2 × 3² = 1 × 9 = 9 J.' },
+    ],
+  },
+
+  // ============ SCIENCE — GRADE 12 ============
+  'science-12-ap-biology': {
+    id: 'science-12-ap-biology', subject: 'science', grade: '12',
+    title: 'AP Biology', description: 'Evolution, ecology, and advanced cellular processes',
+    explanation: 'Evolution occurs through natural selection: organisms with favorable traits survive and reproduce. Hardy-Weinberg equilibrium describes non-evolving populations. Cellular respiration (mitochondria) and photosynthesis (chloroplasts) are complementary energy processes.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'Natural selection acts directly on:', options: ['Genotypes','Phenotypes','Allele frequencies alone','Random mutations'], answer: 'Phenotypes', hint: 'The environment selects for observable traits, not hidden genotypes.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Hardy-Weinberg equilibrium requires:', options: ['Large population, no migration, no mutation, no selection, random mating','Small population with lots of mutation','Natural selection and genetic drift','Migration and mutation only'], answer: 'Large population, no migration, no mutation, no selection, random mating', hint: 'Five conditions — if all met, allele frequencies don\'t change (no evolution).' },
+      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'The electron transport chain occurs in the:', options: ['Cytoplasm','Nucleus','Inner mitochondrial membrane','Ribosome'], answer: 'Inner mitochondrial membrane', hint: 'The ETC is embedded in the inner mitochondrial membrane, driving ATP synthesis.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 1 ============
+  'social-1-community': {
+    id: 'social-1-community', subject: 'social', grade: '1',
+    title: 'My Community', description: 'Learn about community helpers, neighborhoods, and maps',
+    explanation: 'A community is a place where people live, work, and play together. Community helpers (firefighters, doctors, teachers) keep us safe and healthy. Maps show places from above.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which community helper puts out fires?', options: ['Doctor','Firefighter','Teacher','Baker'], answer: 'Firefighter', hint: 'They use hoses and fire trucks.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Where do you go to borrow books for free?', options: ['Bank','Library','Hospital','Fire station'], answer: 'Library', hint: 'Books are organized on shelves for everyone to borrow.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'A map shows:', options: ['How things taste','A view of a place from above','The weather','How people feel'], answer: 'A view of a place from above', hint: 'Maps show streets, buildings, and landmarks from a bird\'s-eye view.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Urban" means:', options: ['Countryside with farms','Small villages','A city or densely populated area','Forest or jungle'], answer: 'A city or densely populated area', hint: 'Urban = city; rural = countryside.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which area has the most people per square mile?', options: ['Rural','Suburban','Urban','Wilderness'], answer: 'Urban', hint: 'Cities are the most densely populated.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Rules in a community help people:', options: ['Stay inside all day','Live safely and fairly together','Ignore their neighbors','Avoid all laws'], answer: 'Live safely and fairly together', hint: 'Rules protect everyone\'s rights and safety.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 3 ============
+  'social-3-us-history': {
+    id: 'social-3-us-history', subject: 'social', grade: '3',
+    title: 'Early American History', description: 'Learn about Native Americans, colonists, and the Revolution',
+    explanation: 'Native Americans were the first people in North America. European colonists arrived starting in the 1400s. The colonists declared independence from Britain on July 4, 1776.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Who were the first people to live in North America?', options: ['Colonists','Native Americans','Pilgrims','Vikings'], answer: 'Native Americans', hint: 'They lived here long before Europeans arrived.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Pilgrims sailed to America on which ship?', options: ['Santa Maria','Mayflower','Niña','Pinta'], answer: 'Mayflower', hint: 'They landed at Plymouth Rock in 1620.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Declaration of Independence was signed in:', options: ['1492','1620','1776','1865'], answer: '1776', hint: 'July 4, 1776 — now celebrated as Independence Day!' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The American Revolution was a conflict between:', options: ['North and South America','Colonists and Great Britain','Spain and France','Native Americans and colonists'], answer: 'Colonists and Great Britain', hint: 'The colonists wanted freedom from British rule and taxation.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Who was the first President of the United States?', options: ['Abraham Lincoln','Thomas Jefferson','Benjamin Franklin','George Washington'], answer: 'George Washington', hint: 'He led the Continental Army and became president in 1789.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 5 ============
+  'social-5-us-geography': {
+    id: 'social-5-us-geography', subject: 'social', grade: '5',
+    title: 'U.S. Geography', description: 'Identify U.S. regions, rivers, mountains, and landmarks',
+    explanation: 'The U.S. has five major regions: Northeast, Southeast, Midwest, Southwest, and West. Key features: Rocky Mountains (West), Mississippi River (Midwest/South), and the Great Plains (Midwest).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The longest river in the United States is the:', options: ['Colorado River','Hudson River','Mississippi River','Ohio River'], answer: 'Mississippi River', hint: 'It runs from Minnesota to the Gulf of Mexico.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which ocean is on the West Coast of the U.S.?', options: ['Atlantic Ocean','Arctic Ocean','Indian Ocean','Pacific Ocean'], answer: 'Pacific Ocean', hint: 'Pacific = west; Atlantic = east.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Rocky Mountains are in which region?', options: ['Northeast','Southeast','Midwest','West'], answer: 'West', hint: 'They run through Colorado, Wyoming, and Montana.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which Great Lake is the largest by surface area?', options: ['Lake Ontario','Lake Erie','Lake Michigan','Lake Superior'], answer: 'Lake Superior', hint: 'Superior is the largest of all five Great Lakes.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Great Plains are known for:', options: ['Dense forests','Flat land used for farming and ranching','Towering mountains','A desert climate'], answer: 'Flat land used for farming and ranching', hint: 'Often called the "breadbasket of America" — vast farms and cattle ranches.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 7 ============
+  'social-7-world-history': {
+    id: 'social-7-world-history', subject: 'social', grade: '7',
+    title: 'Ancient Civilizations', description: 'Study ancient Egypt, Greece, Rome, and Mesopotamia',
+    explanation: 'Ancient civilizations developed near rivers where farming thrived. Mesopotamia ("between two rivers") is the "Cradle of Civilization." Greece gave us democracy. Rome built a republic that became an empire.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which river was central to ancient Egyptian civilization?', options: ['Amazon','Nile','Ganges','Tigris'], answer: 'Nile', hint: 'Annual Nile floods enriched the farmland.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Mesopotamia was located between which two rivers?', options: ['Nile and Congo','Amazon and Parana','Tigris and Euphrates','Yangtze and Yellow'], answer: 'Tigris and Euphrates', hint: 'Mesopotamia means "between two rivers" in Greek.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Ancient Greece is considered the birthplace of:', options: ['Writing','Democracy','Monotheism','Paper'], answer: 'Democracy', hint: 'Athenian citizens voted on laws and leaders.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The Roman Republic became an empire when:', options: ['Greece was conquered','Julius Caesar was elected','Augustus became the first emperor','Rome was sacked'], answer: 'Augustus became the first emperor', hint: 'Augustus (Octavian) became emperor after Caesar\'s assassination in 44 BCE.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Code of Hammurabi was significant because it was:', options: ['A Greek epic poem','One of the earliest written legal codes','An Egyptian religious text','A Roman military manual'], answer: 'One of the earliest written legal codes', hint: 'Created in ancient Babylon around 1754 BCE.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 9 ============
+  'social-9-economics': {
+    id: 'social-9-economics', subject: 'social', grade: '9',
+    title: 'Economics Basics', description: 'Understand supply, demand, scarcity, and economic systems',
+    explanation: 'Economics studies how people use limited resources. Scarcity means wants exceed available resources. Supply and demand determine prices: high demand + low supply → higher prices. Opportunity cost is what you give up when making a choice.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Scarcity in economics means:', options: ['Everything is free','Wants exceed available resources','There is enough of everything','Prices are always high'], answer: 'Wants exceed available resources', hint: 'Resources (time, money, goods) are always limited.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'If demand rises but supply stays the same, the price will:', options: ['Fall','Stay the same','Rise','Become zero'], answer: 'Rise', hint: 'More buyers competing for the same amount → sellers charge more.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Opportunity cost is:', options: ['The price of a product','The next best alternative given up when making a choice','A type of tax','The cost of production'], answer: 'The next best alternative given up when making a choice', hint: 'Every choice means giving up something else.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In a market economy, prices are primarily determined by:', options: ['Government decisions','Supply and demand','Business owners alone','International trade'], answer: 'Supply and demand', hint: 'Buyers and sellers interact freely to set prices.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 10 ============
+  'social-10-world-history': {
+    id: 'social-10-world-history', subject: 'social', grade: '10',
+    title: 'World War Era', description: 'Analyze the causes and consequences of WWI and WWII',
+    explanation: 'WWI (1914-1918) was caused by MAIN: Militarism, Alliances, Imperialism, Nationalism. WWII (1939-1945) arose from the Great Depression, fascism, and unresolved WWI tensions. The Holocaust was the systematic genocide of 6 million Jews.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'MAIN stands for causes of WWI. The "M" stands for:', options: ['Money','Militarism','Migration','Manufacturing'], answer: 'Militarism', hint: 'Nations were rapidly building up massive armies and navies.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The immediate trigger for WWI was:', options: ['Germany invading Poland','The assassination of Archduke Franz Ferdinand','The bombing of Pearl Harbor','The Treaty of Versailles'], answer: 'The assassination of Archduke Franz Ferdinand', hint: 'Shot in Sarajevo in June 1914 by a Serbian nationalist.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Holocaust refers to:', options: ['Allied bombing campaigns','The German invasion of France','The Nazi genocide of approximately 6 million Jews','The destruction of Hiroshima'], answer: 'The Nazi genocide of approximately 6 million Jews', hint: 'A systematic murder program carried out by Nazi Germany 1941-1945.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'The Treaty of Versailles (1919) contributed to WWII by:', options: ['Creating the United Nations','Promoting European prosperity','Placing harsh penalties on Germany that fueled resentment','Giving Germany new territories'], answer: 'Placing harsh penalties on Germany that fueled resentment', hint: 'Reparations and humiliation created conditions for Hitler\'s rise.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 11 ============
+  'social-11-government': {
+    id: 'social-11-government', subject: 'social', grade: '11',
+    title: 'U.S. Government & Politics', description: 'Understand the Constitution, civil rights, and political processes',
+    explanation: 'The U.S. Constitution created three branches with checks and balances. The Bill of Rights protects individual freedoms. The Civil Rights Movement fought to extend constitutional rights to all Americans.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Checks and balances means:', options: ['Balancing the federal budget','Each branch limits the others\' power','States check federal power only','Citizens vote on all laws'], answer: 'Each branch limits the others\' power', hint: 'No single branch has unchecked authority.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The First Amendment protects:', options: ['The right to bear arms','Freedom of speech, religion, press, assembly, and petition','The right to a jury trial','Protection against unreasonable searches'], answer: 'Freedom of speech, religion, press, assembly, and petition', hint: 'The 1st Amendment covers five fundamental freedoms.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Civil Rights Act of 1964 banned:', options: ['Segregation in schools only','Discrimination based on race, color, religion, sex, or national origin','Employment discrimination only','All voting restrictions'], answer: 'Discrimination based on race, color, religion, sex, or national origin', hint: 'It applied broadly to public places, employment, and more.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Judicial review — the Supreme Court\'s power to strike down laws — was established in:', options: ['The Constitution itself','Marbury v. Madison','McCulloch v. Maryland','Brown v. Board of Education'], answer: 'Marbury v. Madison', hint: '1803 case that established this foundational principle of constitutional law.' },
+    ],
+  },
+
+  // ============ SOCIAL STUDIES — GRADE 12 ============
+  'social-12-ap-us-history': {
+    id: 'social-12-ap-us-history', subject: 'social', grade: '12',
+    title: 'AP U.S. History', description: 'Advanced analysis of American historical themes and causation',
+    explanation: 'AP US History requires analyzing primary sources, understanding causation, and writing evidence-based arguments. Key themes: American identity, migration and settlement, work and exchange, politics and power.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'Manifest Destiny was the belief that:', options: ['Native Americans should be assimilated','The U.S. was destined to expand across North America','States had rights over the federal government','America should avoid foreign affairs'], answer: 'The U.S. was destined to expand across North America', hint: 'The "obvious fate" to stretch from sea to shining sea.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The primary cause of the Civil War was:', options: ['Economic differences between North and South','Slavery and its expansion into new territories','States\' rights to nullify federal law','Lincoln\'s election alone'], answer: 'Slavery and its expansion into new territories', hint: 'Slavery underpinned all other sectional conflicts.' },
+      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'The New Deal (1933-1939) was primarily a response to:', options: ['WWI debt','The Great Depression','Soviet expansionism','An immigration crisis'], answer: 'The Great Depression', hint: 'FDR\'s programs aimed to relieve suffering, recover the economy, and reform institutions.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A primary source is:', options: ['A textbook summary','A document or artifact from the time period being studied','A historian\'s interpretation','A recent encyclopedia entry'], answer: 'A document or artifact from the time period being studied', hint: 'Letters, newspapers, photographs, speeches from the era itself are primary sources.' },
+    ],
+  },
 };
 
 const GRADE_8_MATH_GROUPS = [
@@ -1621,188 +2210,248 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
 }
 
 function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard }) {
-  const supportCards = [
-    { icon: Brain,      title: 'Comprehensive curriculum', text: 'Pre-K through grade 12 skills across math, language arts, science, and social studies.', color: '#0C5CA8', link: 'Browse skills ›' },
-    { icon: Settings,   title: 'Assessment suite',         text: 'Pinpoint exactly what students know and don\'t know with our adaptive diagnostic tools.', color: '#059669', link: 'Explore suite ›' },
-    { icon: Target,     title: 'Personalized guidance',    text: 'Gradely\'s adaptive algorithm identifies each learner\'s strengths and fills their gaps.', color: '#7C3AED', link: 'Learn more ›' },
-    { icon: TrendingUp, title: 'Actionable analytics',     text: 'Get real-time data and actionable insights to help students reach their full potential.', color: '#D97706', link: 'Explore analytics ›' },
-  ];
-  const impactCards = [
-    { emoji: '📊', title: 'Proven effective',          text: 'Research consistently shows Gradely practice positively impacts student results.',          btn: 'View our research' },
-    { emoji: '🏫', title: 'Flexible for any classroom', text: 'Gradely works for every student across all levels — whether in class or learning at home.',  btn: 'Start their journey' },
-    { emoji: '⭐', title: 'Trusted by top teachers',   text: 'With millions of students using Gradely, educators worldwide rely on our platform daily.',    btn: 'Join today' },
-  ];
-  const skillPlanCards = [
-    { label: 'MAP Growth',       icon: '📈', bg: '#4A90D9' },
-    { label: 'AP Courses',       icon: '🎓', bg: '#7C3AED' },
-    { label: 'SAT Prep',         icon: '📝', bg: '#E53E3E' },
-    { label: 'State Standards',  icon: '🏛️', bg: '#2F855A' },
-    { label: 'Common Core',      icon: '⭐', bg: '#DD6B20' },
-    { label: 'ACT Prep',         icon: '✏️', bg: '#3182CE' },
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const artS = {
+    page: { background: '#FAFAF9', color: '#1a1a2e' },
+    hero: { background: '#fff', padding: '72px 24px 80px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 64, flexWrap: 'wrap' },
+    heroLeft: { maxWidth: 560, flex: '1 1 320px' },
+    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#C8F0D4', color: '#1a6632', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
+    h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1a1a2e' },
+    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#3DAF52' },
+    heroPara: { fontSize: 17, color: '#6B7280', margin: '16px 0 28px', lineHeight: 1.6 },
+    heroBtn: { background: '#3DAF52', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
+    tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
+    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#C8F0D4', border: '5px solid #3DAF52', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(61,175,82,0.2)', flexShrink: 0 },
+    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#FFE566', color: '#1a1a2e', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
+    programSec: { background: '#F7F3FF', padding: '64px 24px' },
+    secWrap: { maxWidth: 1100, margin: '0 auto' },
+    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#9333EA', marginBottom: 8 },
+    secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#1a1a2e' },
+    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#3DAF52' },
+    secDesc: { fontSize: 16, color: '#6B7280', margin: '0 0 40px', maxWidth: 560 },
+    cardsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 },
+    card: { borderRadius: 20, padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer', border: 'none', textAlign: 'left', minHeight: 240 },
+    cardGradeTag: { display: 'inline-block', background: 'rgba(255,255,255,0.55)', borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 700, alignSelf: 'flex-start' },
+    cardTitle: { fontSize: 22, fontWeight: 900, margin: 0, color: '#1a1a2e' },
+    cardSub: { fontSize: 14, color: '#4B5563', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif' },
+    cardArrow: { width: 36, height: 36, borderRadius: '50%', background: '#1a1a2e', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, alignSelf: 'flex-start', marginTop: 'auto', pointerEvents: 'none' },
+    cardEmoji: { position: 'absolute', right: 20, bottom: 16, fontSize: 56, opacity: 0.28, pointerEvents: 'none' },
+    gradesSec: { background: '#fff', padding: '56px 24px' },
+    gradesRow: { display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 28 },
+    gradeChip: { borderRadius: 999, padding: '8px 20px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer' },
+    whySec: { background: '#FAFAF9', padding: '64px 24px' },
+    whyGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 40 },
+    whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12 },
+    whyIcon: { width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 },
+    whyTitle: { fontSize: 18, fontWeight: 800, margin: 0, color: '#1a1a2e' },
+    whyText: { fontSize: 14, color: '#6B7280', margin: 0, lineHeight: 1.6 },
+    startSec: { background: '#fff', padding: '64px 24px' },
+    startInner: { maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' },
+    statsGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 28 },
+    statCard: { background: '#F7F3FF', borderRadius: 14, padding: '20px 18px' },
+    statVal: { fontSize: 28, fontWeight: 900, color: '#3DAF52', margin: 0 },
+    statLabel: { fontSize: 13, color: '#6B7280', margin: '4px 0 0' },
+    readCard: { background: '#C4B3F5', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16 },
+    readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1a1a2e' },
+    readSub: { fontSize: 14, color: '#4B5563', margin: 0, lineHeight: 1.6 },
+    readBtn: { alignSelf: 'flex-start', background: '#1a1a2e', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
+    ctaSec: { background: '#FAFAF9', padding: '64px 24px' },
+    ctaCard: { maxWidth: 680, margin: '0 auto', background: '#C4B3F5', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 },
+    ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1a1a2e' },
+    ctaSub: { fontSize: 15, color: '#4B5563', margin: 0 },
+    ctaBtn: { background: '#3DAF52', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    contactSec: { background: '#fff', padding: '64px 24px', textAlign: 'center' },
+    avatarsRow: { fontSize: 36, display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
+    contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1a1a2e' },
+    contactSub: { fontSize: 15, color: '#6B7280', margin: '0 0 28px' },
+    contactBtns: { display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' },
+    contactBtn: { borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer' },
+    faqSec: { background: '#FAFAF9', padding: '64px 24px 80px' },
+    faqInner: { maxWidth: 720, margin: '40px auto 0' },
+    faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden' },
+    faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1a1a2e', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
+    faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B7280', lineHeight: 1.7, margin: 0 },
+  };
+
+  const gradeColors = ['#FFD6D6','#FFE4C4','#FFF3C4','#E4F4D0','#C8F0D4','#C8EFF8','#D4E4FF','#E4D8FF','#F9D4FF','#FFD6EE','#C8F0D4','#D4E4FF','#FFF3C4','#FFD6D6'];
+
+  const faqs = [
+    { q: 'What grades does Gradely cover?', a: 'Gradely covers Pre-Kindergarten through Grade 12 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
+    { q: 'Is Gradely free to use?', a: 'Gradely offers free practice access. Premium plans unlock full curriculum, detailed analytics, and personalized learning paths.' },
+    { q: 'How does adaptive learning work?', a: 'Gradely tracks every answer and adjusts question difficulty in real time, so students are always challenged at the right level for maximum growth.' },
   ];
 
   return (
-    <>
+    <div style={artS.page}>
+
       {/* ── Hero ── */}
-      <section style={styles.ixlHero}>
-        {/* Left decorations */}
-        <span style={{ ...styles.ixlDeco, left: '2%',  top: '7%',   fontSize: 54 }}>🎈</span>
-        <span style={{ ...styles.ixlDeco, left: '10%', top: '3%',   fontSize: 38 }}>☀️</span>
-        <span style={{ ...styles.ixlDeco, left: '0%',  top: '38%',  fontSize: 58 }}>🧒</span>
-        <span style={{ ...styles.ixlDeco, left: '12%', top: '54%',  fontSize: 52 }}>🚴</span>
-        <span style={{ ...styles.ixlDeco, left: '3%',  bottom: '24%', fontSize: 38 }}>🏢</span>
-        <span style={{ ...styles.ixlDeco, left: '19%', bottom: '16%', fontSize: 30 }}>🌲</span>
-        <span style={{ ...styles.ixlDeco, left: '7%',  bottom: '14%', fontSize: 28 }}>📘</span>
-        <span style={{ ...styles.ixlDeco, left: '17%', bottom: '9%',  fontSize: 26 }}>⛺</span>
-        {/* Right decorations */}
-        <span style={{ ...styles.ixlDeco, right: '15%', top: '5%',   fontSize: 48, transform: 'rotate(-18deg)' }}>✈️</span>
-        <span style={{ ...styles.ixlDeco, right: '4%',  top: '3%',   fontSize: 44 }}>🪁</span>
-        <span style={{ ...styles.ixlDeco, right: '5%',  top: '34%',  fontSize: 54 }}>🎊</span>
-        <span style={{ ...styles.ixlDeco, right: '20%', top: '22%',  fontSize: 36 }}>🏘️</span>
-        <span style={{ ...styles.ixlDeco, right: '2%',  bottom: '20%', fontSize: 48 }}>👩‍💻</span>
-        <span style={{ ...styles.ixlDeco, right: '22%', bottom: '12%', fontSize: 34 }}>📐</span>
-        <span style={{ ...styles.ixlDeco, right: '11%', bottom: '10%', fontSize: 32 }}>⛵</span>
-        <span style={{ ...styles.ixlDeco, right: '5%',  bottom: '14%', fontSize: 30 }}>🔭</span>
-
-        {/* Main content */}
-        <div style={styles.ixlHeroContent}>
-          <h1 style={styles.ixlHeroTitle}>
-            Gradely <em style={styles.ixlHeroIs}>is</em> personalized learning
+      <section style={artS.hero}>
+        <div style={artS.heroLeft}>
+          <div style={artS.welcomePill}>✳ Welcome to Gradely Academy</div>
+          <h1 style={artS.h1}>
+            Learn<br /><em style={artS.h1em}>With Gradely</em>
           </h1>
-
-          <div style={styles.ixlCloudsRow}>
-            <div style={styles.ixlCloud}>
-              <h3 style={{ ...styles.ixlCloudTitle, color: '#0C5CA8' }}>Comprehensive<br />K–12 curriculum</h3>
-              <p style={styles.ixlCloudBody}>Math • Language arts • Science<br />Social studies • Spanish</p>
-              <ChevronDown size={20} color="#0C5CA8" />
-            </div>
-            <div style={{ ...styles.ixlCloud, ...styles.ixlCloudCenter }}>
-              <h3 style={{ ...styles.ixlCloudTitle, color: '#9B5DE5' }}>Trusted by<br />educators and parents</h3>
-              <p style={styles.ixlCloudBody}>Over <strong>200 billion</strong> questions answered<br />More than <strong>18 million</strong> students use Gradely</p>
-              <ChevronDown size={20} color="#9B5DE5" />
-            </div>
-            <div style={styles.ixlCloud}>
-              <h3 style={{ ...styles.ixlCloudTitle, color: '#0891B2' }}>Immersive<br />learning experience</h3>
-              <p style={styles.ixlCloudBody}>Analytics • Recommendations<br />Real-Time Diagnostic • Awards</p>
-              <ChevronDown size={20} color="#0891B2" />
-            </div>
-          </div>
-
-          <button onClick={() => onSelectGrade(GRADES[0])} style={styles.ixlMemberBtn}>
-            Become a member!
-          </button>
-        </div>
-
-        {/* Landscape layers */}
-        <div style={styles.ixlWater} />
-        <div style={styles.ixlHillBack} />
-        <div style={styles.ixlHillFront} />
-      </section>
-
-      {/* ── Promo band ── */}
-      <div style={styles.homePromoBand}>
-        <div style={styles.promoCards} className="promo-cards">
-          <button onClick={() => onSelectGrade(GRADES[8])} style={styles.promoCard}>
-            <div style={styles.testStack} className="test-stack">
-              <span>ACT</span><span>SAT</span>
-            </div>
-            <div>
-              <strong>Gradely for high school</strong>
-              <p>Gradely helps high schoolers create their own path to success.</p>
-              <em>Take a look <ChevronRight size={14} /></em>
-            </div>
-          </button>
-          <button onClick={onDashboard} style={styles.promoCard}>
-            <div style={styles.testStack} className="test-stack">
-              <span>GED</span><span>HiSET</span>
-            </div>
-            <div>
-              <strong>Gradely for independent learners</strong>
-              <p>Yes, Gradely is for adults, too!</p>
-              <em>Take a look <ChevronRight size={14} /></em>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      {/* ── Grade catalog ── */}
-      <section style={styles.gradeCatalogSection}>
-        <div style={styles.gradeCatalogGrid} className="grade-catalog-grid">
-          {GRADES.map((g, index) => (
-            <GradeCatalogCard key={g.id} grade={g} index={index} progress={progress} onSelectGrade={onSelectGrade} />
-          ))}
-          <div style={{ ...styles.catalogCard, cursor: 'default', borderColor: '#FF8C42' }}>
-            <div style={styles.catalogHead}>
-              <span style={{ ...styles.catalogNumber, background: '#FF8C42', fontSize: 11, width: 48 }}>ES</span>
-              <span style={{ ...styles.catalogTitle, color: '#FF8C42' }}>Spanish</span>
-            </div>
-            <p style={styles.catalogDesc}>Basic Spanish vocabulary, conversation, and grammar skills coming soon.</p>
-            <div style={{ ...styles.catalogProgress, color: '#FF8C42', marginTop: 'auto' }}>
-              <span>Coming soon</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Exact skills band ── */}
-      <section style={styles.skillsBand}>
-        <h2 style={styles.bandTitle}>The exact skills you need.</h2>
-        <p style={styles.bandSub}>We've custom-built Gradely skills to perfectly meet each standard within your textbooks, state standards, and assessments.</p>
-        <div style={styles.skillPlanGrid}>
-          {skillPlanCards.map(card => (
-            <button key={card.label} onClick={() => onSelectGrade(GRADES[0])} style={{ ...styles.skillPlanCard, background: card.bg }}>
-              <span style={styles.skillPlanIcon}>{card.icon}</span>
-              <span style={styles.skillPlanLabel}>{card.label}</span>
-            </button>
-          ))}
-        </div>
-        <button onClick={() => onSelectGrade(GRADES[0])} style={styles.greenCta}>Find your skill plan!</button>
-      </section>
-
-      {/* ── Supports success band ── */}
-      <section style={styles.supportBand}>
-        <h2 style={styles.supportTitle}>Discover how Gradely supports success for every learner</h2>
-        <p style={styles.supportSub}>Gradely gives teachers everything they need to personalize instruction.</p>
-        <div style={styles.supportGrid} className="support-grid">
-          {supportCards.map(card => <SupportCard key={card.title} card={card} />)}
-        </div>
-        <button onClick={onDashboard} style={styles.supportCta}>See more</button>
-      </section>
-
-      {/* ── Impact band ── */}
-      <section style={styles.impactBand}>
-        <h2 style={styles.impactTitle}>See the impact Gradely has made on student learning!</h2>
-        <div style={styles.impactGrid} className="impact-grid">
-          {impactCards.map(card => (
-            <div key={card.title} style={styles.impactCard}>
-              <div style={styles.impactIconCircle}>{card.emoji}</div>
-              <h3 style={styles.impactCardTitle}>{card.title}</h3>
-              <p style={styles.impactCardText}>{card.text}</p>
-              <button onClick={onDashboard} style={styles.impactButton}>{card.btn}</button>
-            </div>
-          ))}
-        </div>
-        <div style={styles.homeStats} className="home-stats">
-          <HeroStat value="18M+" label="Students worldwide" color="#0C5CA8" />
-          <HeroStat value="200B+" label="Questions answered" color="#059669" />
-          <HeroStat value={stats.points || 0} label="Your points" color="#D97706" />
-          <HeroStat value={stats.earnedBadges.length} label="Badges earned" color="#7C3AED" />
-        </div>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section style={styles.testimonialsBand}>
-        <div style={styles.testimonialsInner}>
-          <div style={styles.testimonialStars}>{'★★★★★'}</div>
-          <p style={styles.testimonialQuote}>
-            "With Gradely, our math confidence has risen a lot of points. We now seem to be{' '}
-            <em>comprehending more than just functioning.</em>"
+          <p style={artS.heroPara}>
+            A personalized K–12 learning platform with thousands of practice skills across Math, Language Arts, Science, and Social Studies.
           </p>
-          <p style={styles.testimonialAttrib}>— Gradely parent</p>
-          <button onClick={onDashboard} style={styles.testimonialLink}>Read more →</button>
+          <button onClick={() => onSelectGrade(GRADES[0])} style={artS.heroBtn}>
+            Start learning ↗
+          </button>
+          <div style={artS.tagsRow}>
+            {[['#Math','#FFE566'],['#Science','#C8F0D4'],['#ELA','#C4B3F5'],['#History','#F9B8C4']].map(([tag, bg]) => (
+              <span key={tag} style={{ ...artS.tag, background: bg }}>{tag}</span>
+            ))}
+          </div>
+        </div>
+        <div style={{ position: 'relative', paddingBottom: 20 }}>
+          <div style={artS.avatarRing}>
+            👩‍🎓
+            <span style={artS.badgePill}>✳ GRADELY ACADEMY</span>
+          </div>
         </div>
       </section>
-    </>
+
+      {/* ── Program cards ── */}
+      <section style={artS.programSec}>
+        <div style={artS.secWrap}>
+          <div style={artS.secLabel}>Our Programs</div>
+          <h2 style={artS.secTitle}>Browse subjects &amp; <em style={artS.secEm}>grade levels</em></h2>
+          <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
+          <div style={artS.cardsGrid} className="art-cards-grid">
+            {[
+              { bg: '#C8F0D4', grade: 'Grades Pre-K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
+              { bg: '#C4B3F5', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
+              { bg: '#FFE566', grade: 'Grade 6 & up', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
+            ].map((card) => (
+              <button key={card.title} style={{ ...artS.card, background: card.bg }} onClick={() => onSelectGrade(GRADES[0])}>
+                <span style={artS.cardGradeTag}>{card.grade}</span>
+                <div>
+                  <p style={artS.cardTitle}>{card.title}</p>
+                  <p style={artS.cardSub}>{card.sub}</p>
+                </div>
+                <div style={artS.cardArrow}>↗</div>
+                <span style={artS.cardEmoji}>{card.emoji}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── All Grades ── */}
+      <section style={artS.gradesSec}>
+        <div style={artS.secWrap}>
+          <div style={artS.secLabel}>All Grade Levels</div>
+          <h2 style={artS.secTitle}>From Pre-K to <em style={artS.secEm}>Grade 12</em></h2>
+          <div style={artS.gradesRow} className="art-grades-row">
+            {GRADES.map((g, i) => (
+              <button key={g.id} style={{ ...artS.gradeChip, background: gradeColors[i] || '#E5E7EB', color: '#1a1a2e' }} onClick={() => onSelectGrade(g)}>
+                {g.name}
+              </button>
+            ))}
+            <span style={{ ...artS.gradeChip, background: '#FFE4B5', color: '#92400E', cursor: 'default' }}>
+              Spanish (coming soon)
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why Choose ── */}
+      <section style={artS.whySec}>
+        <div style={artS.secWrap}>
+          <div style={artS.secLabel}>Why Gradely</div>
+          <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
+          <div style={artS.whyGrid} className="art-why-grid">
+            {[
+              { icon: '📚', bg: '#C8F0D4', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
+              { icon: '🎯', bg: '#E9D8FD', title: 'Adaptive Learning', text: 'Gradely adjusts question difficulty in real time based on student responses for maximum growth.' },
+              { icon: '⭐', bg: '#FEF3C7', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
+            ].map((item) => (
+              <div key={item.title} style={artS.whyCard}>
+                <div style={{ ...artS.whyIcon, background: item.bg }}>{item.icon}</div>
+                <h3 style={artS.whyTitle}>{item.title}</h3>
+                <p style={artS.whyText}>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Start Now + Stats ── */}
+      <section style={artS.startSec}>
+        <div style={artS.startInner} className="art-start-inner">
+          <div>
+            <div style={artS.secLabel}>Get Started</div>
+            <h2 style={artS.secTitle}>Start practicing <em style={artS.secEm}>today</em></h2>
+            <p style={{ ...artS.secDesc, marginBottom: 0 }}>Thousands of skills available across all grades. Track progress, earn badges, and build mastery.</p>
+            <div style={artS.statsGrid} className="art-stats-row">
+              {[
+                { val: '66+',  label: 'Skills available' },
+                { val: '14',   label: 'Grade levels' },
+                { val: stats.points || 0,        label: 'Your points' },
+                { val: stats.totalAnswered || 0, label: 'Questions answered' },
+              ].map((s) => (
+                <div key={s.label} style={artS.statCard}>
+                  <p style={artS.statVal}>{s.val}</p>
+                  <p style={artS.statLabel}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={artS.readCard}>
+            <div style={{ fontSize: 40 }}>🎓</div>
+            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>explore</em> skills?</h3>
+            <p style={artS.readSub}>Pick a grade level to see all available practice skills and begin your learning journey.</p>
+            <button onClick={() => onSelectGrade(GRADES[0])} style={artS.readBtn}>Browse all grades ↗</button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Sign Up CTA ── */}
+      <section style={artS.ctaSec}>
+        <div style={artS.ctaCard}>
+          <div style={{ fontSize: 52 }}>👧</div>
+          <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>Free Practice</em></h2>
+          <p style={artS.ctaSub}>Join thousands of students already learning with Gradely.</p>
+          <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
+        </div>
+      </section>
+
+      {/* ── Contact ── */}
+      <section style={artS.contactSec}>
+        <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
+        <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>to talking</em></h2>
+        <p style={artS.contactSub}>Have questions about Gradely? Reach out — we're here to help.</p>
+        <div style={artS.contactBtns}>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#3DAF52', color: '#fff' }}>Contact us</button>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#C4B3F5', color: '#1a1a2e' }}>Call us</button>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#C8F0D4', color: '#1a6632' }}>Video chat</button>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section style={artS.faqSec}>
+        <div style={{ ...artS.secWrap, textAlign: 'center' }}>
+          <div style={artS.secLabel}>FAQ</div>
+          <h2 style={artS.secTitle}>Common <em style={artS.secEm}>questions</em></h2>
+        </div>
+        <div style={artS.faqInner}>
+          {faqs.map((faq, i) => (
+            <div key={i} style={artS.faqItem}>
+              <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                <span>{faq.q}</span>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#3DAF52' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
+                  {openFaq === i ? '−' : '+'}
+                </span>
+              </button>
+              {openFaq === i && <p style={artS.faqA}>{faq.a}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
   );
 }
 
@@ -3682,7 +4331,9 @@ function StyleInjector() {
         .impact-grid,
         .home-stats,
         .promo-cards,
-        .responsive-grid {
+        .responsive-grid,
+        .art-cards-grid,
+        .art-why-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
       }
@@ -3697,7 +4348,10 @@ function StyleInjector() {
         .impact-grid,
         .home-stats,
         .promo-cards,
-        .responsive-grid {
+        .responsive-grid,
+        .art-cards-grid,
+        .art-why-grid,
+        .art-start-inner {
           grid-template-columns: 1fr !important;
         }
         .payment-form,
