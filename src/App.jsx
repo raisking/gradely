@@ -335,6 +335,90 @@ const SKILLS = {
     ],
   },
 
+  'math-9-linear-relations': {
+    id: 'math-9-linear-relations', subject: 'math', grade: '9',
+    title: 'Linear Relations', description: 'Slope, y-intercept, and equations of lines',
+    explanation: 'A linear relation has the form y = mx + b, where m is the slope (rate of change) and b is the y-intercept (starting value). Slope tells you how steep the line is; y-intercept tells you where the line crosses the y-axis.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the y-intercept of the line y = 3x + 7?', options: ['3','7','-3','-7'], answer: '7', hint: 'In y = mx + b, b is the y-intercept.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the slope of the line y = -4x + 1?', options: ['1','-1','4','-4'], answer: '-4', hint: 'In y = mx + b, m is the slope.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A canoe rental charges an initial fee of $5 plus $8 per hour. The equation is C = 8t + 5. What does the 5 represent?', options: ['The hourly rate','The initial charge','The total hours','The total cost'], answer: 'The initial charge', hint: 'In C = 8t + 5, the constant 5 is the flat starting cost.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A bus trip costs $275 plus $2 per seat. Which equation gives total cost C for n seats?', options: ['C = 2n + 225','C = 2n + 275','C = -2n + 225','C = 275n + 2'], answer: 'C = 2n + 275', hint: 'Initial cost is $275; each extra seat adds $2.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A plumber charges C = 50t + 70. The hourly rate changes to $60 per hour but the flat fee stays the same. How does the graph change?', options: ['The slope increases','The slope decreases','The y-intercept increases','The y-intercept decreases'], answer: 'The slope increases', hint: 'Rate (slope) goes from 50 to 60 — a steeper line.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A line passes through (0, 3) and (-1, 6). What is the slope?', options: ['-9','-3','3','9'], answer: '-3', hint: 'Slope = (6-3)/(-1-0) = 3/(-1) = -3.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Rewrite 3x - 2y + 16 = 0 in slope-intercept form. What are m and b?', options: ['m = 3/2, b = 8','m = -3/2, b = -8','m = 3, b = 16','m = 2/3, b = -8'], answer: 'm = 3/2, b = 8', hint: '2y = 3x + 16 → y = (3/2)x + 8.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Sarah runs a 40 km race at 10 km/h. Which equation gives the distance left, D, after t hours?', options: ['D = 40 - 10t','D = 40 + 10t','D = 10t - 40','D = 10 + 40t'], answer: 'D = 40 - 10t', hint: 'She starts at 40 km and reduces by 10 km each hour.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'At 5 PM the temperature is 4°C and drops 2°C every hour. What is the temperature at 11 PM?', options: ['2°C','-2°C','-6°C','-8°C'], answer: '-8°C', hint: '6 hours × 2°C = 12°C drop. 4 - 12 = -8°C.' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Which equation represents a linear relation?', options: ['y = x² - 5','y = 2x + 3','x² + y² = 25','y = x³'], answer: 'y = 2x + 3', hint: 'A linear relation has no exponents greater than 1 on variables.' },
+    ],
+  },
+
+  'math-9-algebra-expressions': {
+    id: 'math-9-algebra-expressions', subject: 'math', grade: '9',
+    title: 'Algebraic Expressions', description: 'Evaluate, simplify, and expand polynomial expressions',
+    explanation: 'To evaluate an expression, substitute the given value for the variable. To simplify, collect like terms. To expand, use the distributive property: a(b + c) = ab + ac.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the value of 6x² when x = 1/3?', options: ['2/3','2','3','6'], answer: '2/3', hint: '6 × (1/3)² = 6 × 1/9 = 6/9 = 2/3.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the value of (x/3) + 2 when x = 18?', options: ['2','6','8','12'], answer: '8', hint: '18/3 + 2 = 6 + 2 = 8.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which expression represents the volume of a cube with side length x?', options: ['x²','3x','6x','x³'], answer: 'x³', hint: 'Volume = side × side × side = x³.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The sum of two perimeters is 13x + 4y. One perimeter is 4x - 2y. What is the other perimeter?', options: ['9x + 6y','9x + 2y','17x + 6y','17x + 2y'], answer: '9x + 6y', hint: '(13x + 4y) - (4x - 2y) = 9x + 6y.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which is equivalent to 3x²(5x² - 2x + 1)?', options: ['8x² - 2x + 1','15x⁴ - 6x³ + 3x²','15x⁴ - 2x + 1','8x⁴ + x + 4'], answer: '15x⁴ - 6x³ + 3x²', hint: 'Distribute: 3x²·5x² = 15x⁴, 3x²·(-2x) = -6x³, 3x²·1 = 3x².' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Simplify: 4a + 3b - 2a + b', options: ['2a + 4b','6a + 4b','2a + 2b','6a + 2b'], answer: '2a + 4b', hint: 'Collect like terms: (4a - 2a) + (3b + b) = 2a + 4b.' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'What is the value of 2x² - 3x + 1 when x = 2?', options: ['1','3','5','7'], answer: '3', hint: '2(4) - 3(2) + 1 = 8 - 6 + 1 = 3.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Expand: 2x(3x - 4)', options: ['6x² - 8x','6x² - 4x','5x² - 2x','6x - 8'], answer: '6x² - 8x', hint: '2x × 3x = 6x²; 2x × (-4) = -8x.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Simplify: (3x² + 5x - 2) - (x² - 2x + 4)', options: ['2x² + 7x - 6','2x² + 3x - 6','4x² + 3x + 2','2x² + 7x + 2'], answer: '2x² + 7x - 6', hint: 'Subtract each term: 3x²-x²=2x², 5x-(-2x)=7x, -2-4=-6.' },
+    ],
+  },
+
+  'math-9-angles-polygons': {
+    id: 'math-9-angles-polygons', subject: 'math', grade: '9',
+    title: 'Angles & Polygons', description: 'Interior angles, polygon sums, and perimeter',
+    explanation: 'The sum of interior angles of a polygon with n sides = (n - 2) × 180°. For example, a triangle (n=3) has 180°, a quadrilateral (n=4) has 360°, a pentagon (n=5) has 540°. Co-interior angles between parallel lines are supplementary (add to 180°).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the sum of interior angles of a triangle?', options: ['90°','180°','270°','360°'], answer: '180°', hint: '(3 - 2) × 180° = 180°.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the sum of interior angles of a quadrilateral (4 sides)?', options: ['180°','270°','360°','450°'], answer: '360°', hint: '(4 - 2) × 180° = 360°.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'What is the sum of interior angles of a hexagon (6 sides)?', options: ['540°','720°','900°','1 080°'], answer: '720°', hint: '(6 - 2) × 180° = 4 × 180° = 720°.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What is the sum of the interior angles of a 12-sided polygon?', options: ['1 080°','1 800°','1 980°','2 160°'], answer: '1 800°', hint: '(12 - 2) × 180° = 10 × 180° = 1 800°.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A rectangle has a perimeter of 100 cm. Which dimensions give the largest possible area?', options: ['10 cm × 40 cm','20 cm × 30 cm','25 cm × 25 cm','15 cm × 35 cm'], answer: '25 cm × 25 cm', hint: 'For a fixed perimeter, a square always gives the maximum area.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'In an isosceles triangle, one base angle is 52°. What is the vertex angle?', options: ['52°','76°','104°','128°'], answer: '76°', hint: '180° - 52° - 52° = 76°.' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'Two parallel lines are cut by a transversal. One co-interior angle is 65°. What is the other co-interior angle?', options: ['65°','90°','115°','125°'], answer: '115°', hint: 'Co-interior angles add to 180°. 180° - 65° = 115°.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A garden is a rectangle 20 m × 10 m with a semicircle of radius 7 m on one end. Which is closest to the total fencing needed (excluding the diameter side where the semicircle joins)?', options: ['60 m','70 m','75 m','85 m'], answer: '75 m', hint: 'Fence = 20 + 10 + 20 + half circumference (π×7 ≈ 22) ≈ 72 m → closest 75 m.' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Each interior angle of a regular polygon is 150°. How many sides does it have?', options: ['8','10','12','15'], answer: '12', hint: 'Each exterior angle = 180°-150° = 30°. Sides = 360°/30° = 12.' },
+    ],
+  },
+
+  'math-9-cylinders-measurement': {
+    id: 'math-9-cylinders-measurement', subject: 'math', grade: '9',
+    title: 'Cylinders & Measurement', description: 'Calculate volume and surface area of cylinders',
+    explanation: 'Volume of a cylinder: V = πr²h (π × radius² × height). Lateral surface area: A = 2πrh. Total surface area: A = 2πrh + 2πr². Remember: diameter = 2 × radius.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which formula gives the volume of a cylinder with radius r and height h?', options: ['V = πrh','V = 2πrh','V = πr²h','V = πr²'], answer: 'V = πr²h', hint: 'Volume = area of circular base × height = πr² × h.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A cylinder has radius 3 cm and height 5 cm. What is closest to its volume?', options: ['47 cm³','94 cm³','141 cm³','188 cm³'], answer: '141 cm³', hint: 'V = π × 9 × 5 = 45π ≈ 141.4 cm³.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A water container has radius 1.5 cm and height 5 cm. Which expression gives its volume?', options: ['V = π(3²)(5)','V = π(1.5)(5)','V = π(1.5²)(5)','V = π(2×1.5)(5)'], answer: 'V = π(1.5²)(5)', hint: 'V = πr²h = π(1.5²)(5).' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A cylinder has volume 150 cm³ and diameter 8 cm. Which is closest to its lateral surface area (2πrh)?', options: ['38 cm²','75 cm²','150 cm²','300 cm²'], answer: '75 cm²', hint: 'r = 4; h = 150/(π×16) ≈ 2.98 cm. Lateral SA = 2π×4×2.98 ≈ 75 cm².' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A cylinder has radius 5 cm and height 12 cm. What is its volume to the nearest cm³?', options: ['188 cm³','377 cm³','942 cm³','1 885 cm³'], answer: '942 cm³', hint: 'V = π × 25 × 12 = 300π ≈ 942 cm³.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A cylindrical case has diameter 40 mm and volume 25 120 mm³. Which is closest to its height?', options: ['2 mm','5 mm','10 mm','20 mm'], answer: '20 mm', hint: 'r = 20; h = 25 120 ÷ (π × 400) ≈ 20 mm.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: '50 identical playing chips fit tightly in the cylinder above (diameter 40 mm, height 20 mm). Which is closest to the thickness of one chip?', options: ['0.1 mm','0.4 mm','1.3 mm','2.5 mm'], answer: '0.4 mm', hint: 'Total height ÷ 50 = 20 ÷ 50 = 0.4 mm.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A cylinder has volume 500 cm³ and height 10 cm. Which is closest to the radius?', options: ['2 cm','4 cm','8 cm','16 cm'], answer: '4 cm', hint: 'r² = 500 ÷ (π × 10) ≈ 15.9; r ≈ 4 cm.' },
+    ],
+  },
+
+  'math-9-proportional-reasoning': {
+    id: 'math-9-proportional-reasoning', subject: 'math', grade: '9',
+    title: 'Proportional Reasoning', description: 'Ratios, proportions, unit rates, and percent problems',
+    explanation: 'A proportion is two equal ratios: a/b = c/d. Cross-multiply to solve: ad = bc. Percent problems: use Part = Percent × Whole. Unit rate = total ÷ quantity (e.g. cost per gram).',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Solve the proportion: 2/3 = x/120', options: ['40','80','180','240'], answer: '80', hint: 'x = 120 × (2/3) = 80.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A recipe needs 3 cups of flour for every 2 cups of sugar. How many cups of flour for 6 cups of sugar?', options: ['4','6','9','12'], answer: '9', hint: '3/2 = x/6 → x = 9.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Four cookie brands: 200 g/$1.99, 250 g/$2.29, 300 g/$2.89, 450 g/$4.29. Which costs the least per gram?', options: ['200 g brand','250 g brand','300 g brand','450 g brand'], answer: '250 g brand', hint: '250g brand: $2.29÷250 ≈ $0.00916/g — cheapest of the four.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '260 Grade 9 students attend school. 80% go to a school dance, and half of those buy tickets at the door. How many buy tickets at the door?', options: ['40','104','130','208'], answer: '104', hint: '260 × 0.80 = 208; 208 ÷ 2 = 104.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Movie treats total $9.76 before tax. With 13% tax and a $20 bill, what change do you receive?', options: ['$8.97','$9.76','$11.03','$11.55'], answer: '$8.97', hint: 'After tax: 9.76 × 1.13 ≈ $11.03. Change: $20 − $11.03 = $8.97.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A phone call costs C = 0.35t + 0.60 dollars (t = minutes). How long is a call that costs $5.85?', options: ['3 min','6 min','15 min','18 min'], answer: '15 min', hint: '5.85 = 0.35t + 0.60 → 0.35t = 5.25 → t = 15.' },
+      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'A map has a scale of 1:25 000. A distance on the map is 4.5 cm. What is the actual distance?', options: ['1.125 km','11.25 km','112.5 km','0.18 km'], answer: '1.125 km', hint: '4.5 cm × 25 000 = 112 500 cm = 1 125 m = 1.125 km.' },
+      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A car travels 300 km on 40 L of gasoline. How many litres are needed for 525 km?', options: ['52 L','60 L','70 L','75 L'], answer: '70 L', hint: 'Rate = 40/300 L/km. 525 × (40/300) = 70 L.' },
+    ],
+  },
+
   // ============ ELA — PRE-K ============
   'ela-prek-letters-az': {
     id: 'ela-prek-letters-az', subject: 'ela', grade: 'prek',
