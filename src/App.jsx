@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Sparkles, Trophy, Flame, Star, Target, BookOpen, Calculator, FlaskConical,
-  Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw,
+  Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw, Menu,
   TrendingUp, BarChart3, GraduationCap,
   Heart, Crown, ArrowRight, Brain,
   Lock, CheckCircle2, Circle, Play, Settings, Users, Search, UserCircle
@@ -1899,6 +1899,7 @@ export default function GradelyApp() {
 
 // ---------- HEADER ----------
 function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const learningViews = new Set(['learning', 'grade', 'subject', 'skill']);
   const navItems = [
     { label: 'Learning',   onClick: onLearning,  active: learningViews.has(view) },
@@ -1910,10 +1911,12 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
     { label: 'Takeoff',    onClick: onBadges,    active: view === 'badges', icon: <Sparkles size={15} /> },
   ];
 
+  const closeMenu = (fn) => { fn(); setMenuOpen(false); };
+
   return (
     <header style={styles.header}>
       <div style={styles.headerInner}>
-        {/* Top row: logo | search | actions */}
+        {/* Top row: logo | search | actions | hamburger */}
         <div style={styles.headerTopRow} className="header-top-row">
           <button onClick={onHome} style={styles.logo}>
             <span style={styles.logoMark}>
@@ -1922,28 +1925,25 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
             </span>
           </button>
 
-          <label style={styles.searchWrap}>
+          <label style={styles.searchWrap} className="header-search">
             <span style={styles.searchIcon}><Search size={18} color="white" /></span>
             <input style={styles.searchInput} placeholder="Search topics, skills, and more" />
             <button type="button" style={styles.searchSubmit}><ChevronRight size={22} color="#9CA3AF" /></button>
           </label>
 
-          <div style={styles.headerActions}>
+          <div style={styles.headerActions} className="header-desktop-actions">
             <div style={styles.topRoleGroup}>
               {[
                 { id: 'student', label: 'Student', icon: GraduationCap, onClick: onDashboard },
-                { id: 'parent', label: 'Parent', icon: Heart, onClick: onParent },
-                { id: 'admin', label: 'Admin', icon: Settings, onClick: onAdmin },
+                { id: 'parent',  label: 'Parent',  icon: Heart,          onClick: onParent },
+                { id: 'admin',   label: 'Admin',   icon: Settings,       onClick: onAdmin },
               ].map(role => {
                 const Icon = role.icon;
                 const active = user?.role === role.id;
                 return (
                   <button
                     key={role.id}
-                    onClick={() => {
-                      onRoleChange(role.id);
-                      role.onClick();
-                    }}
+                    onClick={() => { onRoleChange(role.id); role.onClick(); }}
                     style={{ ...styles.topRoleBtn, ...(active ? styles.topRoleBtnActive : {}) }}
                   >
                     <Icon size={13} />
@@ -1958,10 +1958,21 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
             <button onClick={onSubscribe} style={styles.membershipBtn}>Membership</button>
             <button onClick={onReset} style={styles.resetBtn} title="Reset session"><RotateCcw size={14} /></button>
           </div>
+
+          {/* Hamburger — shown on mobile via CSS */}
+          <button
+            className="header-hamburger"
+            onClick={() => setMenuOpen(o => !o)}
+            style={styles.hamburgerBtn}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X size={22} color="white" /> : <Menu size={22} color="white" />}
+          </button>
         </div>
 
-        {/* Nav row */}
-        <nav style={styles.headerNav} aria-label="Primary">
+        {/* Desktop nav row — hidden on mobile via CSS */}
+        <nav style={styles.headerNav} className="header-desktop-nav" aria-label="Primary">
           {navItems.map(item => (
             <button
               key={item.label}
@@ -1974,6 +1985,27 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
             </button>
           ))}
         </nav>
+
+        {/* Mobile dropdown */}
+        {menuOpen && (
+          <nav style={styles.mobileMenu} aria-label="Mobile navigation">
+            {navItems.map(item => (
+              <button
+                key={item.label}
+                onClick={() => closeMenu(item.onClick)}
+                style={{ ...styles.mobileNavLink, ...(item.active ? styles.mobileNavLinkActive : {}) }}
+              >
+                {item.label}
+                {item.icon && <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center' }}>{item.icon}</span>}
+              </button>
+            ))}
+            <div style={styles.mobileMenuDivider} />
+            <button onClick={() => closeMenu(onSignIn)}    style={styles.mobileNavLink}>Sign in</button>
+            <button onClick={() => closeMenu(onDashboard)} style={styles.mobileNavLink}>Student</button>
+            <button onClick={() => closeMenu(onParent)}    style={styles.mobileNavLink}>Parent</button>
+            <button onClick={() => closeMenu(onSubscribe)} style={{ ...styles.mobileNavLink, color: '#FFE566', fontWeight: 900 }}>Membership</button>
+          </nav>
+        )}
       </div>
     </header>
   );
@@ -2287,8 +2319,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     <div style={artS.page}>
 
       {/* ── Hero ── */}
-      <section style={artS.hero}>
-        <div style={artS.heroLeft}>
+      <section style={artS.hero} className="art-hero">
+        <div style={artS.heroLeft} className="art-hero-left">
           <div style={artS.welcomePill}>✳ Welcome to Gradely Academy</div>
           <h1 style={artS.h1}>
             Learn<br /><em style={artS.h1em}>With Gradely</em>
@@ -2299,13 +2331,13 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <button onClick={() => onSelectGrade(GRADES[0])} style={artS.heroBtn}>
             Start learning ↗
           </button>
-          <div style={artS.tagsRow}>
+          <div style={artS.tagsRow} className="art-tags-row">
             {[['#Math','#FFE566'],['#Science','#C8F0D4'],['#ELA','#C4B3F5'],['#History','#F9B8C4']].map(([tag, bg]) => (
               <span key={tag} style={{ ...artS.tag, background: bg }}>{tag}</span>
             ))}
           </div>
         </div>
-        <div style={{ position: 'relative', paddingBottom: 20 }}>
+        <div style={{ position: 'relative', paddingBottom: 20 }} className="art-hero-right">
           <div style={artS.avatarRing}>
             👩‍🎓
             <span style={artS.badgePill}>✳ GRADELY ACADEMY</span>
@@ -2314,8 +2346,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Program cards ── */}
-      <section style={artS.programSec}>
-        <div style={artS.secWrap}>
+      <section style={artS.programSec} className="art-section">
+        <div style={artS.secWrap} className="art-section-wrap">
           <div style={artS.secLabel}>Our Programs</div>
           <h2 style={artS.secTitle}>Browse subjects &amp; <em style={artS.secEm}>grade levels</em></h2>
           <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
@@ -2340,8 +2372,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── All Grades ── */}
-      <section style={artS.gradesSec}>
-        <div style={artS.secWrap}>
+      <section style={artS.gradesSec} className="art-section">
+        <div style={artS.secWrap} className="art-section-wrap">
           <div style={artS.secLabel}>All Grade Levels</div>
           <h2 style={artS.secTitle}>From Pre-K to <em style={artS.secEm}>Grade 12</em></h2>
           <div style={artS.gradesRow} className="art-grades-row">
@@ -2358,8 +2390,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Why Choose ── */}
-      <section style={artS.whySec}>
-        <div style={artS.secWrap}>
+      <section style={artS.whySec} className="art-section">
+        <div style={artS.secWrap} className="art-section-wrap">
           <div style={artS.secLabel}>Why Gradely</div>
           <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
           <div style={artS.whyGrid} className="art-why-grid">
@@ -2379,7 +2411,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Start Now + Stats ── */}
-      <section style={artS.startSec}>
+      <section style={artS.startSec} className="art-section">
         <div style={artS.startInner} className="art-start-inner">
           <div>
             <div style={artS.secLabel}>Get Started</div>
@@ -2409,8 +2441,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Sign Up CTA ── */}
-      <section style={artS.ctaSec}>
-        <div style={artS.ctaCard}>
+      <section style={artS.ctaSec} className="art-section">
+        <div style={artS.ctaCard} className="art-cta-card">
           <div style={{ fontSize: 52 }}>👧</div>
           <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>Free Practice</em></h2>
           <p style={artS.ctaSub}>Join thousands of students already learning with Gradely.</p>
@@ -2419,7 +2451,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Contact ── */}
-      <section style={artS.contactSec}>
+      <section style={artS.contactSec} className="art-section">
         <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
         <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>to talking</em></h2>
         <p style={artS.contactSub}>Have questions about Gradely? Reach out — we're here to help.</p>
@@ -2431,7 +2463,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── FAQ ── */}
-      <section style={artS.faqSec}>
+      <section style={artS.faqSec} className="art-section">
         <div style={{ ...artS.secWrap, textAlign: 'center' }}>
           <div style={artS.secLabel}>FAQ</div>
           <h2 style={artS.secTitle}>Common <em style={artS.secEm}>questions</em></h2>
@@ -4107,7 +4139,7 @@ function Footer() {
   return (
     <footer style={styles.footer}>
       <div style={styles.footerInner}>
-        <div style={styles.footerTop}>
+        <div style={styles.footerTop} className="footer-top">
           <div style={styles.footerBrand}>
             <span style={styles.footerLogo}>
               <span style={styles.logoCapSection}>🎓</span>
@@ -4118,7 +4150,7 @@ function Footer() {
             </p>
             <button style={styles.footerJoinBtn}>Join now</button>
           </div>
-          <div style={styles.footerCols}>
+          <div style={styles.footerCols} className="footer-cols">
             {cols.map(col => (
               <div key={col.heading} style={styles.footerCol}>
                 <h4 style={styles.footerColHead}>{col.heading}</h4>
@@ -4152,8 +4184,10 @@ function StyleInjector() {
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-      * { box-sizing: border-box; }
-      body { margin: 0; }
+      html { overflow-x: hidden; }
+      body { margin: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+      *, *::before, *::after { box-sizing: border-box; }
+      img, video, iframe, svg { max-width: 100%; height: auto; }
 
       @keyframes float {
         0%, 100% { transform: translateY(0) rotate(0); }
@@ -4172,141 +4206,134 @@ function StyleInjector() {
         0% { background-position: -200% 0; }
         100% { background-position: 200% 0; }
       }
-      .grade-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-      }
-      .skill-card:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      }
-      .lc-grade-row:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        transform: translateY(-1px);
-      }
-      input:focus, button:focus-visible {
-        outline: 3px solid #0C5CA844;
-        outline-offset: 2px;
-      }
+
+      .grade-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+      .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+      .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+      input:focus, button:focus-visible { outline: 3px solid #0C5CA844; outline-offset: 2px; }
       button { font-family: inherit; }
-      .test-stack span {
-        position: absolute;
-        top: 8px;
-        width: 58px;
-        height: 76px;
-        border-radius: 6px;
-        background: linear-gradient(160deg, #58c9e8, #2563eb);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        box-shadow: 0 8px 14px rgba(0,0,0,0.15);
-        border: 3px solid white;
-      }
-      .test-stack span:first-child {
-        left: 10px;
-        transform: rotate(-14deg);
-      }
-      .test-stack span:last-child {
-        left: 58px;
-        transform: rotate(9deg);
-      }
-      .promo-cards strong {
-        display: block;
-        font-family: ${FONT_DISPLAY};
-        font-size: 26px;
-        color: #00913c;
-        margin-bottom: 4px;
-        font-weight: 700;
-      }
-      .promo-cards p {
-        margin: 0 0 10px;
-        font-size: 14px;
-        color: #2f4a36;
-      }
-      .promo-cards em {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-style: normal;
-        color: #008C2E;
-        font-weight: 700;
-      }
-      .payment-form label,
-      .admin-form label {
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-        font-size: 13px;
-        font-weight: 800;
-        color: #334155;
-      }
-      label input,
-      label select,
-      label textarea {
-        width: 100%;
-        border: 2px solid #D9E7FF;
-        border-radius: 10px;
-        padding: 11px 12px;
-        font-family: ${FONT_BODY};
-        font-size: 14px;
-        background: #F8FBFF;
-      }
-      label textarea {
-        min-height: 92px;
-        resize: vertical;
+      input, select, textarea { max-width: 100%; }
+
+      /* ── HEADER RESPONSIVE (mobile-first) ── */
+      /* Mobile default: hamburger visible, desktop elements hidden */
+      .header-hamburger { display: flex !important; }
+      .header-desktop-nav { display: none !important; }
+      .header-desktop-actions { display: none !important; }
+      .header-search { display: none !important; }
+
+      /* 769px+: show desktop layout */
+      @media (min-width: 769px) {
+        .header-hamburger { display: none !important; }
+        .header-desktop-nav { display: flex !important; }
+        .header-desktop-actions { display: flex !important; }
+        .header-search { display: flex !important; }
       }
 
+      /* Mobile top row: logo left, hamburger right */
       @media (max-width: 768px) {
-        .grade-card { min-width: 0 !important; }
-        input { min-width: 0; }
-        header nav {
-          overflow-x: auto;
-          justify-content: flex-start !important;
-          padding-bottom: 8px !important;
+        .header-top-row {
+          display: flex !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          padding-bottom: 10px !important;
         }
       }
+
+      /* ── HOME SCREEN ── */
+      /* Hero stacks on tablet/mobile */
       @media (max-width: 900px) {
-        .hero-clouds,
-        .grade-catalog-grid,
-        .grade8-skill-columns,
-        .support-grid,
-        .impact-grid,
-        .home-stats,
-        .promo-cards,
-        .responsive-grid,
+        .art-hero {
+          gap: 40px !important;
+          padding: 52px 20px 60px !important;
+        }
         .art-cards-grid,
         .art-why-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
+        .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
+        .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
       }
+
+      @media (max-width: 768px) {
+        .art-hero {
+          flex-direction: column !important;
+          padding: 40px 16px 48px !important;
+          gap: 28px !important;
+          text-align: center !important;
+        }
+        .art-hero-left { max-width: 100% !important; }
+        .art-hero-right { display: none !important; }
+        .art-tags-row { justify-content: center !important; }
+
+        .art-section { padding: 40px 16px !important; }
+        .art-section-wrap { padding-left: 16px !important; padding-right: 16px !important; }
+
+        .art-cards-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+        .art-why-grid   { grid-template-columns: 1fr 1fr !important; gap: 14px !important; }
+        .art-start-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
+        .art-cta-card { padding: 36px 20px !important; }
+
+        .footer-top { display: flex !important; flex-direction: column !important; gap: 28px !important; }
+        .footer-cols { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+
+        .grade-card { min-width: 0 !important; }
+        input { min-width: 0; }
+      }
+
       @media (max-width: 640px) {
-        .header-top-row {
+        .art-why-grid { grid-template-columns: 1fr !important; }
+        .art-stats-row { grid-template-columns: 1fr 1fr !important; }
+
+        .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
+        .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid,
+        .art-cards-grid, .art-why-grid, .art-start-inner {
           grid-template-columns: 1fr !important;
         }
-        .hero-clouds,
-        .grade-catalog-grid,
-        .grade8-skill-columns,
-        .support-grid,
-        .impact-grid,
-        .home-stats,
-        .promo-cards,
-        .responsive-grid,
-        .art-cards-grid,
-        .art-why-grid,
-        .art-start-inner {
-          grid-template-columns: 1fr !important;
-        }
-        .payment-form,
-        .admin-form {
-          grid-template-columns: 1fr !important;
-        }
-        .report-row,
-        .activity-row {
-          grid-template-columns: 1fr !important;
-        }
+        .payment-form, .admin-form { grid-template-columns: 1fr !important; }
+        .report-row { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+        .activity-row { grid-template-columns: 40px 1fr !important; }
       }
+
+      @media (max-width: 480px) {
+        .art-cta-card { padding: 28px 14px !important; }
+        .footer-cols { grid-template-columns: 1fr !important; }
+        .art-grades-row button,
+        .art-grades-row span { padding: 6px 10px !important; font-size: 12px !important; }
+      }
+
+      /* ── MISC COMPONENTS ── */
+      .test-stack span {
+        position: absolute; top: 8px; width: 58px; height: 76px;
+        border-radius: 6px;
+        background: linear-gradient(160deg, #58c9e8, #2563eb);
+        color: white; display: flex; align-items: center; justify-content: center;
+        font-weight: 900; box-shadow: 0 8px 14px rgba(0,0,0,0.15); border: 3px solid white;
+      }
+      .test-stack span:first-child { left: 10px; transform: rotate(-14deg); }
+      .test-stack span:last-child  { left: 58px; transform: rotate(9deg); }
+
+      .promo-cards strong {
+        display: block; font-family: ${FONT_DISPLAY};
+        font-size: 26px; color: #00913c; margin-bottom: 4px; font-weight: 700;
+      }
+      .promo-cards p  { margin: 0 0 10px; font-size: 14px; color: #2f4a36; }
+      .promo-cards em {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-style: normal; color: #008C2E; font-weight: 700;
+      }
+
+      .payment-form label, .admin-form label {
+        display: flex; flex-direction: column; gap: 7px;
+        font-size: 13px; font-weight: 800; color: #334155;
+      }
+      label input, label select, label textarea {
+        width: 100%; border: 2px solid #D9E7FF; border-radius: 10px;
+        padding: 11px 12px; font-family: ${FONT_BODY}; font-size: 14px; background: #F8FBFF;
+      }
+      label textarea { min-height: 92px; resize: vertical; }
     `}</style>
   );
 }
@@ -4323,6 +4350,7 @@ const styles = {
     color: '#0D2040',
     display: 'flex',
     flexDirection: 'column',
+    overflowX: 'hidden',
   },
   main: { flex: 1, paddingBottom: 0 },
   container: { maxWidth: 1200, margin: '0 auto', padding: '32px 24px' },
@@ -4776,6 +4804,36 @@ const styles = {
     cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
+  },
+  hamburgerBtn: {
+    width: 36, height: 36, borderRadius: 6,
+    background: 'rgba(255,255,255,0.15)',
+    border: '1px solid rgba(255,255,255,0.35)',
+    cursor: 'pointer',
+    display: 'none',
+    alignItems: 'center', justifyContent: 'center',
+    color: 'white', flexShrink: 0,
+  },
+  mobileMenu: {
+    display: 'flex', flexDirection: 'column',
+    background: '#0A4F8A',
+    borderTop: '1px solid rgba(255,255,255,0.15)',
+    paddingBottom: 8,
+  },
+  mobileNavLink: {
+    background: 'none', border: 'none',
+    color: 'rgba(255,255,255,0.88)',
+    fontSize: 17, fontWeight: 600,
+    padding: '13px 20px', textAlign: 'left', cursor: 'pointer',
+    borderBottom: '1px solid rgba(255,255,255,0.07)',
+    fontFamily: FONT_DISPLAY,
+    width: '100%',
+  },
+  mobileNavLinkActive: {
+    color: 'white', background: 'rgba(255,255,255,0.08)', fontWeight: 800,
+  },
+  mobileMenuDivider: {
+    height: 1, background: 'rgba(255,255,255,0.18)', margin: '6px 0',
   },
   signInBtn: {
     height: 36,
