@@ -1,6 +1,6 @@
 export const databaseModels = {
   users: {
-    description: 'Login identity and role for every Gradely account.',
+    description: 'Login identity and role for every Questly account.',
     fields: ['id', 'email', 'password_hash', 'display_name', 'role', 'avatar_url', 'is_active', 'last_login_at'],
     relationships: ['parent_profiles.user_id', 'student_profiles.user_id'],
   },

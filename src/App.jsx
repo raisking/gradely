@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   Sparkles, Trophy, Flame, Star, Target, BookOpen, Calculator, FlaskConical,
   Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw, Menu,
@@ -16,7 +16,7 @@ import {
 } from './services/accountStorage';
 
 /* =========================================================================
-   Gradely — A complete educational platform inspired by Gradely
+   Questly — A complete educational platform inspired by Questly
    Single-file React app with working practice engine, progress tracking,
    gamification, and adaptive difficulty.
    ========================================================================= */
@@ -26,20 +26,12 @@ import {
 // content management trivial: just add to these objects.
 
 const GRADES = [
-  { id: 'prek', label: 'Pre-K', color: '#FF6B9D', emoji: '🌈' },
   { id: 'k',    label: 'Kindergarten', color: '#FF8C42', emoji: '🎨' },
   { id: '1',    label: 'Grade 1', color: '#FFB627', emoji: '⭐' },
   { id: '2',    label: 'Grade 2', color: '#7DCE82', emoji: '🌱' },
   { id: '3',    label: 'Grade 3', color: '#3DB2FF', emoji: '🚀' },
   { id: '4',    label: 'Grade 4', color: '#5C7AEA', emoji: '🔬' },
   { id: '5',    label: 'Grade 5', color: '#9B5DE5', emoji: '📚' },
-  { id: '6',    label: 'Grade 6', color: '#F15BB5', emoji: '🎯' },
-  { id: '7',    label: 'Grade 7', color: '#00BBF9', emoji: '💡' },
-  { id: '8',    label: 'Grade 8', color: '#00F5D4', emoji: '🧪' },
-  { id: '9',    label: 'Grade 9', color: '#FEE440', emoji: '🎓' },
-  { id: '10',   label: 'Grade 10', color: '#FB5607', emoji: '🏆' },
-  { id: '11',   label: 'Grade 11', color: '#8338EC', emoji: '🧠' },
-  { id: '12',   label: 'Grade 12', color: '#3A86FF', emoji: '🌟' },
 ];
 
 const SUBJECTS = {
@@ -52,55 +44,6 @@ const SUBJECTS = {
 // Skill catalog. Each skill has a curated set of questions across types.
 // Difficulty levels: 1 (easy) → 3 (hard). Adaptive engine selects accordingly.
 const SKILLS = {
-  // ============ MATH — PRE-K ============
-  'math-prek-counting': {
-    id: 'math-prek-counting', subject: 'math', grade: 'prek',
-    title: 'Counting to 5', description: 'Count objects and recognize numbers up to 5',
-    explanation: 'Counting helps us know "how many" of something we have. Point to each item as you count: 1, 2, 3, 4, 5!',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'How many apples? 🍎🍎🍎', options: ['2','3','4','5'], answer: '3', hint: 'Count each apple one at a time.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'How many stars? ⭐⭐', options: ['1','2','3','4'], answer: '2', hint: 'Touch each star as you count.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'How many balloons? 🎈', options: ['1','2','3','4'], answer: '1', hint: 'Just one balloon!' },
-      { id: 'q4', type: 'mcq', difficulty: 1, prompt: 'How many cats? 🐱🐱🐱🐱', options: ['2','3','4','5'], answer: '4', hint: 'Count: one, two, three, four!' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'How many hearts? 💜💜💜💜💜', options: ['3','4','5','6'], answer: '5', hint: 'Count slowly: one, two, three, four, five.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'How many flowers? 🌸🌸🌸', options: ['1','2','3','4'], answer: '3', hint: 'Touch each flower.' },
-      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'What number comes after 2?', options: ['1','3','4','5'], answer: '3', hint: 'Count: 1, 2, then…' },
-      { id: 'q8', type: 'mcq', difficulty: 2, prompt: 'What number comes before 4?', options: ['2','3','5','6'], answer: '3', hint: 'Count backward from 4.' },
-      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Which group has MORE? 🐶🐶 or 🐱🐱🐱🐱?', options: ['Dogs','Cats'], answer: 'Cats', hint: 'Count each group, pick the bigger.' },
-      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Which is more: 4 or 2?', options: ['4','2'], answer: '4', hint: 'Bigger numbers mean more things.' },
-      { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'Which group has FEWER? 🍎🍎🍎🍎🍎 or 🍌🍌?', options: ['Apples','Bananas'], answer: 'Bananas', hint: 'Fewer means a smaller number.' },
-    ],
-  },
-  'math-prek-shapes': {
-    id: 'math-prek-shapes', subject: 'math', grade: 'prek',
-    title: 'Basic Shapes', description: 'Recognize circles, squares, triangles, and more',
-    explanation: 'Shapes are all around us! A circle is round like a ball. A square has 4 equal sides. A triangle has 3 sides.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which shape is round like a ball?', options: ['Square','Circle','Triangle','Star'], answer: 'Circle', hint: 'It has no corners.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'How many sides does a triangle have?', options: ['2','3','4','5'], answer: '3', hint: '"Tri" means three!' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which shape has 4 equal sides?', options: ['Circle','Triangle','Square','Oval'], answer: 'Square', hint: 'All sides are the same length.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A pizza is shaped like a:', options: ['Square','Circle','Triangle','Rectangle'], answer: 'Circle', hint: 'A whole pizza is round.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A door is shaped like a:', options: ['Circle','Triangle','Rectangle','Star'], answer: 'Rectangle', hint: 'It is taller than it is wide.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'How many corners does a square have?', options: ['2','3','4','5'], answer: '4', hint: 'Count each pointy spot.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which shape has NO corners?', options: ['Square','Triangle','Circle','Star'], answer: 'Circle', hint: 'It is smooth all the way around.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A slice of pizza looks most like a:', options: ['Square','Circle','Triangle','Oval'], answer: 'Triangle', hint: 'It has a pointy end.' },
-    ],
-  },
-  'math-prek-colors-patterns': {
-    id: 'math-prek-colors-patterns', subject: 'math', grade: 'prek',
-    title: 'Colors & Simple Patterns', description: 'Identify colors and continue easy patterns',
-    explanation: 'A pattern is something that repeats. Red, blue, red, blue — the next color would be red again!',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What color is the sun? ☀️', options: ['Blue','Yellow','Green','Purple'], answer: 'Yellow', hint: 'Bright like a banana!' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What color is grass? 🌱', options: ['Red','Green','Blue','Pink'], answer: 'Green', hint: 'Like leaves on a tree.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'What color is the sky on a sunny day?', options: ['Black','Yellow','Blue','Red'], answer: 'Blue', hint: 'Look up on a clear day!' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What comes next? 🔴🔵🔴🔵🔴 ?', options: ['🔴','🔵','🟢','🟡'], answer: '🔵', hint: 'Red, blue, red, blue… then?' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What comes next? ⭐🌙⭐🌙 ?', options: ['⭐','🌙','☀️','🌈'], answer: '⭐', hint: 'Star, moon, star, moon…' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'What comes next? 🍎🍎🍌🍎🍎🍌🍎🍎 ?', options: ['🍎','🍌','🍇','🍊'], answer: '🍌', hint: 'Two apples, then a banana — repeating!' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which item does NOT belong? 🔴🔴🔵🔴', options: ['🔴 (red)','🔵 (blue)'], answer: '🔵 (blue)', hint: 'Most are red — find the odd one.' },
-    ],
-  },
-
   // ============ MATH — KINDERGARTEN ============
   'math-k-counting-10': {
     id: 'math-k-counting-10', subject: 'math', grade: 'k',
@@ -149,6 +92,65 @@ const SKILLS = {
       { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A clock face is most like a:', options: ['Square','Circle','Triangle','Rectangle'], answer: 'Circle', hint: 'It is round.' },
       { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which shape has more sides: square or triangle?', options: ['Square','Triangle'], answer: 'Square', hint: 'Square has 4, triangle has 3.' },
       { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A book cover is shaped like a:', options: ['Circle','Triangle','Rectangle','Star'], answer: 'Rectangle', hint: '4 sides — 2 long, 2 short.' },
+    ],
+  },
+  'math-k-odd-even': {
+    id: 'math-k-odd-even', subject: 'math', grade: 'k',
+    title: 'Odd & Even Numbers', description: 'Count blocks and decide if the number is odd or even',
+    explanation: 'Even numbers can be split into two equal groups: 2, 4, 6, 8, 10. Odd numbers always have one left over: 1, 3, 5, 7, 9. Try pairing up objects — if none are left over, the number is even!',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Is 2 odd or even? 🟦🟦', options: ['Odd','Even'], answer: 'Even', hint: 'Can you split 2 into two equal groups? 1 and 1 — yes! So it is even.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Is 3 odd or even? 🟨🟨🟨', options: ['Odd','Even'], answer: 'Odd', hint: 'Try to pair them: 1+1 — one is left over! That means 3 is odd.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Is 4 odd or even? 🟦🟦🟦🟦', options: ['Odd','Even'], answer: 'Even', hint: 'Pair them up: 2 and 2 — none left over! Even.' },
+      { id: 'q4', type: 'mcq', difficulty: 1, prompt: 'Is 1 odd or even? 🟨', options: ['Odd','Even'], answer: 'Odd', hint: 'You cannot split 1 into two equal groups — it is odd.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Count the blocks: 🟦🟦🟦🟦🟦. Is 5 odd or even?', options: ['Odd','Even'], answer: 'Odd', hint: 'Pair them: 2+2, then 1 is left over. Odd!' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Count the blocks: 🟨🟨🟨🟨🟨🟨. Is 6 odd or even?', options: ['Odd','Even'], answer: 'Even', hint: 'Pair them: 3 groups of 2 — none left over. Even!' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'Count the blocks: 🟦🟦🟦🟦🟦🟦🟦. Is 7 odd or even?', options: ['Odd','Even'], answer: 'Odd', hint: '3 pairs and 1 left over. Odd numbers always have one extra.' },
+      { id: 'q8', type: 'mcq', difficulty: 2, prompt: 'Count the blocks: 🟨🟨🟨🟨🟨🟨🟨🟨. Is 8 odd or even?', options: ['Odd','Even'], answer: 'Even', hint: '4 pairs of 2 — nothing left over. Even!' },
+      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Count the blocks: 🟦🟦🟦🟦🟦🟦🟦🟦🟦. Is 9 odd or even?', options: ['Odd','Even'], answer: 'Odd', hint: '4 pairs and 1 block left over — so 9 is odd.' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Count the blocks: 🟨🟨🟨🟨🟨🟨🟨🟨🟨🟨. Is 10 odd or even?', options: ['Odd','Even'], answer: 'Even', hint: '5 perfect pairs — nothing left over. 10 is even!' },
+      { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'Which of these numbers is EVEN?', options: ['1','3','6','9'], answer: '6', hint: 'Even numbers can be split into two equal groups. Try each one.' },
+      { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'Which of these numbers is ODD?', options: ['2','4','6','7'], answer: '7', hint: 'Odd numbers have one left over when you try to pair them. Which one has a leftover?' },
+    ],
+  },
+
+  'math-k-ten-frames': {
+    id: 'math-k-ten-frames', subject: 'math', grade: 'k',
+    title: 'Ten Frames Counting', description: 'Count the dots in a ten frame to find the number',
+    explanation: 'A ten frame is a box with 2 rows of 5 spaces. We fill it with dots to show numbers 1–10. Count all the filled circles (⚫) to find the number!',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⚫\n⚫⬜⬜⬜⬜\nHow many dots?', options: ['5','6','7','8'], answer: '6', hint: 'Count each dot one by one: 1, 2, 3, 4, 5, 6.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⬜\n⬜⬜⬜⬜⬜\nHow many dots?', options: ['3','4','5','6'], answer: '4', hint: 'Count just the top row: 1, 2, 3, 4.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⚫\n⬜⬜⬜⬜⬜\nHow many dots?', options: ['4','5','6','7'], answer: '5', hint: 'The top row is all filled! Count across: 1, 2, 3, 4, 5.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⚫\n⚫⚫⚫⬜⬜\nHow many dots?', options: ['6','7','8','9'], answer: '8', hint: 'Top row has 5. Count the bottom: 6, 7, 8.' },
+      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⚫\n⚫⚫⬜⬜⬜\nHow many dots?', options: ['5','6','7','8'], answer: '7', hint: 'Top row has 5. Bottom row adds 2 more: 5 + 2 = 7.' },
+      { id: 'q6', type: 'mcq', difficulty: 1, prompt: 'Count the dots in the ten frame:\n⚫⬜⬜⬜⬜\n⬜⬜⬜⬜⬜\nHow many dots?', options: ['1','2','3','4'], answer: '1', hint: 'There is only 1 dot in the whole frame!' },
+      { id: 'q7', type: 'mcq', difficulty: 1, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⬜⬜\n⬜⬜⬜⬜⬜\nHow many dots?', options: ['2','3','4','5'], answer: '3', hint: 'Count the dots in the top row: 1, 2, 3.' },
+      { id: 'q8', type: 'mcq', difficulty: 2, prompt: 'Count the dots in the ten frame:\n⚫⚫⚫⚫⚫\n⚫⚫⚫⚫⚫\nHow many dots?', options: ['8','9','10','11'], answer: '10', hint: 'The ten frame is full! A full ten frame always equals 10.' },
+      { id: 'q9', type: 'mcq', difficulty: 2, prompt: 'A ten frame has 5 dots on top and 3 on the bottom. How many dots in all?', options: ['6','7','8','9'], answer: '8', hint: 'Add the top and bottom: 5 + 3 = ?' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'A ten frame shows 9 dots. How many empty spaces are there?', options: ['0','1','2','3'], answer: '1', hint: 'A ten frame holds 10. 10 − 9 = ?' },
+      { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'Which ten frame shows the number 6?\nA: ⚫⚫⚫⚫⚫ / ⚫⬜⬜⬜⬜\nB: ⚫⚫⚫⚫⬜ / ⚫⚫⬜⬜⬜', options: ['A','B','Both','Neither'], answer: 'A', hint: 'Count A: 5 + 1 = 6. Count B: 4 + 2 = 6. Wait — check again!' },
+      { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'A ten frame has 4 empty spaces. How many dots does it show?', options: ['4','5','6','7'], answer: '6', hint: 'A ten frame holds 10. 10 − 4 empty = ? dots filled.' },
+    ],
+  },
+
+  'math-k-counting-to-4': {
+    id: 'math-k-counting-to-4', subject: 'math', grade: 'k',
+    title: 'Counting to 4', description: 'Count balloons, fish, and objects from 1 to 4',
+    explanation: 'We count objects by touching or pointing to each one and saying its number. 1, 2, 3, 4! Each number has a word: ONE, TWO, THREE, FOUR.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Count the balloons: 🎈\nHow many balloons?', options: ['1','2','3','4'], answer: '1', hint: 'There is just one balloon. That is ONE.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Count the balloons: 🎈🎈\nHow many balloons?', options: ['1','2','3','4'], answer: '2', hint: 'Count each balloon: 1, 2. That is TWO.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Count the balloons: 🎈🎈🎈\nHow many balloons?', options: ['1','2','3','4'], answer: '3', hint: 'Count: 1, 2, 3. That is THREE.' },
+      { id: 'q4', type: 'mcq', difficulty: 1, prompt: 'Count the balloons: 🎈🎈🎈🎈\nHow many balloons?', options: ['1','2','3','4'], answer: '4', hint: 'Count: 1, 2, 3, 4. That is FOUR.' },
+      { id: 'q5', type: 'mcq', difficulty: 1, prompt: 'Count the fish: 🐟\nHow many fish?', options: ['1','2','3','4'], answer: '1', hint: 'There is only one fish — ONE.' },
+      { id: 'q6', type: 'mcq', difficulty: 1, prompt: 'Count the fish: 🐟🐟🐟\nHow many fish?', options: ['1','2','3','4'], answer: '3', hint: 'Point to each fish and count: 1, 2, 3.' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'The number 2 is spelled:', options: ['ONE','TWO','THREE','FOUR'], answer: 'TWO', hint: '2 = TWO. Like two eyes!' },
+      { id: 'q8', type: 'mcq', difficulty: 2, prompt: 'The number 4 is spelled:', options: ['ONE','TWO','THREE','FOUR'], answer: 'FOUR', hint: '4 = FOUR. Count your fingers on one hand minus the thumb!' },
+      { id: 'q9', type: 'mcq', difficulty: 2, prompt: 'The word THREE means the number:', options: ['1','2','3','4'], answer: '3', hint: 'ONE=1, TWO=2, THREE=3, FOUR=4.' },
+      { id: 'q10', type: 'mcq', difficulty: 2, prompt: 'Count the stars: ⭐⭐⭐⭐\nWhat number is this?', options: ['ONE','TWO','THREE','FOUR'], answer: 'FOUR', hint: 'Count: 1, 2, 3, 4. The word for 4 is FOUR.' },
+      { id: 'q11', type: 'mcq', difficulty: 2, prompt: 'Count the apples: 🍎🍎\nWhat number is this?', options: ['ONE','TWO','THREE','FOUR'], answer: 'TWO', hint: '2 apples = TWO.' },
+      { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'Which group shows THREE objects?', options: ['🎈🎈','🐟🐟🐟','⭐⭐⭐⭐','🍎'], answer: '🐟🐟🐟', hint: 'Count each group. Which one has exactly 3?' },
     ],
   },
 
@@ -200,6 +202,25 @@ const SKILLS = {
       { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'How many tens are in 60?', options: ['0','6','16','60'], answer: '6', hint: '6 groups of 10.' },
       { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is the same as 4 tens and 2 ones?', options: ['24','42','402','420'], answer: '42', hint: '40 + 2.' },
       { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which number is bigger: 39 or 41?', options: ['39','41'], answer: '41', hint: 'Compare the tens place first.' },
+    ],
+  },
+  'math-1-number-bonds-8': {
+    id: 'math-1-number-bonds-8', subject: 'math', grade: '1',
+    title: 'Number Bonds — Sums of 8', description: 'Find the missing number that makes 8 when added together',
+    explanation: 'Number bonds show two parts that make a whole. When the whole is 8, the two parts always add up to 8. If one part is 5, the other must be 3, because 5 + 3 = 8. Think: what is missing to reach 8?',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '4 + __ = 8\nWhat is the missing number?', options: ['2','3','4','5'], answer: '4', hint: 'Start at 4 and count up to 8: 5, 6, 7, 8 — that is 4 more.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '5 + __ = 8\nWhat is the missing number?', options: ['2','3','4','5'], answer: '3', hint: 'Start at 5 and count up to 8: 6, 7, 8 — that is 3 more.' },
+      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '2 + __ = 8\nWhat is the missing number?', options: ['4','5','6','7'], answer: '6', hint: 'Start at 2 and count up to 8: 3, 4, 5, 6, 7, 8 — that is 6 more.' },
+      { id: 'q4', type: 'mcq', difficulty: 1, prompt: '7 + __ = 8\nWhat is the missing number?', options: ['0','1','2','3'], answer: '1', hint: 'Start at 7 — just one more step reaches 8!' },
+      { id: 'q5', type: 'mcq', difficulty: 1, prompt: '6 + __ = 8\nWhat is the missing number?', options: ['1','2','3','4'], answer: '2', hint: '6 + 2 = 8. Count up from 6: 7, 8.' },
+      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '3 + __ = 8\nWhat is the missing number?', options: ['3','4','5','6'], answer: '5', hint: '3 + 5 = 8. Think of the pair: 5 + 3.' },
+      { id: 'q7', type: 'mcq', difficulty: 2, prompt: '8 + __ = 8\nWhat is the missing number?', options: ['0','1','2','8'], answer: '0', hint: '8 is already 8! Adding 0 keeps it the same.' },
+      { id: 'q8', type: 'mcq', difficulty: 2, prompt: '1 + __ = 8\nWhat is the missing number?', options: ['5','6','7','8'], answer: '7', hint: 'Start at 1 and count up to 8 — you need 7 more.' },
+      { id: 'q9', type: 'mcq', difficulty: 2, prompt: 'Tom has 4 red marbles. He needs 8 marbles in all. How many more does he need?', options: ['2','3','4','5'], answer: '4', hint: '4 + ? = 8.' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Which pair of numbers makes a sum of 8?', options: ['3 + 6','2 + 5','6 + 2','4 + 3'], answer: '6 + 2', hint: 'Add each pair. Which one totals 8?' },
+      { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'A number bond shows 8 as the whole. One part is 5. What is the other part?', options: ['2','3','4','5'], answer: '3', hint: '5 + ? = 8. Count up from 5.' },
+      { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'Lucy baked 8 cookies total. She put 7 on a plate. How many cookies are left?', options: ['0','1','2','3'], answer: '1', hint: '7 + ? = 8.' },
     ],
   },
 
@@ -309,145 +330,6 @@ const SKILLS = {
       { id: 'q3', type: 'mcq', difficulty: 2, prompt: '2/3 + 1/6 = ?', options: ['3/9','5/6','3/6','4/6'], answer: '5/6', hint: '2/3 equals 4/6. Then add 1/6.' },
       { id: 'q4', type: 'fill', difficulty: 3, prompt: '1/3 + 1/4 = ? (use a/b form, like 7/12)', answer: '7/12', hint: 'Common denominator is 12. 1/3 = 4/12, 1/4 = 3/12.' },
       { id: 'q5', type: 'mcq', difficulty: 3, prompt: '3/5 + 1/2 = ?', options: ['4/7','11/10','11/10','1 1/10'], answer: '11/10', hint: 'Common denominator: 10. 6/10 + 5/10.' },
-    ],
-  },
-  'math-7-algebra': {
-    id: 'math-7-algebra', subject: 'math', grade: '7',
-    title: 'Solving One-Step Equations', description: 'Solve for x using inverse operations',
-    explanation: 'To solve for x, do the opposite operation on both sides. If x + 5 = 12, subtract 5 from both sides to get x = 7.',
-    questions: [
-      { id: 'q1', type: 'fill', difficulty: 1, prompt: 'Solve: x + 8 = 15. x = ?', answer: '7', hint: 'Subtract 8 from both sides.' },
-      { id: 'q2', type: 'fill', difficulty: 1, prompt: 'Solve: x - 4 = 9. x = ?', answer: '13', hint: 'Add 4 to both sides.' },
-      { id: 'q3', type: 'fill', difficulty: 2, prompt: 'Solve: 3x = 21. x = ?', answer: '7', hint: 'Divide both sides by 3.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Solve: x/4 = 6. x = ?', options: ['10','24','2','1.5'], answer: '24', hint: 'Multiply both sides by 4.' },
-      { id: 'q5', type: 'fill', difficulty: 3, prompt: 'Solve: -2x = 18. x = ?', answer: '-9', hint: 'Divide by -2. Watch the sign!' },
-    ],
-  },
-  'math-9-geometry': {
-    id: 'math-9-geometry', subject: 'math', grade: '9',
-    title: 'Pythagorean Theorem', description: 'Find missing sides of right triangles',
-    explanation: 'In a right triangle, a² + b² = c², where c is the hypotenuse (the longest side, across from the right angle).',
-    questions: [
-      { id: 'q1', type: 'fill', difficulty: 1, prompt: 'Legs 3 and 4. Find c (hypotenuse).', answer: '5', hint: '3² + 4² = 9 + 16 = 25. √25 = ?' },
-      { id: 'q2', type: 'fill', difficulty: 1, prompt: 'Legs 6 and 8. Find c.', answer: '10', hint: 'A 3-4-5 triangle, doubled.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Legs 5 and 12. Find c.', options: ['13','15','17','7'], answer: '13', hint: '25 + 144 = 169. √169 = 13.' },
-      { id: 'q4', type: 'fill', difficulty: 3, prompt: 'Hypotenuse 17, one leg 8. Find the other leg.', answer: '15', hint: '17² - 8² = 289 - 64 = 225. √225 = ?' },
-    ],
-  },
-
-  'math-9-linear-relations': {
-    id: 'math-9-linear-relations', subject: 'math', grade: '9',
-    title: 'Linear Relations', description: 'Slope, y-intercept, and equations of lines',
-    explanation: 'A linear relation has the form y = mx + b, where m is the slope (rate of change) and b is the y-intercept (starting value). Slope tells you how steep the line is; y-intercept tells you where the line crosses the y-axis.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the y-intercept of the line y = 3x + 7?', options: ['3','7','-3','-7'], answer: '7', hint: 'In y = mx + b, b is the y-intercept.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the slope of the line y = -4x + 1?', options: ['1','-1','4','-4'], answer: '-4', hint: 'In y = mx + b, m is the slope.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A canoe rental charges an initial fee of $5 plus $8 per hour. The equation is C = 8t + 5. What does the 5 represent?', options: ['The hourly rate','The initial charge','The total hours','The total cost'], answer: 'The initial charge', hint: 'In C = 8t + 5, the constant 5 is the flat starting cost.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A bus trip costs $275 plus $2 per seat. Which equation gives total cost C for n seats?', options: ['C = 2n + 225','C = 2n + 275','C = -2n + 225','C = 275n + 2'], answer: 'C = 2n + 275', hint: 'Initial cost is $275; each extra seat adds $2.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A plumber charges C = 50t + 70. The hourly rate changes to $60 per hour but the flat fee stays the same. How does the graph change?', options: ['The slope increases','The slope decreases','The y-intercept increases','The y-intercept decreases'], answer: 'The slope increases', hint: 'Rate (slope) goes from 50 to 60 — a steeper line.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A line passes through (0, 3) and (-1, 6). What is the slope?', options: ['-9','-3','3','9'], answer: '-3', hint: 'Slope = (6-3)/(-1-0) = 3/(-1) = -3.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Rewrite 3x - 2y + 16 = 0 in slope-intercept form. What are m and b?', options: ['m = 3/2, b = 8','m = -3/2, b = -8','m = 3, b = 16','m = 2/3, b = -8'], answer: 'm = 3/2, b = 8', hint: '2y = 3x + 16 → y = (3/2)x + 8.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Sarah runs a 40 km race at 10 km/h. Which equation gives the distance left, D, after t hours?', options: ['D = 40 - 10t','D = 40 + 10t','D = 10t - 40','D = 10 + 40t'], answer: 'D = 40 - 10t', hint: 'She starts at 40 km and reduces by 10 km each hour.' },
-      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'At 5 PM the temperature is 4°C and drops 2°C every hour. What is the temperature at 11 PM?', options: ['2°C','-2°C','-6°C','-8°C'], answer: '-8°C', hint: '6 hours × 2°C = 12°C drop. 4 - 12 = -8°C.' },
-      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'Which equation represents a linear relation?', options: ['y = x² - 5','y = 2x + 3','x² + y² = 25','y = x³'], answer: 'y = 2x + 3', hint: 'A linear relation has no exponents greater than 1 on variables.' },
-    ],
-  },
-
-  'math-9-algebra-expressions': {
-    id: 'math-9-algebra-expressions', subject: 'math', grade: '9',
-    title: 'Algebraic Expressions', description: 'Evaluate, simplify, and expand polynomial expressions',
-    explanation: 'To evaluate an expression, substitute the given value for the variable. To simplify, collect like terms. To expand, use the distributive property: a(b + c) = ab + ac.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the value of 6x² when x = 1/3?', options: ['2/3','2','3','6'], answer: '2/3', hint: '6 × (1/3)² = 6 × 1/9 = 6/9 = 2/3.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the value of (x/3) + 2 when x = 18?', options: ['2','6','8','12'], answer: '8', hint: '18/3 + 2 = 6 + 2 = 8.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which expression represents the volume of a cube with side length x?', options: ['x²','3x','6x','x³'], answer: 'x³', hint: 'Volume = side × side × side = x³.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The sum of two perimeters is 13x + 4y. One perimeter is 4x - 2y. What is the other perimeter?', options: ['9x + 6y','9x + 2y','17x + 6y','17x + 2y'], answer: '9x + 6y', hint: '(13x + 4y) - (4x - 2y) = 9x + 6y.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which is equivalent to 3x²(5x² - 2x + 1)?', options: ['8x² - 2x + 1','15x⁴ - 6x³ + 3x²','15x⁴ - 2x + 1','8x⁴ + x + 4'], answer: '15x⁴ - 6x³ + 3x²', hint: 'Distribute: 3x²·5x² = 15x⁴, 3x²·(-2x) = -6x³, 3x²·1 = 3x².' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Simplify: 4a + 3b - 2a + b', options: ['2a + 4b','6a + 4b','2a + 2b','6a + 2b'], answer: '2a + 4b', hint: 'Collect like terms: (4a - 2a) + (3b + b) = 2a + 4b.' },
-      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'What is the value of 2x² - 3x + 1 when x = 2?', options: ['1','3','5','7'], answer: '3', hint: '2(4) - 3(2) + 1 = 8 - 6 + 1 = 3.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Expand: 2x(3x - 4)', options: ['6x² - 8x','6x² - 4x','5x² - 2x','6x - 8'], answer: '6x² - 8x', hint: '2x × 3x = 6x²; 2x × (-4) = -8x.' },
-      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Simplify: (3x² + 5x - 2) - (x² - 2x + 4)', options: ['2x² + 7x - 6','2x² + 3x - 6','4x² + 3x + 2','2x² + 7x + 2'], answer: '2x² + 7x - 6', hint: 'Subtract each term: 3x²-x²=2x², 5x-(-2x)=7x, -2-4=-6.' },
-    ],
-  },
-
-  'math-9-angles-polygons': {
-    id: 'math-9-angles-polygons', subject: 'math', grade: '9',
-    title: 'Angles & Polygons', description: 'Interior angles, polygon sums, and perimeter',
-    explanation: 'The sum of interior angles of a polygon with n sides = (n - 2) × 180°. For example, a triangle (n=3) has 180°, a quadrilateral (n=4) has 360°, a pentagon (n=5) has 540°. Co-interior angles between parallel lines are supplementary (add to 180°).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the sum of interior angles of a triangle?', options: ['90°','180°','270°','360°'], answer: '180°', hint: '(3 - 2) × 180° = 180°.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the sum of interior angles of a quadrilateral (4 sides)?', options: ['180°','270°','360°','450°'], answer: '360°', hint: '(4 - 2) × 180° = 360°.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'What is the sum of interior angles of a hexagon (6 sides)?', options: ['540°','720°','900°','1 080°'], answer: '720°', hint: '(6 - 2) × 180° = 4 × 180° = 720°.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What is the sum of the interior angles of a 12-sided polygon?', options: ['1 080°','1 800°','1 980°','2 160°'], answer: '1 800°', hint: '(12 - 2) × 180° = 10 × 180° = 1 800°.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A rectangle has a perimeter of 100 cm. Which dimensions give the largest possible area?', options: ['10 cm × 40 cm','20 cm × 30 cm','25 cm × 25 cm','15 cm × 35 cm'], answer: '25 cm × 25 cm', hint: 'For a fixed perimeter, a square always gives the maximum area.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'In an isosceles triangle, one base angle is 52°. What is the vertex angle?', options: ['52°','76°','104°','128°'], answer: '76°', hint: '180° - 52° - 52° = 76°.' },
-      { id: 'q7', type: 'mcq', difficulty: 2, prompt: 'Two parallel lines are cut by a transversal. One co-interior angle is 65°. What is the other co-interior angle?', options: ['65°','90°','115°','125°'], answer: '115°', hint: 'Co-interior angles add to 180°. 180° - 65° = 115°.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A garden is a rectangle 20 m × 10 m with a semicircle of radius 7 m on one end. Which is closest to the total fencing needed (excluding the diameter side where the semicircle joins)?', options: ['60 m','70 m','75 m','85 m'], answer: '75 m', hint: 'Fence = 20 + 10 + 20 + half circumference (π×7 ≈ 22) ≈ 72 m → closest 75 m.' },
-      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Each interior angle of a regular polygon is 150°. How many sides does it have?', options: ['8','10','12','15'], answer: '12', hint: 'Each exterior angle = 180°-150° = 30°. Sides = 360°/30° = 12.' },
-    ],
-  },
-
-  'math-9-cylinders-measurement': {
-    id: 'math-9-cylinders-measurement', subject: 'math', grade: '9',
-    title: 'Cylinders & Measurement', description: 'Calculate volume and surface area of cylinders',
-    explanation: 'Volume of a cylinder: V = πr²h (π × radius² × height). Lateral surface area: A = 2πrh. Total surface area: A = 2πrh + 2πr². Remember: diameter = 2 × radius.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which formula gives the volume of a cylinder with radius r and height h?', options: ['V = πrh','V = 2πrh','V = πr²h','V = πr²'], answer: 'V = πr²h', hint: 'Volume = area of circular base × height = πr² × h.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A cylinder has radius 3 cm and height 5 cm. What is closest to its volume?', options: ['47 cm³','94 cm³','141 cm³','188 cm³'], answer: '141 cm³', hint: 'V = π × 9 × 5 = 45π ≈ 141.4 cm³.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A water container has radius 1.5 cm and height 5 cm. Which expression gives its volume?', options: ['V = π(3²)(5)','V = π(1.5)(5)','V = π(1.5²)(5)','V = π(2×1.5)(5)'], answer: 'V = π(1.5²)(5)', hint: 'V = πr²h = π(1.5²)(5).' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A cylinder has volume 150 cm³ and diameter 8 cm. Which is closest to its lateral surface area (2πrh)?', options: ['38 cm²','75 cm²','150 cm²','300 cm²'], answer: '75 cm²', hint: 'r = 4; h = 150/(π×16) ≈ 2.98 cm. Lateral SA = 2π×4×2.98 ≈ 75 cm².' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A cylinder has radius 5 cm and height 12 cm. What is its volume to the nearest cm³?', options: ['188 cm³','377 cm³','942 cm³','1 885 cm³'], answer: '942 cm³', hint: 'V = π × 25 × 12 = 300π ≈ 942 cm³.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A cylindrical case has diameter 40 mm and volume 25 120 mm³. Which is closest to its height?', options: ['2 mm','5 mm','10 mm','20 mm'], answer: '20 mm', hint: 'r = 20; h = 25 120 ÷ (π × 400) ≈ 20 mm.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: '50 identical playing chips fit tightly in the cylinder above (diameter 40 mm, height 20 mm). Which is closest to the thickness of one chip?', options: ['0.1 mm','0.4 mm','1.3 mm','2.5 mm'], answer: '0.4 mm', hint: 'Total height ÷ 50 = 20 ÷ 50 = 0.4 mm.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A cylinder has volume 500 cm³ and height 10 cm. Which is closest to the radius?', options: ['2 cm','4 cm','8 cm','16 cm'], answer: '4 cm', hint: 'r² = 500 ÷ (π × 10) ≈ 15.9; r ≈ 4 cm.' },
-    ],
-  },
-
-  'math-9-proportional-reasoning': {
-    id: 'math-9-proportional-reasoning', subject: 'math', grade: '9',
-    title: 'Proportional Reasoning', description: 'Ratios, proportions, unit rates, and percent problems',
-    explanation: 'A proportion is two equal ratios: a/b = c/d. Cross-multiply to solve: ad = bc. Percent problems: use Part = Percent × Whole. Unit rate = total ÷ quantity (e.g. cost per gram).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Solve the proportion: 2/3 = x/120', options: ['40','80','180','240'], answer: '80', hint: 'x = 120 × (2/3) = 80.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A recipe needs 3 cups of flour for every 2 cups of sugar. How many cups of flour for 6 cups of sugar?', options: ['4','6','9','12'], answer: '9', hint: '3/2 = x/6 → x = 9.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Four cookie brands: 200 g/$1.99, 250 g/$2.29, 300 g/$2.89, 450 g/$4.29. Which costs the least per gram?', options: ['200 g brand','250 g brand','300 g brand','450 g brand'], answer: '250 g brand', hint: '250g brand: $2.29÷250 ≈ $0.00916/g — cheapest of the four.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '260 Grade 9 students attend school. 80% go to a school dance, and half of those buy tickets at the door. How many buy tickets at the door?', options: ['40','104','130','208'], answer: '104', hint: '260 × 0.80 = 208; 208 ÷ 2 = 104.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Movie treats total $9.76 before tax. With 13% tax and a $20 bill, what change do you receive?', options: ['$8.97','$9.76','$11.03','$11.55'], answer: '$8.97', hint: 'After tax: 9.76 × 1.13 ≈ $11.03. Change: $20 − $11.03 = $8.97.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A phone call costs C = 0.35t + 0.60 dollars (t = minutes). How long is a call that costs $5.85?', options: ['3 min','6 min','15 min','18 min'], answer: '15 min', hint: '5.85 = 0.35t + 0.60 → 0.35t = 5.25 → t = 15.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'A map has a scale of 1:25 000. A distance on the map is 4.5 cm. What is the actual distance?', options: ['1.125 km','11.25 km','112.5 km','0.18 km'], answer: '1.125 km', hint: '4.5 cm × 25 000 = 112 500 cm = 1 125 m = 1.125 km.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A car travels 300 km on 40 L of gasoline. How many litres are needed for 525 km?', options: ['52 L','60 L','70 L','75 L'], answer: '70 L', hint: 'Rate = 40/300 L/km. 525 × (40/300) = 70 L.' },
-    ],
-  },
-
-  // ============ ELA — PRE-K ============
-  'ela-prek-letters-az': {
-    id: 'ela-prek-letters-az', subject: 'ela', grade: 'prek',
-    title: 'Letters of the Alphabet', description: 'Learn to recognize all 26 letters',
-    explanation: 'The alphabet has 26 letters. Every word is made of letters! A is the first letter, Z is the last.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the FIRST letter of the alphabet?', options: ['A','B','C','Z'], answer: 'A', hint: 'A, B, C…' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What letter comes after B?', options: ['A','C','D','E'], answer: 'C', hint: 'A, B, then…' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'What letter comes after D?', options: ['B','C','E','F'], answer: 'E', hint: 'Sing the alphabet song!' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which letter is uppercase?', options: ['a','b','C','d'], answer: 'C', hint: 'Uppercase letters are big!' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which letter is lowercase?', options: ['A','B','c','D'], answer: 'c', hint: 'Lowercase letters are small.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'What is the LAST letter of the alphabet?', options: ['X','Y','Z','A'], answer: 'Z', hint: 'It comes after Y.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'How many letters are in the alphabet?', options: ['10','20','26','30'], answer: '26', hint: 'A through Z.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Which letter looks the same uppercase and lowercase?', options: ['A/a','B/b','O/o','D/d'], answer: 'O/o', hint: 'A circle is a circle!' },
-    ],
-  },
-  'ela-prek-rhyming': {
-    id: 'ela-prek-rhyming', subject: 'ela', grade: 'prek',
-    title: 'Rhyming Words', description: 'Find words that sound alike at the end',
-    explanation: 'Rhyming words sound alike at the end. "Cat" and "hat" rhyme because they both end in "-at".',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which word rhymes with "cat"?', options: ['Dog','Hat','Sun','Tree'], answer: 'Hat', hint: 'Both end in "-at".' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which word rhymes with "dog"?', options: ['Cat','Frog','Bird','Fish'], answer: 'Frog', hint: 'Both end in "-og".' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which word rhymes with "bug"?', options: ['Bee','Bat','Hug','Hop'], answer: 'Hug', hint: 'Listen for the "-ug" sound.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which word rhymes with "star"?', options: ['Sun','Moon','Car','Bell'], answer: 'Car', hint: 'Both end with "-ar".' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which word rhymes with "tree"?', options: ['Bee','Run','Sky','Cup'], answer: 'Bee', hint: '"-ee" sound at the end.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Which two words rhyme?', options: ['Cake & Lake','Cake & Cup','Lake & Sky','Cup & Bee'], answer: 'Cake & Lake', hint: 'Both end in "-ake".' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which word does NOT rhyme with "fan"?', options: ['Man','Pan','Can','Dog'], answer: 'Dog', hint: 'Three end in "-an".' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Which word rhymes with "spring"?', options: ['Spoon','Ring','Frog','Snow'], answer: 'Ring', hint: 'Both end with "-ing".' },
     ],
   },
 
@@ -677,17 +559,6 @@ const SKILLS = {
       { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which property is true for liquids?', options: ['Fixed shape and volume','Takes shape of container, fixed volume','No fixed shape or volume','Always cold'], answer: 'Takes shape of container, fixed volume', hint: 'Pour water into different cups.' },
     ],
   },
-  'science-8-cells': {
-    id: 'science-8-cells', subject: 'science', grade: '8',
-    title: 'Cell Biology Basics', description: 'Parts and functions of cells',
-    explanation: 'All living things are made of cells. Plant and animal cells share parts like the nucleus and cell membrane, but plant cells also have cell walls and chloroplasts.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the "control center" of a cell?', options: ['Membrane','Nucleus','Cytoplasm','Wall'], answer: 'Nucleus', hint: 'It contains DNA.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Which part is found ONLY in plant cells?', options: ['Nucleus','Chloroplast','Membrane','Mitochondria'], answer: 'Chloroplast', hint: 'It makes food using sunlight.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'What do mitochondria do?', options: ['Store water','Produce energy','Make proteins','Hold DNA'], answer: 'Produce energy', hint: 'Often called the "powerhouse".' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Which structure controls what enters and exits a cell?', options: ['Nucleus','Cell membrane','Vacuole','Ribosome'], answer: 'Cell membrane', hint: 'It is the cell\'s outer boundary.' },
-    ],
-  },
 
   // ============ SOCIAL STUDIES ============
   'social-2-community': {
@@ -711,28 +582,6 @@ const SKILLS = {
       { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which continent has the Sahara Desert?', options: ['Asia','Africa','Australia','South America'], answer: 'Africa', hint: 'A huge desert in the north.' },
       { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Where is the Amazon Rainforest?', options: ['Africa','Asia','South America','Europe'], answer: 'South America', hint: 'Mostly in Brazil.' },
       { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which is the longest river in the world?', options: ['Amazon','Nile','Mississippi','Yangtze'], answer: 'Nile', hint: 'It flows through Egypt.' },
-    ],
-  },
-  'social-6-history': {
-    id: 'social-6-history', subject: 'social', grade: '6',
-    title: 'Ancient Civilizations', description: 'Egypt, Greece, Rome, and more',
-    explanation: 'Ancient civilizations laid the foundation for modern society. They gave us writing, math, government systems, and ideas about democracy.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Where did the pyramids originate?', options: ['Greece','Egypt','Rome','China'], answer: 'Egypt', hint: 'Along the Nile River.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Where did democracy originate?', options: ['Rome','Egypt','Greece','India'], answer: 'Greece', hint: 'Specifically in Athens.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Colosseum is found in:', options: ['Athens','Rome','Cairo','Babylon'], answer: 'Rome', hint: 'Romans held games there.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Which civilization invented paper?', options: ['Greek','Egyptian','Chinese','Roman'], answer: 'Chinese', hint: 'Around 100 AD.' },
-    ],
-  },
-  'social-8-civics': {
-    id: 'social-8-civics', subject: 'social', grade: '8',
-    title: 'U.S. Government', description: 'Branches of government and the Constitution',
-    explanation: 'The U.S. government has three branches: Legislative (makes laws), Executive (enforces laws), and Judicial (interprets laws). This separation keeps power balanced.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'How many branches does the U.S. government have?', options: ['2','3','4','5'], answer: '3', hint: 'Legislative, Executive, Judicial.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Which branch makes laws?', options: ['Executive','Judicial','Legislative','Military'], answer: 'Legislative', hint: 'Congress (Senate and House).' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Who heads the Executive branch?', options: ['Chief Justice','President','Speaker','Senator'], answer: 'President', hint: 'Lives in the White House.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'What is the Bill of Rights?', options: ['A list of taxes','First 10 amendments','A type of court','A speech by Lincoln'], answer: 'First 10 amendments', hint: 'It protects individual freedoms.' },
     ],
   },
 
@@ -786,915 +635,7 @@ const SKILLS = {
     ],
   },
 
-  // ============ MATH — GRADE 6 ============
-  'math-6-ratios': {
-    id: 'math-6-ratios', subject: 'math', grade: '6',
-    title: 'Ratios & Proportions', description: 'Understand and apply ratios, rates, and unit rates',
-    explanation: 'A ratio compares two quantities. 3 cats and 5 dogs → ratio is 3:5. A unit rate shows the rate per 1 unit, like 60 miles per hour. Proportions are equivalent ratios.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the ratio of stars to circles? ⭐⭐⭐🔵🔵', options: ['2:3','3:2','3:5','5:3'], answer: '3:2', hint: 'Stars:circles = 3:2.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A car travels 120 miles in 2 hours. What is the unit rate?', options: ['40 mph','60 mph','80 mph','100 mph'], answer: '60 mph', hint: '120 ÷ 2 = 60 miles per hour.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Which ratio is equivalent to 4:6?', options: ['1:2','2:3','3:4','4:5'], answer: '2:3', hint: 'Divide both by 2.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'If 5 pencils cost $2.50, how much is one pencil?', options: ['$0.40','$0.50','$0.60','$0.75'], answer: '$0.50', hint: '2.50 ÷ 5.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Scale: 1 cm = 5 m. A map shows 4 cm. The real distance is:', options: ['4 m','9 m','16 m','20 m'], answer: '20 m', hint: '4 × 5.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'A recipe uses 3 cups flour for 24 cookies. For 48 cookies, use:', options: ['4 cups','5 cups','6 cups','8 cups'], answer: '6 cups', hint: 'Double the recipe.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'In a class of 30, the ratio of girls to boys is 2:3. How many girls?', options: ['10','12','15','18'], answer: '12', hint: 'Girls = 2/5 × 30.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'You earn $42 in 6 hours. How much in 10 hours?', options: ['$60','$70','$75','$80'], answer: '$70', hint: 'Unit rate: $7/hr × 10.' },
-    ],
-  },
-  'math-6-integers': {
-    id: 'math-6-integers', subject: 'math', grade: '6',
-    title: 'Integers & Number Line', description: 'Work with positive and negative integers',
-    explanation: 'Integers include positive numbers, negative numbers, and zero. On a number line, negative numbers are left of zero. −3 is less than −1 because it is further left.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which is the lowest temperature? −5°, 0°, 3°, −2°', options: ['−5°','0°','3°','−2°'], answer: '−5°', hint: 'The most negative number is the lowest.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What is the opposite of −7?', options: ['−14','0','7','14'], answer: '7', hint: 'Opposite means switch the sign.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '−3 + 5 = ?', options: ['−8','−2','2','8'], answer: '2', hint: 'Move 5 steps right from −3.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '−4 + (−6) = ?', options: ['−10','−2','2','10'], answer: '−10', hint: 'Adding two negatives gives a more negative result.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: '8 − (−3) = ?', options: ['5','8','11','16'], answer: '11', hint: 'Subtracting a negative = adding a positive.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'What is the absolute value of −9?', options: ['−9','0','9','81'], answer: '9', hint: 'Absolute value is always the positive distance from 0.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Order from least to greatest: −6, 2, −1, 4', options: ['−6, −1, 2, 4','2, −1, 4, −6','4, 2, −1, −6','−6, 2, −1, 4'], answer: '−6, −1, 2, 4', hint: 'Start from farthest left on the number line.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A submarine at −200 m rises 75 m. New depth?', options: ['−275 m','−125 m','−75 m','275 m'], answer: '−125 m', hint: '−200 + 75 = −125.' },
-    ],
-  },
-  'math-6-expressions': {
-    id: 'math-6-expressions', subject: 'math', grade: '6',
-    title: 'Variable Expressions', description: 'Write, evaluate, and simplify algebraic expressions',
-    explanation: 'A variable is a letter standing for an unknown number. In 3x + 5, if x = 4, the expression equals 3(4) + 5 = 17. Like terms (same variable, same exponent) can be combined.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'If x = 3, what is 2x + 1?', options: ['4','5','7','9'], answer: '7', hint: '2(3) + 1 = 6 + 1.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What expression means "5 more than n"?', options: ['5n','n − 5','n + 5','5 − n'], answer: 'n + 5', hint: '"More than" means add.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Evaluate 4a when a = 6:', options: ['10','14','24','46'], answer: '24', hint: '4 × 6.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Simplify: 3x + 2x', options: ['5','6x','5x','3x²'], answer: '5x', hint: 'Combine like terms.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'If y = 5, evaluate 2y² − 3:', options: ['22','37','47','97'], answer: '47', hint: '2(25) − 3 = 50 − 3.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Which expression means "four less than three times k"?', options: ['4 − 3k','3k − 4','3k + 4','4 + 3k'], answer: '3k − 4', hint: '3 times k, then subtract 4.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Simplify: 5m + 3 − 2m + 7', options: ['3m + 10','7m + 10','3m + 4','7m + 4'], answer: '3m + 10', hint: 'Group m terms: 5m − 2m = 3m; constants: 3 + 7 = 10.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A store sells items for $p each. You buy 4 and use a $3 coupon. Total cost expression:', options: ['4p + 3','4p − 3','p + 3','4(p − 3)'], answer: '4p − 3', hint: '4 items at price p, minus $3 off.' },
-    ],
-  },
-
-  // ============ MATH — GRADE 8 ============
-  'math-8-linear-equations': {
-    id: 'math-8-linear-equations', subject: 'math', grade: '8',
-    title: 'Linear Equations', description: 'Solve one- and two-step equations and inequalities',
-    explanation: 'To solve an equation, perform inverse operations to isolate the variable. For 2x + 3 = 11: subtract 3 → 2x = 8, then divide by 2 → x = 4. For inequalities, flip the sign when multiplying or dividing by a negative.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Solve: x + 7 = 15', options: ['7','8','9','22'], answer: '8', hint: 'Subtract 7 from both sides.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Solve: 3x = 18', options: ['3','5','6','54'], answer: '6', hint: 'Divide both sides by 3.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Solve: 2x − 4 = 10', options: ['3','5','7','9'], answer: '7', hint: 'Add 4, then divide by 2.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Solve: x/5 + 3 = 8', options: ['20','25','35','40'], answer: '25', hint: 'Subtract 3, then multiply by 5.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which inequality means "x is at least 5"?', options: ['x < 5','x ≤ 5','x ≥ 5','x > 5'], answer: 'x ≥ 5', hint: '"At least" includes 5 itself.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: 'Solve: 4(x − 2) = 20', options: ['5','6','7','8'], answer: '7', hint: 'Distribute: 4x − 8 = 20, then solve.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Solve: 3x + 5 = 2x + 9', options: ['1','2','3','4'], answer: '4', hint: 'Move x terms to one side: x = 9 − 5.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'A gym charges $25/month plus a $50 join fee. At what month does total cost equal $175?', options: ['4','5','6','7'], answer: '5', hint: '50 + 25m = 175 → m = 5.' },
-      { id: 'q9', type: 'mcq', difficulty: 3, prompt: 'Solve: 5 − 2x > 1', options: ['x > 2','x < 2','x > −2','x < −2'], answer: 'x < 2', hint: 'Subtract 5, divide by −2 (flip the inequality sign).' },
-    ],
-  },
-  'math-8-pythagorean': {
-    id: 'math-8-pythagorean', subject: 'math', grade: '8',
-    title: 'Pythagorean Theorem', description: 'Find missing side lengths in right triangles',
-    explanation: 'The Pythagorean Theorem: a² + b² = c², where c is the hypotenuse (longest side, opposite the right angle). To find a missing leg: a = √(c² − b²).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In a right triangle with legs 3 and 4, the hypotenuse is:', options: ['5','6','7','8'], answer: '5', hint: '3² + 4² = 9 + 16 = 25. √25 = 5.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which set forms a right triangle?', options: ['2, 3, 4','3, 4, 5','4, 5, 6','5, 6, 7'], answer: '3, 4, 5', hint: '9 + 16 = 25 ✓.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A ladder 10 m long rests 6 m up a wall. How far from the wall is its base?', options: ['4 m','6 m','8 m','10 m'], answer: '8 m', hint: '6² + b² = 10² → b² = 64.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Legs are 5 and 12. Hypotenuse is:', options: ['13','14','15','17'], answer: '13', hint: '25 + 144 = 169. √169 = 13.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Hypotenuse = 17, one leg = 8. Find the other leg.', options: ['9','12','13','15'], answer: '15', hint: '17² − 8² = 289 − 64 = 225. √225 = 15.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A square has side length 5. Its diagonal is closest to:', options: ['5','7','8','10'], answer: '7', hint: '5² + 5² = 50. √50 ≈ 7.07.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Two streets meet at 90°. One is 9 m and another is 40 m. The diagonal path is:', options: ['41 m','43 m','45 m','49 m'], answer: '41 m', hint: '9² + 40² = 81 + 1600 = 1681. √1681 = 41.' },
-    ],
-  },
-  'math-8-functions': {
-    id: 'math-8-functions', subject: 'math', grade: '8',
-    title: 'Functions & Graphs', description: 'Understand slope, y-intercept, and linear equations y = mx + b',
-    explanation: 'A linear function graphs as a straight line: y = mx + b, where m is the slope (steepness) and b is the y-intercept (where the line crosses the y-axis). Slope = rise/run = (y₂ − y₁)/(x₂ − x₁).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In y = 3x + 2, the slope is:', options: ['−2','2','3','5'], answer: '3', hint: 'm is the coefficient of x.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'In y = 3x + 2, the y-intercept is:', options: ['−2','2','3','5'], answer: '2', hint: 'b is the constant term.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'Is (3, 7) a solution to y = 2x + 1?', options: ['Yes','No'], answer: 'Yes', hint: '2(3) + 1 = 7 ✓.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Slope between points (2, 5) and (4, 11) is:', options: ['2','3','4','6'], answer: '3', hint: '(11−5)/(4−2) = 6/2 = 3.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A line through (0, −3) with slope 2. Its equation is:', options: ['y = 2x − 3','y = −3x + 2','y = 2x + 3','y = −2x − 3'], answer: 'y = 2x − 3', hint: 'y = mx + b; b = −3, m = 2.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is a function? (Each x has exactly one y)', options: ['x² + y² = 9','y = 3x + 1','x = 4','y = ±x'], answer: 'y = 3x + 1', hint: 'Each x gives exactly one y value.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'A phone plan: $20 flat + $0.05/text. 100 texts = total cost:', options: ['$22','$25','$27','$30'], answer: '$25', hint: '20 + 0.05 × 100 = 20 + 5.' },
-    ],
-  },
-
-  // ============ MATH — GRADE 10 ============
-  'math-10-algebra2': {
-    id: 'math-10-algebra2', subject: 'math', grade: '10',
-    title: 'Quadratic Functions', description: 'Solve quadratic equations and analyze parabolas',
-    explanation: 'A quadratic has the form ax² + bx + c = 0. Solutions can be found by factoring or the quadratic formula: x = (−b ± √(b²−4ac)) / 2a. The vertex is at x = −b/2a.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The graph of a quadratic function is called a:', options: ['Line','Parabola','Circle','Hyperbola'], answer: 'Parabola', hint: 'It is U-shaped (or ∩-shaped).' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Solve: x² − 9 = 0', options: ['x = 3','x = ±3','x = 9','x = ±9'], answer: 'x = ±3', hint: 'x² = 9; take the square root of both sides.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Solve by factoring: x² + 5x + 6 = 0', options: ['x = 2, 3','x = −2, −3','x = −2, 3','x = 2, −3'], answer: 'x = −2, −3', hint: 'Find two numbers that multiply to 6 and add to 5.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'In y = x² − 4x + 4, the vertex is at:', options: ['(0, 4)','(2, 0)','(4, 4)','(−2, 0)'], answer: '(2, 0)', hint: 'x = −b/2a = 4/2 = 2; y(2) = 4 − 8 + 4 = 0.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'When the discriminant b²−4ac = 0, there is/are:', options: ['Two real solutions','One real solution','No real solutions','Infinite solutions'], answer: 'One real solution', hint: 'The parabola touches the x-axis at exactly one point.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Solve using the quadratic formula: x² − 5x + 6 = 0', options: ['x = 2, 3','x = −2, 3','x = 2, −3','x = −2, −3'], answer: 'x = 2, 3', hint: 'a=1, b=−5, c=6. Discriminant = 25−24=1.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Height h = −16t² + 32t. When does the ball hit the ground?', options: ['t = 1 s','t = 2 s','t = 3 s','t = 4 s'], answer: 't = 2 s', hint: 'Set h = 0: −16t(t − 2) = 0. t = 0 (launch) or t = 2.' },
-    ],
-  },
-
-  // ============ MATH — GRADE 11 ============
-  'math-11-trigonometry': {
-    id: 'math-11-trigonometry', subject: 'math', grade: '11',
-    title: 'Trigonometry', description: 'Use sine, cosine, and tangent in right triangles and the unit circle',
-    explanation: 'In a right triangle: sin(θ) = opposite/hypotenuse, cos(θ) = adjacent/hypotenuse, tan(θ) = opposite/adjacent. Remember SOH-CAH-TOA.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'SOH in SOH-CAH-TOA stands for:', options: ['Sine = Opposite / Hypotenuse','Sine = Opposite × Hypotenuse','Sum Of Hypotenuse','Sine Over Hyperbola'], answer: 'Sine = Opposite / Hypotenuse', hint: 'SOH = Sine, Opposite, Hypotenuse.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'sin(30°) = ?', options: ['0.25','0.5','0.75','1'], answer: '0.5', hint: 'A key angle to memorize.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'cos(60°) = ?', options: ['0.25','0.5','0.75','0.866'], answer: '0.5', hint: 'cos(60°) = sin(30°) = 0.5.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'tan(45°) = ?', options: ['0','0.5','1','√2'], answer: '1', hint: 'At 45°, opposite = adjacent, so tan = 1.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'In a right triangle, opposite = 3, hypotenuse = 5. Find sin(θ):', options: ['3/5','4/5','3/4','5/3'], answer: '3/5', hint: 'sin = opposite/hypotenuse.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A ramp is 10 m long at 30° to the ground. Its height is:', options: ['4 m','5 m','6 m','8 m'], answer: '5 m', hint: 'height = 10 × sin(30°) = 10 × 0.5.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'The Law of Cosines is used when:', options: ['You have a right triangle','You know all three angles','You know two sides and the included angle','You only know one side'], answer: 'You know two sides and the included angle', hint: 'c² = a² + b² − 2ab·cos(C).' },
-    ],
-  },
-
-  // ============ MATH — GRADE 12 ============
-  'math-12-calculus': {
-    id: 'math-12-calculus', subject: 'math', grade: '12',
-    title: 'Intro to Calculus', description: 'Understand limits, derivatives, and basic integrals',
-    explanation: 'A derivative measures instantaneous rate of change (slope of a curve). Power rule: d/dx(xⁿ) = n·xⁿ⁻¹. An integral finds area under a curve. ∫xⁿdx = xⁿ⁺¹/(n+1) + C.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A derivative measures:', options: ['Area under a curve','Rate of change','Total distance','Sum of a series'], answer: 'Rate of change', hint: 'It gives the instantaneous slope at any point.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Using the power rule, d/dx(x³) = ?', options: ['x²','3x²','3x³','x⁴/4'], answer: '3x²', hint: 'Bring down the exponent, reduce by 1.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'd/dx(5x² + 3x − 2) = ?', options: ['5x + 3','10x + 3','10x − 2','5x² + 3'], answer: '10x + 3', hint: 'Differentiate term by term; constants disappear.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The limit as x→2 of (x² − 4)/(x − 2) is:', options: ['0','2','4','Undefined'], answer: '4', hint: 'Factor: (x+2)(x−2)/(x−2) = x+2. At x=2: 4.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: '∫x dx = ?', options: ['1','x','x²','x²/2 + C'], answer: 'x²/2 + C', hint: 'Reverse power rule: add 1 to exponent, divide.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'If f(x) = 3x² − 6x, find f\'(2):', options: ['0','3','6','12'], answer: '6', hint: 'f\'(x) = 6x − 6. f\'(2) = 12 − 6 = 6.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'The definite integral ∫₀² x² dx equals:', options: ['4/3','8/3','4','8'], answer: '8/3', hint: '[x³/3]₀² = 8/3 − 0 = 8/3.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 4 ============
-  'ela-4-figurative-language': {
-    id: 'ela-4-figurative-language', subject: 'ela', grade: '4',
-    title: 'Figurative Language', description: 'Identify and interpret similes, metaphors, and idioms',
-    explanation: 'Figurative language goes beyond literal meaning. A simile compares using "like" or "as." A metaphor says something IS something else. An idiom is a phrase with a special cultural meaning. Hyperbole is an extreme exaggeration.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '"She ran like the wind." This is a:', options: ['Metaphor','Simile','Idiom','Hyperbole'], answer: 'Simile', hint: 'Uses "like" to compare.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '"The classroom was a zoo." This is a:', options: ['Simile','Idiom','Metaphor','Alliteration'], answer: 'Metaphor', hint: 'No "like" or "as" — it says the room IS a zoo.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: '"It\'s raining cats and dogs" is an:', options: ['Simile','Metaphor','Idiom','Onomatopoeia'], answer: 'Idiom', hint: 'Animals are not literally falling from the sky!' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Her smile was as bright as the sun." This uses:', options: ['Metaphor','Simile','Alliteration','Hyperbole'], answer: 'Simile', hint: '"As … as" is a simile structure.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What does "break a leg" mean?', options: ['Get hurt','Good luck','Run fast','Sit down'], answer: 'Good luck', hint: 'A common theater idiom meaning good luck.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '"I\'ve told you a million times!" is an example of:', options: ['Simile','Metaphor','Hyperbole','Alliteration'], answer: 'Hyperbole', hint: 'An extreme exaggeration for emphasis.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: '"The stars are diamonds scattered across the sky." This is a:', options: ['Simile','Metaphor','Idiom','Personification'], answer: 'Metaphor', hint: 'The stars ARE diamonds (no "like" or "as").' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: '"The wind whispered through the trees." What is this?', options: ['Simile','Hyperbole','Personification','Idiom'], answer: 'Personification', hint: 'The wind is given a human action (whispering).' },
-    ],
-  },
-  'ela-4-reading-comprehension': {
-    id: 'ela-4-reading-comprehension', subject: 'ela', grade: '4',
-    title: 'Reading Comprehension', description: 'Identify main ideas, details, and text structure',
-    explanation: 'When reading, ask: What is the main idea? What details support it? Texts can be structured as sequence, cause/effect, compare/contrast, or problem/solution. Theme is the big life lesson.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The main idea of a paragraph is:', options: ['A supporting detail','The most important point','The title','The first sentence'], answer: 'The most important point', hint: 'All other sentences support the main idea.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A text describing events in time order uses which structure?', options: ['Compare/Contrast','Cause/Effect','Sequence','Problem/Solution'], answer: 'Sequence', hint: 'Sequence = events in order.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Words like "because," "as a result," and "therefore" signal:', options: ['Compare/Contrast','Sequence','Cause/Effect','Problem/Solution'], answer: 'Cause/Effect', hint: 'These words connect a reason to its outcome.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A biography is BEST described as:', options: ['A made-up story','A poem','The story of a real person\'s life','A set of instructions'], answer: 'The story of a real person\'s life', hint: '"Bio" = life; "graphy" = writing.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What question helps find the THEME of a story?', options: ['Who is the main character?','What is the setting?','What lesson does the story teach?','What happens first?'], answer: 'What lesson does the story teach?', hint: 'Theme is the big message or universal lesson.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'An author uses bold font for a word. Why?', options: ['To show it is a verb','To highlight an important or key term','To show the setting','To show dialogue'], answer: 'To highlight an important or key term', hint: 'Text features like bold draw the reader\'s attention.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which text feature helps a reader find information quickly?', options: ['Introduction','Table of contents','Conclusion','Dialogue'], answer: 'Table of contents', hint: 'Lists chapters and their page numbers.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 5 ============
-  'ela-5-vocabulary': {
-    id: 'ela-5-vocabulary', subject: 'ela', grade: '5',
-    title: 'Context Clues & Vocabulary', description: 'Use context clues and word parts to determine meaning',
-    explanation: 'When you find an unfamiliar word, look at surrounding sentences for clues. Prefixes (un-, re-, pre-) and suffixes (-ful, -less, -tion) also hint at meaning.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: '"The gigantic bear towered over the trees." What does GIGANTIC mean?', options: ['Small','Very large','Angry','Friendly'], answer: 'Very large', hint: 'It towered over trees — it must be enormous!' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The prefix "un-" means:', options: ['Again','Before','Not','After'], answer: 'Not', hint: 'Unhappy = not happy.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'The suffix "-less" means:', options: ['Full of','Without','The act of','To do again'], answer: 'Without', hint: 'Careless = without care.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Despite being reluctant, she agreed to go." RELUCTANT means:', options: ['Excited','Willing','Unwilling','Confused'], answer: 'Unwilling', hint: '"Despite" signals contrast — she did NOT want to go.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'What is a synonym for COURAGEOUS?', options: ['Timid','Brave','Reckless','Curious'], answer: 'Brave', hint: 'Synonyms share the same meaning.' },
-      { id: 'q6', type: 'mcq', difficulty: 2, prompt: '"The benevolent teacher helped every struggling student." BENEVOLENT means:', options: ['Strict','Careless','Kind and generous','Confused'], answer: 'Kind and generous', hint: '"Bene-" means good/well.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'What is an antonym for TRANSPARENT?', options: ['Clear','See-through','Opaque','Bright'], answer: 'Opaque', hint: 'Antonyms are opposites. Opaque = not see-through.' },
-      { id: 'q8', type: 'mcq', difficulty: 3, prompt: '"The intricate lace took months to create." INTRICATE means:', options: ['Simple','Detailed and complex','Large','Old-fashioned'], answer: 'Detailed and complex', hint: 'It took months — it must be very detailed.' },
-    ],
-  },
-  'ela-5-writing': {
-    id: 'ela-5-writing', subject: 'ela', grade: '5',
-    title: 'Essay Structure & Writing', description: 'Plan and write structured paragraphs and essays',
-    explanation: 'A paragraph has a topic sentence, supporting details, and a concluding sentence. An essay adds an introduction (with a thesis statement) and a conclusion that restates the main idea.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The sentence that states the main idea of a paragraph is the:', options: ['Concluding sentence','Topic sentence','Detail sentence','Transition'], answer: 'Topic sentence', hint: 'It usually comes first and sets up the paragraph.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A concluding sentence in a paragraph should:', options: ['Introduce a new topic','Restate the main idea','Give a new example','Ask a question'], answer: 'Restate the main idea', hint: 'It wraps up what the paragraph said.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which transition word shows contrast?', options: ['Furthermore','In addition','However','For example'], answer: 'However', hint: '"However" = but; it introduces an opposing idea.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The purpose of an introduction is to:', options: ['Summarize the conclusion','Introduce the topic and thesis','List all evidence','Explain each body paragraph'], answer: 'Introduce the topic and thesis', hint: 'It hooks the reader and states the main argument.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A thesis statement is:', options: ['A supporting detail','The title','The writer\'s main argument','The final sentence'], answer: 'The writer\'s main argument', hint: 'Everything in the essay supports this claim.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is the BEST topic sentence for a paragraph about dogs?', options: ['Dogs bark.','There are many types of dogs.','Dogs make ideal pets because they are loyal, trainable, and loving.','My dog is named Max.'], answer: 'Dogs make ideal pets because they are loyal, trainable, and loving.', hint: 'A good topic sentence is specific and states a claim.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Body paragraphs of a persuasive essay should contain:', options: ['Only personal opinions','Unrelated stories','Evidence and reasoning supporting the thesis','Summaries of other essays'], answer: 'Evidence and reasoning supporting the thesis', hint: 'You need facts and logic, not just feelings.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 6 ============
-  'ela-6-literary-devices': {
-    id: 'ela-6-literary-devices', subject: 'ela', grade: '6',
-    title: 'Literary Devices', description: 'Identify foreshadowing, flashback, irony, and allusion',
-    explanation: 'Authors use literary devices to deepen meaning. Foreshadowing hints at future events. Flashback revisits earlier events. Irony is when the opposite of what is expected occurs. Allusion references something well-known.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'When an author hints about what will happen later, it is called:', options: ['Flashback','Foreshadowing','Irony','Allusion'], answer: 'Foreshadowing', hint: '"Fore" means before — a hint of things to come.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A scene that interrupts the story to show an earlier event is a:', options: ['Foreshadowing','Climax','Flashback','Resolution'], answer: 'Flashback', hint: 'You "flash back" to a past moment in time.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A character says "Great, another rainy day" with a frustrated tone. This is:', options: ['Sarcasm/Verbal Irony','Simile','Foreshadowing','Alliteration'], answer: 'Sarcasm/Verbal Irony', hint: 'They say the opposite of what they mean.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Situational irony is when:', options: ['A character says the opposite of what they mean','The audience knows more than characters','The opposite of what is expected happens','The story jumps to the past'], answer: 'The opposite of what is expected happens', hint: 'Reality surprises us by contradicting expectations.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A reference to Spider-Man in a novel would be an example of:', options: ['Alliteration','An allusion','Onomatopoeia','A simile'], answer: 'An allusion', hint: 'An allusion is a reference to a well-known story, person, or event.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"Dark, stormy clouds gathered as the hero began his journey." This is:', options: ['Flashback','Allusion','Foreshadowing','Irony'], answer: 'Foreshadowing', hint: 'Dark clouds hint that trouble lies ahead.' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Dramatic irony means:', options: ['The audience knows more than the characters','Characters say the opposite of what they mean','An unexpected event occurs','Comparing two unlike things'], answer: 'The audience knows more than the characters', hint: 'Like knowing a villain is sneaking up on a character who is unaware.' },
-    ],
-  },
-  'ela-6-grammar': {
-    id: 'ela-6-grammar', subject: 'ela', grade: '6',
-    title: 'Advanced Grammar', description: 'Master subject-verb agreement, clauses, and pronoun usage',
-    explanation: 'Subject-verb agreement: singular subjects take singular verbs ("He runs"), plural subjects take plural verbs ("They run"). An independent clause can stand alone; a dependent clause cannot.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which sentence has correct subject-verb agreement?', options: ['The dogs runs fast.','The dog run fast.','The dog runs fast.','The dogs run fastly.'], answer: 'The dog runs fast.', hint: 'Singular subject + singular verb.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: '"Although it rained" is a:', options: ['Independent clause','Dependent clause','Complete sentence','Simple sentence'], answer: 'Dependent clause', hint: '"Although" makes it incomplete — it needs more.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which pronoun correctly completes: "Each of the students must bring ___ book."', options: ['their','his or her','its','our'], answer: 'his or her', hint: '"Each" is singular, so use a singular pronoun.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The independent clause in "She smiled when she saw the surprise" is:', options: ['When she saw the surprise','She smiled','She smiled when','Saw the surprise'], answer: 'She smiled', hint: 'An independent clause can stand alone as a complete sentence.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A run-on sentence is:', options: ['Too short','Two sentences incorrectly joined without punctuation','A sentence with many adjectives','A dependent clause'], answer: 'Two sentences incorrectly joined without punctuation', hint: 'Two independent clauses need a period, semicolon, or conjunction.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Correct verb: "Neither the students nor the teacher ___ ready."', options: ['are','were','was','been'], answer: 'was', hint: 'With neither/nor, the verb agrees with the subject closest to it (teacher = singular).' },
-      { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'Which sentence uses a semicolon correctly?', options: ['I love pizza; but not anchovies.','She was tired; however, she kept running.','We went to; the store.','He said; "hello."'], answer: 'She was tired; however, she kept running.', hint: 'A semicolon + conjunctive adverb joins two independent clauses.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 7 ============
-  'ela-7-argumentative': {
-    id: 'ela-7-argumentative', subject: 'ela', grade: '7',
-    title: 'Argumentative Writing', description: 'Build arguments with claims, evidence, and counterclaims',
-    explanation: 'An effective argument has: a clear claim (your position), supporting evidence (facts, data, quotes), and addresses counterclaims (opposing views) to show balanced thinking.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The main position in an argument is called the:', options: ['Evidence','Counterclaim','Claim','Conclusion'], answer: 'Claim', hint: 'It is the statement you are trying to prove.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A counterclaim is:', options: ['Your main argument','An opposing viewpoint','A supporting fact','A rhetorical question'], answer: 'An opposing viewpoint', hint: '"Counter" means against.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which type of evidence is strongest in an argument?', options: ['Personal feelings','Statistics from a reliable study','A friend\'s opinion','A rumor'], answer: 'Statistics from a reliable study', hint: 'Evidence should be factual and verifiable.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Why should an argumentative essay address counterclaims?', options: ['To confuse readers','To make the essay longer','To show balanced thinking and refute opposing views','To change the topic'], answer: 'To show balanced thinking and refute opposing views', hint: 'Acknowledging and countering other views strengthens your argument.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'An author who appeals to emotion to persuade is using:', options: ['Logos','Ethos','Pathos','Kairos'], answer: 'Pathos', hint: 'Pathos = emotional appeal.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Logos in an argument refers to:', options: ['Emotional appeal','Appeal to credibility','Logical appeal using facts and reasoning','Timing of the argument'], answer: 'Logical appeal using facts and reasoning', hint: 'Logos = logic and reasoning.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 8 ============
-  'ela-8-literary-analysis': {
-    id: 'ela-8-literary-analysis', subject: 'ela', grade: '8',
-    title: 'Literary Analysis', description: 'Analyze theme, character development, and author\'s craft',
-    explanation: 'Literary analysis goes beyond plot to examine HOW and WHY an author makes choices. Dynamic characters change; static characters don\'t. Theme is the central message. Tone is the author\'s attitude.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A dynamic character is one who:', options: ['Never appears again','Stays exactly the same','Changes significantly during the story','Is always positive'], answer: 'Changes significantly during the story', hint: '"Dynamic" = changing, evolving.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A static character is one who:', options: ['Changes throughout the story','Remains essentially unchanged','Appears in every scene','Has special powers'], answer: 'Remains essentially unchanged', hint: '"Static" = unchanging.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"First person" point of view means:', options: ['Three narrators tell the story','The narrator uses "I" and is a character','An omniscient narrator knows everything','A "you" narrative'], answer: 'The narrator uses "I" and is a character', hint: '"I went to the store" — the narrator participates in the story.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'In literature, "tone" refers to:', options: ['The main conflict','The author\'s attitude toward the subject','The rhyme scheme','The setting'], answer: 'The author\'s attitude toward the subject', hint: 'Tone can be serious, humorous, critical, nostalgic, etc.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: '"The Great Gatsby" is said to explore the corruption of the American Dream. This is its:', options: ['Plot','Setting','Theme','Character'], answer: 'Theme', hint: 'Theme is the universal idea beneath the surface story.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'An author repeats a symbol (like a green light) throughout a novel to:', options: ['Fill word count','Show character movement','Reinforce a theme','Provide comic relief'], answer: 'Reinforce a theme', hint: 'Repeated symbols carry deeper meaning and emphasize the author\'s message.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 9 ============
-  'ela-9-rhetoric': {
-    id: 'ela-9-rhetoric', subject: 'ela', grade: '9',
-    title: 'Rhetoric & Persuasion', description: 'Analyze rhetorical appeals and persuasive techniques',
-    explanation: 'Rhetoric is the art of persuasion. The three main appeals: Ethos (credibility/authority), Pathos (emotion), Logos (logic/facts). Rhetorical devices include anaphora (repetition at clause start) and rhetorical questions.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A doctor saying "As a physician, I recommend..." uses:', options: ['Pathos','Logos','Ethos','Kairos'], answer: 'Ethos', hint: 'Establishing authority or credibility.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'An ad showing a crying child to raise charity funds uses:', options: ['Logos','Ethos','Pathos','Anaphora'], answer: 'Pathos', hint: 'Emotional appeal targeting the audience\'s feelings.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Ask not what your country can do for you; ask what you can do for your country" repeats "ask." This is:', options: ['Antithesis','Anaphora','Alliteration','Hyperbole'], answer: 'Anaphora', hint: 'Repetition of a word/phrase at the beginning of successive clauses.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A rhetorical question is one that:', options: ['Requires a detailed answer','Has no answer','Is meant to make a point, not get an answer','Only experts can answer'], answer: 'Is meant to make a point, not get an answer', hint: '"Is that really what we want for our children?" — the answer is implied.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Analyzing a speech for "purpose, audience, and context" is part of:', options: ['STEAL analysis','SOAPSTone analysis','SWOT analysis','CRAAP analysis'], answer: 'SOAPSTone analysis', hint: 'Speaker, Occasion, Audience, Purpose, Subject, Tone.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 10 ============
-  'ela-10-shakespeare': {
-    id: 'ela-10-shakespeare', subject: 'ela', grade: '10',
-    title: 'Shakespeare & Drama', description: 'Understand dramatic structure and Shakespeare\'s language',
-    explanation: 'Shakespeare wrote in Elizabethan English using iambic pentameter (10 syllables/line: da-DUM × 5). Five-act plays follow: exposition, rising action, climax, falling action, resolution. A soliloquy reveals inner thoughts.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Iambic pentameter has how many syllables per line?', options: ['8','10','12','14'], answer: '10', hint: '5 iambs × 2 syllables each = 10.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A soliloquy is when a character:', options: ['Speaks to another character','Speaks alone on stage to reveal inner thoughts','Sings a song','Argues in court'], answer: 'Speaks alone on stage to reveal inner thoughts', hint: 'Like Hamlet\'s "To be or not to be..."' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Star-crossed lovers" in Romeo and Juliet suggests their fate is controlled by:', options: ['Their families','Destiny/chance','The Prince','Their wealth'], answer: 'Destiny/chance', hint: '"Star-crossed" = opposed by the stars (fate).' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The moment of highest tension in a play is the:', options: ['Exposition','Falling action','Climax','Resolution'], answer: 'Climax', hint: 'The turning point where everything changes.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A tragic hero\'s "fatal flaw" is called:', options: ['Hubris','Nemesis','Catharsis','Hamartia'], answer: 'Hamartia', hint: 'Greek for the character flaw that leads to a hero\'s downfall.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 11 ============
-  'ela-11-american-literature': {
-    id: 'ela-11-american-literature', subject: 'ela', grade: '11',
-    title: 'American Literature', description: 'Analyze major periods and works of American literary history',
-    explanation: 'American literature spans Puritan writings, Romanticism (Emerson, Thoreau), Realism (Twain), Modernism (Fitzgerald, Hemingway), and the Harlem Renaissance (Hughes, Hurston).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Harlem Renaissance was primarily associated with:', options: ['Western expansion','African American cultural expression','Puritan religious writing','The Industrial Revolution'], answer: 'African American cultural expression', hint: 'A flowering of Black art, literature, and music in 1920s Harlem, New York.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: '"Self-Reliance" by Emerson promotes:', options: ['Dependence on government','Conformity to society','Individual thought and trust in oneself','Religious devotion above all'], answer: 'Individual thought and trust in oneself', hint: 'Transcendentalism valued self-reliance and nature.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The "Lost Generation" writers (Hemingway, Fitzgerald) were disillusioned by:', options: ['The Civil War','World War I','The Great Depression','World War II'], answer: 'World War I', hint: 'They felt abandoned by a world that promised progress but delivered carnage.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In "The Great Gatsby," the green light symbolizes:', options: ['Money','Jealousy','The unattainable American Dream','Environmental ideals'], answer: 'The unattainable American Dream', hint: 'Gatsby reaches toward a dream he can never quite grasp.' },
-    ],
-  },
-
-  // ============ ELA — GRADE 12 ============
-  'ela-12-ap-skills': {
-    id: 'ela-12-ap-skills', subject: 'ela', grade: '12',
-    title: 'AP Language & Composition', description: 'Master rhetorical analysis, synthesis essays, and diction',
-    explanation: 'AP Language focuses on analyzing how writers use rhetorical strategies. Key terms: diction (word choice), syntax (sentence structure), anaphora (repeated phrases), and juxtaposition (placing contrasting ideas side by side).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'In a rhetorical analysis, your primary job is to:', options: ['Agree or disagree with the author','Explain the plot','Analyze HOW the author uses language to achieve their purpose','Summarize the text'], answer: 'Analyze HOW the author uses language to achieve their purpose', hint: 'Focus on strategies (how), not content (what).' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A synthesis essay requires you to:', options: ['Write a personal narrative','Analyze a single text deeply','Combine multiple sources to support your argument','Summarize an argument'], answer: 'Combine multiple sources to support your argument', hint: 'You weave cited sources together to build your own argument.' },
-      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'Diction refers to:', options: ['Sentence length','Word choice','Paragraph structure','Punctuation patterns'], answer: 'Word choice', hint: 'Diction = the specific words an author selects.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Syntax refers to:', options: ['Word choice','Sentence structure and arrangement','The tone of a piece','The use of imagery'], answer: 'Sentence structure and arrangement', hint: 'How sentences are built and ordered affects meaning and rhythm.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Short, fragmented sentences create a tone of:', options: ['Calm reflection','Urgency or tension','Humor','Formality'], answer: 'Urgency or tension', hint: 'Short sentences speed up the reader\'s pace and heighten tension.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 2 ============
-  'science-2-weather': {
-    id: 'science-2-weather', subject: 'science', grade: '2',
-    title: 'Weather & Seasons', description: 'Observe weather patterns and understand seasonal change',
-    explanation: 'Weather is the daily atmospheric condition: sunny, cloudy, rainy, snowy. Seasons change because Earth\'s axis tilts as it orbits the Sun. In summer, your hemisphere tilts toward the Sun.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which tool measures temperature?', options: ['Rain gauge','Thermometer','Wind vane','Barometer'], answer: 'Thermometer', hint: 'It measures how hot or cold the air is.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'What type of weather brings snow?', options: ['Hot and sunny','Warm and rainy','Cold and wet','Hot and windy'], answer: 'Cold and wet', hint: 'Snow needs freezing temperatures and moisture.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'In which season do many trees lose their leaves?', options: ['Spring','Summer','Fall/Autumn','Winter'], answer: 'Fall/Autumn', hint: 'Leaves change color and fall in autumn.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What causes day and night?', options: ['The Moon orbiting Earth','Earth\'s rotation on its axis','The Sun moving','Clouds blocking sunlight'], answer: 'Earth\'s rotation on its axis', hint: 'Earth spins once every 24 hours.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Dark gray, low clouds usually mean:', options: ['Sunny weather coming','Rain or storms are coming','A hot day','Extreme cold'], answer: 'Rain or storms are coming', hint: 'Dark clouds hold a lot of water.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Why is summer hotter than winter in the United States?', options: ['Earth is closer to the Sun','The Sun moves north','Earth tilts toward the Sun','Days and nights are equal'], answer: 'Earth tilts toward the Sun', hint: 'Earth\'s axial tilt determines how directly sunlight hits each hemisphere.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 4 ============
-  'science-4-ecosystems': {
-    id: 'science-4-ecosystems', subject: 'science', grade: '4',
-    title: 'Ecosystems & Food Chains', description: 'Understand how organisms interact in ecosystems',
-    explanation: 'An ecosystem includes all living things and their environment. Food chains show energy flow. Producers (plants) make food via photosynthesis. Consumers eat other organisms. Decomposers recycle nutrients.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Plants are called PRODUCERS because they:', options: ['Eat other animals','Make their own food through photosynthesis','Break down dead matter','Pollinate flowers'], answer: 'Make their own food through photosynthesis', hint: 'They produce food from sunlight, water, and CO₂.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'In grass → rabbit → fox, the rabbit is a:', options: ['Producer','Primary consumer','Secondary consumer','Decomposer'], answer: 'Primary consumer', hint: 'It eats the producer (grass) directly.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Fungi that break down fallen logs are:', options: ['Producers','Primary consumers','Decomposers','Predators'], answer: 'Decomposers', hint: 'They recycle nutrients back into the soil.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What would happen if all plants disappeared from an ecosystem?', options: ['Only herbivores would survive','All consumers would eventually die','Decomposers would take over','Nothing would change'], answer: 'All consumers would eventually die', hint: 'Without producers, there is no energy source for the food chain.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A habitat provides animals with:', options: ['Only food','Only water','Food, water, shelter, and space','Just a place to sleep'], answer: 'Food, water, shelter, and space', hint: 'All four are needed for animal survival.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A predator-prey relationship means:', options: ['Both animals help each other','One hunts and the other is hunted','Animals compete for the same food','Two animals living peacefully'], answer: 'One hunts and the other is hunted', hint: 'The predator hunts; the prey is hunted.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 6 ============
-  'science-6-chemistry': {
-    id: 'science-6-chemistry', subject: 'science', grade: '6',
-    title: 'Matter & Chemistry', description: 'Classify matter and distinguish physical from chemical changes',
-    explanation: 'Physical changes alter form but not substance (cutting, melting). Chemical changes create new substances (burning, rusting). Elements contain one type of atom. Compounds chemically combine two or more elements.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A physical change:', options: ['Creates a new substance','Changes form but not composition','Cannot be reversed','Always produces a gas'], answer: 'Changes form but not composition', hint: 'Cutting paper is physical — it\'s still paper.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which is a chemical change?', options: ['Cutting wood','Melting ice','Burning paper','Tearing cloth'], answer: 'Burning paper', hint: 'Burning creates ash — a new substance.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'An element is a pure substance made of:', options: ['Two or more types of atoms','Only one type of atom','Molecules and compounds','Water and air'], answer: 'Only one type of atom', hint: 'Gold, oxygen, carbon are elements — only one atom type each.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Water (H₂O) is an example of a:', options: ['Element','Mixture','Compound','Pure element'], answer: 'Compound', hint: 'Two or more elements chemically combined in a fixed ratio.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A mixture differs from a compound because:', options: ['Mixtures contain only one element','Mixtures can be separated physically','Compounds are easily separated','Compounds have no fixed composition'], answer: 'Mixtures can be separated physically', hint: 'Saltwater can be separated by evaporation — no chemical change needed.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Signs of a chemical reaction include:', options: ['Only temperature change','Color change, gas, light/heat, precipitate','Melting and freezing only','Change in shape'], answer: 'Color change, gas, light/heat, precipitate', hint: 'New substances form with multiple observable changes.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 7 ============
-  'science-7-physics': {
-    id: 'science-7-physics', subject: 'science', grade: '7',
-    title: 'Force & Motion', description: 'Apply Newton\'s Laws to real-world motion problems',
-    explanation: 'Newton\'s 3 Laws: (1) Inertia — objects stay at rest or in motion unless a net force acts. (2) F = ma — force equals mass times acceleration. (3) Every action has an equal and opposite reaction.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Newton\'s First Law is called the law of:', options: ['Action-Reaction','Acceleration','Inertia','Gravity'], answer: 'Inertia', hint: 'Objects resist changes in their state of motion.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'F = ma means force equals:', options: ['Mass × Acceleration','Mass + Acceleration','Mass − Acceleration','Mass / Acceleration'], answer: 'Mass × Acceleration', hint: 'Newton\'s Second Law.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A ball rolling on a floor slows due to:', options: ['Gravity','Inertia','Friction','Newton\'s Third Law'], answer: 'Friction', hint: 'The floor resists the ball\'s motion.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A 10 kg object accelerates at 3 m/s². The force is:', options: ['3 N','7 N','13 N','30 N'], answer: '30 N', hint: 'F = 10 × 3 = 30 N.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'A gun recoils when fired. This is Newton\'s:', options: ['First Law','Second Law','Third Law','Law of Gravity'], answer: 'Third Law', hint: 'Every action has an equal and opposite reaction.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'On the Moon, gravity is weaker. An object\'s MASS would:', options: ['Decrease','Increase','Stay the same','Become zero'], answer: 'Stay the same', hint: 'Mass is the amount of matter — it doesn\'t change with gravity. Weight does.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 9 ============
-  'science-9-biology': {
-    id: 'science-9-biology', subject: 'science', grade: '9',
-    title: 'Cell Biology & Genetics', description: 'Understand cell structure, DNA, and Mendelian genetics',
-    explanation: 'Cells are the basic unit of life. DNA stores genetic information in the nucleus. Genes determine traits. Dominant alleles mask recessive ones. Mitosis creates identical daughter cells; meiosis creates sex cells.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The "powerhouse of the cell" is the:', options: ['Nucleus','Ribosome','Mitochondria','Cell wall'], answer: 'Mitochondria', hint: 'It produces ATP through cellular respiration.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'DNA is stored in the:', options: ['Mitochondria','Ribosome','Nucleus','Cell membrane'], answer: 'Nucleus', hint: 'The nucleus is the cell\'s control center.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'In a Punnett square, if both parents are Bb, the probability of BB offspring is:', options: ['0%','25%','50%','75%'], answer: '25%', hint: 'Bb × Bb gives BB, Bb, Bb, bb. Only 1 in 4 is BB.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Mitosis results in:', options: ['2 identical daughter cells','4 cells with half the chromosomes','Genetic variation only','Sex cells'], answer: '2 identical daughter cells', hint: 'Mitosis = growth and repair; meiosis = sex cells.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A plant with genotype Tt (tall dominant over short) has which phenotype?', options: ['Short','Tall','Medium','Cannot determine'], answer: 'Tall', hint: 'One dominant allele (T) is enough to express the dominant trait.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 10 ============
-  'science-10-chemistry': {
-    id: 'science-10-chemistry', subject: 'science', grade: '10',
-    title: 'Chemical Reactions & Stoichiometry', description: 'Balance equations and calculate moles and mass',
-    explanation: 'A balanced chemical equation has equal numbers of atoms on each side. Stoichiometry uses molar ratios to calculate products/reactants. One mole = 6.02 × 10²³ particles (Avogadro\'s number).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In a chemical equation, coefficients represent:', options: ['Number of atoms in one molecule','Number of molecules or moles','Type of bond','Energy released'], answer: 'Number of molecules or moles', hint: '2H₂ + O₂ → 2H₂O: 2 moles of H₂ react with 1 mole of O₂.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Balance: H₂ + O₂ → H₂O. Correct coefficients are:', options: ['1, 1, 1','2, 1, 2','1, 2, 2','2, 2, 1'], answer: '2, 1, 2', hint: '2H₂ + O₂ → 2H₂O: 4 H and 2 O on each side.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'One mole of any substance contains approximately:', options: ['6.02 × 10²³ particles','1000 particles','6.02 × 10¹² particles','1 × 10⁶ particles'], answer: '6.02 × 10²³ particles', hint: 'Avogadro\'s number.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In 2H₂ + O₂ → 2H₂O, how many moles of water form from 4 moles of H₂?', options: ['2','4','6','8'], answer: '4', hint: 'Ratio is 2H₂ : 2H₂O = 1:1, so 4 mol H₂ → 4 mol H₂O.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 11 ============
-  'science-11-physics': {
-    id: 'science-11-physics', subject: 'science', grade: '11',
-    title: 'Kinematics & Dynamics', description: 'Analyze motion, velocity, acceleration, and energy',
-    explanation: 'Velocity = displacement/time (vector). Acceleration = Δvelocity/time. Kinetic energy KE = ½mv². Potential energy PE = mgh. The Law of Conservation of Energy: total energy remains constant.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Velocity is:', options: ['Speed in any direction','Speed with a specific direction','Just distance','Just time'], answer: 'Speed with a specific direction', hint: 'Velocity is a vector — it includes both magnitude and direction.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A car goes from 0 to 60 m/s in 10 s. Its acceleration is:', options: ['6 m/s²','60 m/s²','600 m/s²','0.6 m/s²'], answer: '6 m/s²', hint: 'a = Δv/t = 60/10 = 6 m/s².' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Kinetic energy depends on:', options: ['Mass and height','Mass and velocity','Weight and speed','Force and distance'], answer: 'Mass and velocity', hint: 'KE = ½mv².' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A 2 kg ball at 3 m/s has kinetic energy of:', options: ['6 J','9 J','12 J','18 J'], answer: '9 J', hint: 'KE = ½ × 2 × 3² = 1 × 9 = 9 J.' },
-    ],
-  },
-
-  // ============ SCIENCE — GRADE 12 ============
-  'science-12-ap-biology': {
-    id: 'science-12-ap-biology', subject: 'science', grade: '12',
-    title: 'AP Biology', description: 'Evolution, ecology, and advanced cellular processes',
-    explanation: 'Evolution occurs through natural selection: organisms with favorable traits survive and reproduce. Hardy-Weinberg equilibrium describes non-evolving populations. Cellular respiration (mitochondria) and photosynthesis (chloroplasts) are complementary energy processes.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'Natural selection acts directly on:', options: ['Genotypes','Phenotypes','Allele frequencies alone','Random mutations'], answer: 'Phenotypes', hint: 'The environment selects for observable traits, not hidden genotypes.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Hardy-Weinberg equilibrium requires:', options: ['Large population, no migration, no mutation, no selection, random mating','Small population with lots of mutation','Natural selection and genetic drift','Migration and mutation only'], answer: 'Large population, no migration, no mutation, no selection, random mating', hint: 'Five conditions — if all met, allele frequencies don\'t change (no evolution).' },
-      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'The electron transport chain occurs in the:', options: ['Cytoplasm','Nucleus','Inner mitochondrial membrane','Ribosome'], answer: 'Inner mitochondrial membrane', hint: 'The ETC is embedded in the inner mitochondrial membrane, driving ATP synthesis.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 1 ============
-  'social-1-community': {
-    id: 'social-1-community', subject: 'social', grade: '1',
-    title: 'My Community', description: 'Learn about community helpers, neighborhoods, and maps',
-    explanation: 'A community is a place where people live, work, and play together. Community helpers (firefighters, doctors, teachers) keep us safe and healthy. Maps show places from above.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which community helper puts out fires?', options: ['Doctor','Firefighter','Teacher','Baker'], answer: 'Firefighter', hint: 'They use hoses and fire trucks.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Where do you go to borrow books for free?', options: ['Bank','Library','Hospital','Fire station'], answer: 'Library', hint: 'Books are organized on shelves for everyone to borrow.' },
-      { id: 'q3', type: 'mcq', difficulty: 1, prompt: 'A map shows:', options: ['How things taste','A view of a place from above','The weather','How people feel'], answer: 'A view of a place from above', hint: 'Maps show streets, buildings, and landmarks from a bird\'s-eye view.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Urban" means:', options: ['Countryside with farms','Small villages','A city or densely populated area','Forest or jungle'], answer: 'A city or densely populated area', hint: 'Urban = city; rural = countryside.' },
-      { id: 'q5', type: 'mcq', difficulty: 2, prompt: 'Which area has the most people per square mile?', options: ['Rural','Suburban','Urban','Wilderness'], answer: 'Urban', hint: 'Cities are the most densely populated.' },
-      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Rules in a community help people:', options: ['Stay inside all day','Live safely and fairly together','Ignore their neighbors','Avoid all laws'], answer: 'Live safely and fairly together', hint: 'Rules protect everyone\'s rights and safety.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 3 ============
-  'social-3-us-history': {
-    id: 'social-3-us-history', subject: 'social', grade: '3',
-    title: 'Early American History', description: 'Learn about Native Americans, colonists, and the Revolution',
-    explanation: 'Native Americans were the first people in North America. European colonists arrived starting in the 1400s. The colonists declared independence from Britain on July 4, 1776.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Who were the first people to live in North America?', options: ['Colonists','Native Americans','Pilgrims','Vikings'], answer: 'Native Americans', hint: 'They lived here long before Europeans arrived.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Pilgrims sailed to America on which ship?', options: ['Santa Maria','Mayflower','Niña','Pinta'], answer: 'Mayflower', hint: 'They landed at Plymouth Rock in 1620.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Declaration of Independence was signed in:', options: ['1492','1620','1776','1865'], answer: '1776', hint: 'July 4, 1776 — now celebrated as Independence Day!' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The American Revolution was a conflict between:', options: ['North and South America','Colonists and Great Britain','Spain and France','Native Americans and colonists'], answer: 'Colonists and Great Britain', hint: 'The colonists wanted freedom from British rule and taxation.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Who was the first President of the United States?', options: ['Abraham Lincoln','Thomas Jefferson','Benjamin Franklin','George Washington'], answer: 'George Washington', hint: 'He led the Continental Army and became president in 1789.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 5 ============
-  'social-5-us-geography': {
-    id: 'social-5-us-geography', subject: 'social', grade: '5',
-    title: 'U.S. Geography', description: 'Identify U.S. regions, rivers, mountains, and landmarks',
-    explanation: 'The U.S. has five major regions: Northeast, Southeast, Midwest, Southwest, and West. Key features: Rocky Mountains (West), Mississippi River (Midwest/South), and the Great Plains (Midwest).',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The longest river in the United States is the:', options: ['Colorado River','Hudson River','Mississippi River','Ohio River'], answer: 'Mississippi River', hint: 'It runs from Minnesota to the Gulf of Mexico.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which ocean is on the West Coast of the U.S.?', options: ['Atlantic Ocean','Arctic Ocean','Indian Ocean','Pacific Ocean'], answer: 'Pacific Ocean', hint: 'Pacific = west; Atlantic = east.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Rocky Mountains are in which region?', options: ['Northeast','Southeast','Midwest','West'], answer: 'West', hint: 'They run through Colorado, Wyoming, and Montana.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which Great Lake is the largest by surface area?', options: ['Lake Ontario','Lake Erie','Lake Michigan','Lake Superior'], answer: 'Lake Superior', hint: 'Superior is the largest of all five Great Lakes.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Great Plains are known for:', options: ['Dense forests','Flat land used for farming and ranching','Towering mountains','A desert climate'], answer: 'Flat land used for farming and ranching', hint: 'Often called the "breadbasket of America" — vast farms and cattle ranches.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 7 ============
-  'social-7-world-history': {
-    id: 'social-7-world-history', subject: 'social', grade: '7',
-    title: 'Ancient Civilizations', description: 'Study ancient Egypt, Greece, Rome, and Mesopotamia',
-    explanation: 'Ancient civilizations developed near rivers where farming thrived. Mesopotamia ("between two rivers") is the "Cradle of Civilization." Greece gave us democracy. Rome built a republic that became an empire.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which river was central to ancient Egyptian civilization?', options: ['Amazon','Nile','Ganges','Tigris'], answer: 'Nile', hint: 'Annual Nile floods enriched the farmland.' },
-      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Mesopotamia was located between which two rivers?', options: ['Nile and Congo','Amazon and Parana','Tigris and Euphrates','Yangtze and Yellow'], answer: 'Tigris and Euphrates', hint: 'Mesopotamia means "between two rivers" in Greek.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Ancient Greece is considered the birthplace of:', options: ['Writing','Democracy','Monotheism','Paper'], answer: 'Democracy', hint: 'Athenian citizens voted on laws and leaders.' },
-      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The Roman Republic became an empire when:', options: ['Greece was conquered','Julius Caesar was elected','Augustus became the first emperor','Rome was sacked'], answer: 'Augustus became the first emperor', hint: 'Augustus (Octavian) became emperor after Caesar\'s assassination in 44 BCE.' },
-      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Code of Hammurabi was significant because it was:', options: ['A Greek epic poem','One of the earliest written legal codes','An Egyptian religious text','A Roman military manual'], answer: 'One of the earliest written legal codes', hint: 'Created in ancient Babylon around 1754 BCE.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 9 ============
-  'social-9-economics': {
-    id: 'social-9-economics', subject: 'social', grade: '9',
-    title: 'Economics Basics', description: 'Understand supply, demand, scarcity, and economic systems',
-    explanation: 'Economics studies how people use limited resources. Scarcity means wants exceed available resources. Supply and demand determine prices: high demand + low supply → higher prices. Opportunity cost is what you give up when making a choice.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Scarcity in economics means:', options: ['Everything is free','Wants exceed available resources','There is enough of everything','Prices are always high'], answer: 'Wants exceed available resources', hint: 'Resources (time, money, goods) are always limited.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'If demand rises but supply stays the same, the price will:', options: ['Fall','Stay the same','Rise','Become zero'], answer: 'Rise', hint: 'More buyers competing for the same amount → sellers charge more.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Opportunity cost is:', options: ['The price of a product','The next best alternative given up when making a choice','A type of tax','The cost of production'], answer: 'The next best alternative given up when making a choice', hint: 'Every choice means giving up something else.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'In a market economy, prices are primarily determined by:', options: ['Government decisions','Supply and demand','Business owners alone','International trade'], answer: 'Supply and demand', hint: 'Buyers and sellers interact freely to set prices.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 10 ============
-  'social-10-world-history': {
-    id: 'social-10-world-history', subject: 'social', grade: '10',
-    title: 'World War Era', description: 'Analyze the causes and consequences of WWI and WWII',
-    explanation: 'WWI (1914-1918) was caused by MAIN: Militarism, Alliances, Imperialism, Nationalism. WWII (1939-1945) arose from the Great Depression, fascism, and unresolved WWI tensions. The Holocaust was the systematic genocide of 6 million Jews.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'MAIN stands for causes of WWI. The "M" stands for:', options: ['Money','Militarism','Migration','Manufacturing'], answer: 'Militarism', hint: 'Nations were rapidly building up massive armies and navies.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The immediate trigger for WWI was:', options: ['Germany invading Poland','The assassination of Archduke Franz Ferdinand','The bombing of Pearl Harbor','The Treaty of Versailles'], answer: 'The assassination of Archduke Franz Ferdinand', hint: 'Shot in Sarajevo in June 1914 by a Serbian nationalist.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Holocaust refers to:', options: ['Allied bombing campaigns','The German invasion of France','The Nazi genocide of approximately 6 million Jews','The destruction of Hiroshima'], answer: 'The Nazi genocide of approximately 6 million Jews', hint: 'A systematic murder program carried out by Nazi Germany 1941-1945.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'The Treaty of Versailles (1919) contributed to WWII by:', options: ['Creating the United Nations','Promoting European prosperity','Placing harsh penalties on Germany that fueled resentment','Giving Germany new territories'], answer: 'Placing harsh penalties on Germany that fueled resentment', hint: 'Reparations and humiliation created conditions for Hitler\'s rise.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 11 ============
-  'social-11-government': {
-    id: 'social-11-government', subject: 'social', grade: '11',
-    title: 'U.S. Government & Politics', description: 'Understand the Constitution, civil rights, and political processes',
-    explanation: 'The U.S. Constitution created three branches with checks and balances. The Bill of Rights protects individual freedoms. The Civil Rights Movement fought to extend constitutional rights to all Americans.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Checks and balances means:', options: ['Balancing the federal budget','Each branch limits the others\' power','States check federal power only','Citizens vote on all laws'], answer: 'Each branch limits the others\' power', hint: 'No single branch has unchecked authority.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The First Amendment protects:', options: ['The right to bear arms','Freedom of speech, religion, press, assembly, and petition','The right to a jury trial','Protection against unreasonable searches'], answer: 'Freedom of speech, religion, press, assembly, and petition', hint: 'The 1st Amendment covers five fundamental freedoms.' },
-      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Civil Rights Act of 1964 banned:', options: ['Segregation in schools only','Discrimination based on race, color, religion, sex, or national origin','Employment discrimination only','All voting restrictions'], answer: 'Discrimination based on race, color, religion, sex, or national origin', hint: 'It applied broadly to public places, employment, and more.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Judicial review — the Supreme Court\'s power to strike down laws — was established in:', options: ['The Constitution itself','Marbury v. Madison','McCulloch v. Maryland','Brown v. Board of Education'], answer: 'Marbury v. Madison', hint: '1803 case that established this foundational principle of constitutional law.' },
-    ],
-  },
-
-  // ============ SOCIAL STUDIES — GRADE 12 ============
-  'social-12-ap-us-history': {
-    id: 'social-12-ap-us-history', subject: 'social', grade: '12',
-    title: 'AP U.S. History', description: 'Advanced analysis of American historical themes and causation',
-    explanation: 'AP US History requires analyzing primary sources, understanding causation, and writing evidence-based arguments. Key themes: American identity, migration and settlement, work and exchange, politics and power.',
-    questions: [
-      { id: 'q1', type: 'mcq', difficulty: 2, prompt: 'Manifest Destiny was the belief that:', options: ['Native Americans should be assimilated','The U.S. was destined to expand across North America','States had rights over the federal government','America should avoid foreign affairs'], answer: 'The U.S. was destined to expand across North America', hint: 'The "obvious fate" to stretch from sea to shining sea.' },
-      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The primary cause of the Civil War was:', options: ['Economic differences between North and South','Slavery and its expansion into new territories','States\' rights to nullify federal law','Lincoln\'s election alone'], answer: 'Slavery and its expansion into new territories', hint: 'Slavery underpinned all other sectional conflicts.' },
-      { id: 'q3', type: 'mcq', difficulty: 3, prompt: 'The New Deal (1933-1939) was primarily a response to:', options: ['WWI debt','The Great Depression','Soviet expansionism','An immigration crisis'], answer: 'The Great Depression', hint: 'FDR\'s programs aimed to relieve suffering, recover the economy, and reform institutions.' },
-      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A primary source is:', options: ['A textbook summary','A document or artifact from the time period being studied','A historian\'s interpretation','A recent encyclopedia entry'], answer: 'A document or artifact from the time period being studied', hint: 'Letters, newspapers, photographs, speeches from the era itself are primary sources.' },
-    ],
-  },
 };
-
-const GRADE_8_MATH_GROUPS = [
-  {
-    letter: 'A',
-    title: 'Integers',
-    skills: [
-      'Compare and order integers',
-      'Integer addition and subtraction rules',
-      'Add and subtract integers using counters',
-      'Add and subtract integers',
-      'Add and subtract three or more integers',
-      'Add and subtract integers: word problems',
-      'Integer multiplication and division rules',
-      'Multiply and divide integers',
-      'Evaluate numerical expressions involving integers',
-    ],
-  },
-  {
-    letter: 'B',
-    title: 'Rational numbers',
-    skills: [
-      'Convert between repeating decimals and fractions',
-      'Convert between decimals and fractions or mixed numbers',
-      'Compare rational numbers',
-      'Put rational numbers in order',
-      'Reciprocals and multiplicative inverses',
-      'Add and subtract rational numbers',
-      'Add and subtract rational numbers: word problems',
-      'Apply addition and subtraction rules',
-      'Multiply and divide rational numbers',
-      'Multiply and divide rational numbers: word problems',
-    ],
-  },
-  {
-    letter: 'M',
-    title: 'One-variable equations',
-    skills: [
-      'Which x satisfies an equation?',
-      'Write an equation from words',
-      'Model and solve equations using algebra tiles',
-      'Write and solve equations that represent diagrams',
-      'Properties of equality',
-      'Identify equivalent equations',
-      'Solve one-step equations',
-      'Solve two-step equations',
-      'Solve two-step equations: complete the solution',
-      'Solve one-step and two-step equations: word problems',
-      'Solve equations involving like terms',
-      'Solve equations with variables on both sides',
-      'Solve equations with variables on both sides: fractional coefficients',
-      'Solve equations with variables on both sides: word problems',
-      'Solve equations using the distributive property',
-      'Solve multi-step equations',
-      'Solve multi-step equations with fractional coefficients',
-      'Solve equations: mixed review',
-    ],
-  },
-  {
-    letter: 'X',
-    title: 'Proportional relationships',
-    skills: [
-      'Find the constant of proportionality from a table',
-      'Write equations for proportional relationships from tables',
-      'Identify proportional relationships by graphing',
-      'Find the constant of proportionality from a graph',
-      'Write equations for proportional relationships from graphs',
-      'Identify proportional relationships from graphs and equations',
-      'Identify proportional relationships from tables',
-      'Identify proportional relationships: word problems',
-      'Graph proportional relationships and find the slope',
-      'Interpret graphs of proportional relationships',
-      'Write and solve equations for proportional relationships',
-      'Compare proportional relationships represented in different ways',
-    ],
-  },
-  {
-    letter: 'Y',
-    title: 'Direct variation',
-    skills: [
-      'Find the constant of variation',
-    ],
-  },
-];
-
-const GRADE_6_SCIENCE_GROUPS = [
-  {
-    letter: 'A',
-    title: 'Science practices and tools',
-    skills: [
-      'The process of scientific inquiry',
-      'Identify laboratory tools',
-      'Laboratory safety equipment',
-    ],
-  },
-  {
-    letter: 'B',
-    title: 'Designing experiments',
-    skills: [
-      'Identify control and experimental groups',
-      'Identify independent and dependent variables',
-      'Identify the experimental question',
-      'Identify questions that can be investigated with a set of materials',
-      'Understand an experimental protocol about plant growth',
-      'Understand an experimental protocol about diffusion',
-      'Understand an experimental protocol about evaporation',
-    ],
-  },
-  {
-    letter: 'C',
-    title: 'Engineering practices',
-    skills: [
-      'Identify parts of the engineering-design process',
-      'Evaluate tests of engineering-design solutions',
-      'Use data from tests to compare engineering-design solutions',
-      'Explore the engineering-design process: going to the Moon!',
-    ],
-  },
-  {
-    letter: 'D',
-    title: 'Matter and mass',
-    skills: [
-      'Compare the density of substances',
-      'Calculate density',
-      'Understand conservation of matter using graphs',
-    ],
-  },
-  {
-    letter: 'F',
-    title: 'Atoms and molecules',
-    skills: [
-      'What are atoms and chemical elements?',
-      'How are substances represented by chemical formulas and models?',
-      'Match chemical formulas to ball-and-stick models',
-      'Complete chemical formulas for ball-and-stick models',
-      'Describe the atomic composition of molecules',
-      'Classify elementary substances and compounds using chemical formulas',
-      'Identify elementary substances and compounds',
-    ],
-  },
-  {
-    letter: 'J',
-    title: 'Thermal energy',
-    skills: [
-      'Predict heat flow and temperature changes',
-      'How are temperature and mass related to thermal energy?',
-      'Compare thermal energy transfers',
-    ],
-  },
-  {
-    letter: 'K',
-    title: 'Particle motion and energy',
-    skills: [
-      'How does particle motion affect temperature?',
-      'Particle motion and changes of state',
-      'How does particle motion affect gas pressure?',
-      'Identify how particle motion affects temperature and pressure',
-    ],
-  },
-  {
-    letter: 'L',
-    title: 'Waves',
-    skills: [
-      'Transverse waves',
-      'Longitudinal waves',
-      'Compare amplitudes, wavelengths, and frequencies of waves',
-      'Compare energy of waves',
-      'Transmission, reflection, and absorption of waves',
-      'Electromagnetic waves',
-      'Applications of infrared waves',
-      'Effects of ultraviolet waves',
-    ],
-  },
-  {
-    letter: 'M',
-    title: 'Solutions',
-    skills: [
-      'Compare concentrations of solutions',
-      'Diffusion across membranes',
-    ],
-  },
-  {
-    letter: 'N',
-    title: 'Classification and scientific names',
-    skills: [
-      'Describe, classify, and compare kingdoms',
-      'Identify common and scientific names',
-      'Origins of scientific names',
-      'Use scientific names to classify organisms',
-    ],
-  },
-  {
-    letter: 'O',
-    title: 'Biochemistry',
-    skills: [
-      'Structure and function: carbohydrates, lipids, proteins, and nucleic acids',
-      'The chemistry of cellular respiration',
-    ],
-  },
-  {
-    letter: 'P',
-    title: 'Cells',
-    skills: [
-      'Identify functions of plant cell parts',
-      'Identify functions of animal cell parts',
-      'Compare plant and animal cells',
-    ],
-  },
-  {
-    letter: 'W',
-    title: 'Ecosystems',
-    skills: [
-      'Describe populations, communities, and ecosystems',
-      'Identify ecosystems',
-      'Describe ecosystems',
-    ],
-  },
-  {
-    letter: 'X',
-    title: 'Ecological interactions',
-    skills: [
-      'How does matter move in food chains?',
-      'Interpret food webs I',
-      'Interpret food webs II',
-      'Use food chains to predict changes in populations',
-      'Classify symbiotic relationships',
-      'Investigate primary succession on a volcanic island',
-    ],
-  },
-  {
-    letter: 'Y',
-    title: 'Conservation',
-    skills: [
-      'Coral reef biodiversity and human uses: explore a problem',
-      'Coral reef biodiversity and human uses: evaluate solutions',
-    ],
-  },
-  {
-    letter: 'Z',
-    title: 'Natural resources and human impacts',
-    skills: [
-      'Petroleum formation and distribution on Earth',
-      'Evaluate claims about natural resource use: groundwater',
-      'Evaluate claims about natural resource use: fossil fuels',
-    ],
-  },
-  {
-    letter: 'AA',
-    title: 'Rocks',
-    skills: [
-      'Identify rocks and minerals',
-      'Introduction to the rock cycle',
-      'Classify rocks as igneous, sedimentary, or metamorphic',
-      'How do rock layers form?',
-      'Label parts of rock cycle diagrams',
-      'Select parts of rock cycle diagrams',
-    ],
-  },
-  {
-    letter: 'BB',
-    title: "Earth's features",
-    skills: [
-      'Label Earth layers',
-    ],
-  },
-];
-
-const slugify = (value) =>
-  value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-const makeGrade8MathQuestions = (title, groupTitle) => [
-  {
-    id: 'q1',
-    type: 'mcq',
-    difficulty: 1,
-    prompt: `Which topic does "${title}" belong to?`,
-    options: [groupTitle, 'Geometry transformations', 'Data displays', 'Probability models'],
-    answer: groupTitle,
-    hint: `This skill is part of ${groupTitle}.`,
-  },
-  {
-    id: 'q2',
-    type: 'mcq',
-    difficulty: 2,
-    prompt: `What should you focus on when practicing "${title}"?`,
-    options: ['Choose a strategy and justify each step', 'Ignore signs and units', 'Guess from the largest number', 'Use only mental math'],
-    answer: 'Choose a strategy and justify each step',
-    hint: 'Eighth grade math rewards clear reasoning and checking each step.',
-  },
-  {
-    id: 'q3',
-    type: 'mcq',
-    difficulty: 3,
-    prompt: `A student is reviewing "${title}". What is the best next action?`,
-    options: ['Try examples, check work, and explain the rule', 'Skip all examples', 'Change the problem topic', 'Use the answer before reading'],
-    answer: 'Try examples, check work, and explain the rule',
-    hint: 'Practice, verification, and explanation build mastery.',
-  },
-];
-
-const GRADE_8_MATH_SKILLS = Object.fromEntries(
-  GRADE_8_MATH_GROUPS.flatMap(group =>
-    group.skills.map((title, index) => {
-      const id = `math-8-${group.letter.toLowerCase()}-${slugify(title)}`;
-      return [id, {
-        id,
-        subject: 'math',
-        grade: '8',
-        title,
-        description: `${group.title}: ${title}`,
-        explanation: `This eighth grade math skill is part of ${group.title}. Practice the concept, check each step, and explain why the result makes sense.`,
-        categoryLetter: group.letter,
-        categoryTitle: group.title,
-        categoryIndex: index + 1,
-        questions: makeGrade8MathQuestions(title, group.title),
-      }];
-    })
-  )
-);
-
-const makeGrade6ScienceQuestions = (title, groupTitle) => [
-  {
-    id: 'q1',
-    type: 'mcq',
-    difficulty: 1,
-    prompt: `Which science topic does "${title}" belong to?`,
-    options: [groupTitle, 'Ancient history', 'Sentence structure', 'Number patterns'],
-    answer: groupTitle,
-    hint: `This skill is part of ${groupTitle}.`,
-  },
-  {
-    id: 'q2',
-    type: 'mcq',
-    difficulty: 2,
-    prompt: `What is the best way to study "${title}"?`,
-    options: ['Use evidence and scientific vocabulary', 'Ignore observations', 'Guess without reading', 'Choose the longest answer'],
-    answer: 'Use evidence and scientific vocabulary',
-    hint: 'Science practice is strongest when you use evidence and precise terms.',
-  },
-  {
-    id: 'q3',
-    type: 'mcq',
-    difficulty: 3,
-    prompt: `A student is explaining "${title}". What should the explanation include?`,
-    options: ['A claim supported by evidence', 'Only an opinion', 'A random example', 'No reasoning'],
-    answer: 'A claim supported by evidence',
-    hint: 'Scientific explanations connect claims, evidence, and reasoning.',
-  },
-];
-
-const GRADE_6_SCIENCE_SKILLS = Object.fromEntries(
-  GRADE_6_SCIENCE_GROUPS.flatMap(group =>
-    group.skills.map((title, index) => {
-      const id = `science-6-${group.letter.toLowerCase()}-${slugify(title)}`;
-      return [id, {
-        id,
-        subject: 'science',
-        grade: '6',
-        title,
-        description: `${group.title}: ${title}`,
-        explanation: `This sixth grade science quiz is part of ${group.title}. Use observations, evidence, and scientific vocabulary as you practice.`,
-        categoryLetter: group.letter,
-        categoryTitle: group.title,
-        categoryIndex: index + 1,
-        questions: makeGrade6ScienceQuestions(title, group.title),
-      }];
-    })
-  )
-);
-
-Object.assign(SKILLS, GRADE_8_MATH_SKILLS, GRADE_6_SCIENCE_SKILLS);
 
 // Helper: get skills for a given grade + subject
 const getSkillsFor = (grade, subject) =>
@@ -1744,9 +685,9 @@ const BADGES = [
 ];
 
 // ---------- MAIN APP ----------
-export default function GradelyApp() {
+export default function QuestlyApp() {
   // Persistent app state (in-memory only — instructions explicitly forbid storage APIs in artifacts)
-  const [view, setView] = useState('home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
+  const [view, setView] = useState(() => window.location.pathname === '/admin' ? 'admin' : 'home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
   const [user, setUser] = useState({ name: 'Learner', role: 'student' });
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -1766,20 +707,32 @@ export default function GradelyApp() {
   }, []);
 
   useEffect(() => {
-    const saved = loadSavedSession();
-    if (saved) {
-      setUser(saved.user);
-      setProgress(saved.progress || {});
-      setStats({ ...emptyStats, ...(saved.stats || {}) });
-      pushToast(`Welcome back, ${saved.user.name || saved.user.username}!`, 'success');
-    }
-    setAuthReady(true);
+    loadSavedSession().then(saved => {
+      if (saved) {
+        setUser(saved.user);
+        setProgress(saved.progress || {});
+        setStats({ ...emptyStats, ...(saved.stats || {}) });
+        pushToast(`Welcome back, ${saved.user.name || saved.user.username}!`, 'success');
+      }
+      setAuthReady(true);
+    });
   }, [pushToast]);
 
   useEffect(() => {
     if (!authReady || !user?.username) return;
     saveLearningState(user, progress, stats);
   }, [authReady, user, progress, stats]);
+
+  // Sync /admin URL path with admin view
+  useEffect(() => {
+    const target = view === 'admin' ? '/admin' : '/';
+    if (window.location.pathname !== target) window.history.pushState(null, '', target);
+  }, [view]);
+  useEffect(() => {
+    const onPop = () => setView(window.location.pathname === '/admin' ? 'admin' : 'home');
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   const recordAnswer = (skillId, questionId, correct, difficulty) => {
     // 1. Update skill progress
@@ -1830,6 +783,40 @@ export default function GradelyApp() {
       newlyEarned.forEach(b => pushToast(`🏅 Badge unlocked: ${b.name}!`, 'success'));
     }
   }, [stats, pushToast]);
+
+  // ----- BROWSER HISTORY (back / forward button) -----
+  const _histMounted  = useRef(false);
+  const _histFromPop  = useRef(false);
+
+  // Restore state when the user hits the browser back/forward button
+  useEffect(() => {
+    window.history.replaceState(
+      { view: 'home', selectedGradeId: null, selectedSubject: null, activeSkillId: null },
+      ''
+    );
+    const onPop = (e) => {
+      if (!e.state) return;
+      _histFromPop.current = true;
+      setView(e.state.view || 'home');
+      setSelectedGrade(e.state.selectedGradeId ? GRADES.find(g => g.id === e.state.selectedGradeId) || null : null);
+      setSelectedSubject(e.state.selectedSubject || null);
+      setActiveSkill(e.state.activeSkillId ? SKILLS[e.state.activeSkillId] || null : null);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  // Push a history entry whenever the view (or related state) changes
+  useEffect(() => {
+    if (!_histMounted.current) { _histMounted.current = true; return; }
+    if (_histFromPop.current)  { _histFromPop.current  = false; return; }
+    window.history.pushState({
+      view,
+      selectedGradeId:   selectedGrade?.id  || null,
+      selectedSubject:   selectedSubject    || null,
+      activeSkillId:     activeSkill?.id    || null,
+    }, '');
+  }, [view, selectedGrade, selectedSubject, activeSkill]);
 
   // ----- ROUTING HANDLERS -----
   const goHome = () => { setView('home'); setSelectedGrade(null); setSelectedSubject(null); setActiveSkill(null); };
@@ -1883,6 +870,7 @@ export default function GradelyApp() {
         onBadges={() => setView('badges')}
         onSubscribe={() => setView('subscription')}
         onReset={handleLogout}
+        onSelectGrade={(g) => { setSelectedGrade(g); setView('grade'); }}
       />
 
       <main style={styles.main}>
@@ -1909,6 +897,7 @@ export default function GradelyApp() {
                                     progress={progress}
                                     onSelectGrade={(g) => { setSelectedGrade(g); setView('grade'); }}
                                     onDashboard={() => setView('dashboard')}
+                                    onSignIn={goSignIn}
                                   />}
         {view === 'grade'     && selectedGrade && <GradeScreen
                                     grade={selectedGrade}
@@ -1982,20 +971,45 @@ export default function GradelyApp() {
 }
 
 // ---------- HEADER ----------
-function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset }) {
+function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset, onSelectGrade }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownTimer = useRef(null);
   const learningViews = new Set(['learning', 'grade', 'subject', 'skill']);
+
+  const openDropdown  = () => { clearTimeout(dropdownTimer.current); setDropdownOpen(true); };
+  const closeDropdown = () => { dropdownTimer.current = setTimeout(() => setDropdownOpen(false), 160); };
+  useEffect(() => () => clearTimeout(dropdownTimer.current), []);
+
   const navItems = [
-    { label: 'Learning',   onClick: onLearning,  active: learningViews.has(view) },
+    { label: 'Learning',   onClick: onLearning,  active: learningViews.has(view), hasDropdown: true },
     { label: 'Practice',   onClick: onPractice,  active: view === 'practice' },
     { label: 'Student',    onClick: onDashboard, active: view === 'dashboard' },
     { label: 'Parent',     onClick: onParent,    active: view === 'parent' },
     { label: 'Reports',    onClick: onReports,   active: view === 'reports' },
-    { label: 'Admin',      onClick: onAdmin,     active: view === 'admin' },
     { label: 'Takeoff',    onClick: onBadges,    active: view === 'badges', icon: <Sparkles size={15} /> },
   ];
 
   const closeMenu = (fn) => { fn(); setMenuOpen(false); };
+
+  const subjects = [
+    { icon: '🔢', label: 'Math',           sub: 'Numbers, algebra & geometry',      key: 'math' },
+    { icon: '📖', label: 'Language Arts',  sub: 'Reading, writing & phonics',        key: 'ela' },
+    { icon: '🔬', label: 'Science',        sub: 'Life, earth & physical science',    key: 'science' },
+    { icon: '🌍', label: 'Social Studies', sub: 'History, maps & community',         key: 'social' },
+  ];
+
+  const features = [
+    { icon: '🎯', label: 'Practice Mode',    onClick: () => { onPractice(); setDropdownOpen(false); } },
+    { icon: '📊', label: 'Progress Reports', onClick: () => { onReports();  setDropdownOpen(false); } },
+    { icon: '🗂️', label: 'Skill Catalog',    onClick: () => { onLearning(); setDropdownOpen(false); } },
+  ];
+
+  const achievements = [
+    { icon: '🏅', label: 'Badges & Awards',   onClick: () => { onBadges();    setDropdownOpen(false); } },
+    { icon: '📋', label: 'Student Dashboard', onClick: () => { onDashboard(); setDropdownOpen(false); } },
+    { icon: '👨‍👩‍👧', label: 'Parent Dashboard',  onClick: () => { onParent();    setDropdownOpen(false); } },
+  ];
 
   return (
     <header style={styles.header}>
@@ -2005,7 +1019,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
           <button onClick={onHome} style={styles.logo}>
             <span style={styles.logoMark}>
               <span style={styles.logoCapSection}>🎓</span>
-              <span style={styles.logoWordmark}>Gradely</span>
+              <span style={styles.logoWordmark}>Questly</span>
             </span>
           </button>
 
@@ -2020,7 +1034,6 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
               {[
                 { id: 'student', label: 'Student', icon: GraduationCap, onClick: onDashboard },
                 { id: 'parent',  label: 'Parent',  icon: Heart,          onClick: onParent },
-                { id: 'admin',   label: 'Admin',   icon: Settings,       onClick: onAdmin },
               ].map(role => {
                 const Icon = role.icon;
                 const active = user?.role === role.id;
@@ -2057,7 +1070,94 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
 
         {/* Desktop nav row — hidden on mobile via CSS */}
         <nav style={styles.headerNav} className="header-desktop-nav" aria-label="Primary">
-          {navItems.map(item => (
+          {navItems.map(item => item.hasDropdown ? (
+            <div
+              key={item.label}
+              className="nav-learning-wrap"
+              onMouseEnter={openDropdown}
+              onMouseLeave={closeDropdown}
+            >
+              <button
+                onClick={() => { item.onClick(); setDropdownOpen(false); }}
+                style={{ ...styles.navLink, ...(item.active ? styles.navLinkActive : {}) }}
+              >
+                {item.label}
+                <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.75 }}>▾</span>
+                {item.active && <span style={styles.navActiveCaret} />}
+              </button>
+
+              {dropdownOpen && (
+                <div
+                  onMouseEnter={openDropdown}
+                  onMouseLeave={closeDropdown}
+                  style={{
+                    position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-40%)',
+                    background: 'white', borderRadius: 16, zIndex: 500,
+                    boxShadow: '0 20px 60px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
+                    border: '1px solid #E5E7EB', padding: '28px 28px 24px',
+                    display: 'grid', gridTemplateColumns: 'repeat(4, 200px)', gap: 0,
+                    animation: 'dropdownSlide 0.2s ease both',
+                    marginTop: 4,
+                  }}
+                >
+                  {/* Col 1 — Subjects → Learning catalog */}
+                  <div style={{ paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Subjects</div>
+                    {subjects.map(s => (
+                      <button key={s.key} className="mega-link" onClick={() => { onLearning(); setDropdownOpen(false); }}>
+                        <span style={{ marginRight: 8 }}>{s.icon}</span>
+                        <span style={{ fontWeight: 700, color: '#1a1a2e' }}>{s.label}</span>
+                        <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1, paddingLeft: 26 }}>{s.sub}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Col 2 — By Grade → navigates directly to grade screen */}
+                  <div style={{ paddingLeft: 20, paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>By Grade</div>
+                    {GRADES.map(g => (
+                      <button
+                        key={g.id}
+                        className="mega-link"
+                        onClick={() => { if (onSelectGrade) onSelectGrade(g); setDropdownOpen(false); }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                      >
+                        <span style={{ fontSize: 16 }}>{g.emoji}</span>
+                        <span>{g.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Col 3 — Features */}
+                  <div style={{ paddingLeft: 20, paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Features</div>
+                    {features.map(f => (
+                      <button key={f.label} className="mega-link" onClick={f.onClick}>
+                        <span style={{ marginRight: 8 }}>{f.icon}</span>{f.label}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => { onSubscribe(); setDropdownOpen(false); }}
+                      style={{ marginTop: 16, marginLeft: 10, background: 'linear-gradient(135deg, #dcfce7, #d1fae5)', borderRadius: 10, padding: '10px 12px', border: 'none', cursor: 'pointer', textAlign: 'left', width: 'calc(100% - 10px)' }}
+                    >
+                      <div style={{ fontSize: 12, fontWeight: 800, color: '#166534' }}>✨ Free Trial</div>
+                      <div style={{ fontSize: 11, color: '#4B5563', marginTop: 2 }}>Start learning today — no credit card needed</div>
+                    </button>
+                  </div>
+
+                  {/* Col 4 — Dashboards */}
+                  <div style={{ paddingLeft: 20 }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Dashboards</div>
+                    {achievements.map(a => (
+                      <button key={a.label} className="mega-link" onClick={a.onClick}>
+                        <span style={{ marginRight: 8 }}>{a.icon}</span>{a.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
             <button
               key={item.label}
               onClick={item.onClick}
@@ -2118,7 +1218,7 @@ function LoginScreen({ onLogin }) {
           <div style={styles.loginLogo}>
             <Sparkles size={36} strokeWidth={2.5} />
           </div>
-          <h1 style={styles.loginTitle}>Gradely</h1>
+          <h1 style={styles.loginTitle}>Questly</h1>
           <p style={styles.loginSub}>Where every kid becomes a learning champion</p>
         </div>
 
@@ -2197,7 +1297,7 @@ function FloatingShape({ style, delay }) {
 }
 
 // ---------- HOME ----------
-function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
+function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignIn }) {
   const accuracy = stats.totalAnswered > 0
     ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100)
     : 0;
@@ -2212,6 +1312,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
         accuracy={accuracy}
         onSelectGrade={onSelectGrade}
         onDashboard={onDashboard}
+        onSignIn={onSignIn}
       />
     );
   }
@@ -2245,7 +1346,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
 
       {/* Grade selector */}
       <section style={{ marginTop: 56 }}>
-        <SectionHeader title="Choose your grade" subtitle="From Pre-K all the way to Grade 12" />
+        <SectionHeader title="Choose your grade" subtitle="From Kindergarten through Grade 5" />
         <div style={styles.gradeGrid}>
           {GRADES.map(g => {
             const skillCount = Object.values(SKILLS).filter(s => s.grade === g.id).length;
@@ -2325,8 +1426,164 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard }) {
   );
 }
 
-function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard }) {
+function WelcomePopup({ onSignIn, onClose }) {
+  const floaters = [
+    { emoji: '📚', top: '10%', left: '8%',  delay: '0s',   dur: '3.2s' },
+    { emoji: '✏️', top: '18%', right: '9%', delay: '0.4s', dur: '2.8s' },
+    { emoji: '🌟', top: '70%', left: '6%',  delay: '0.8s', dur: '3.6s' },
+    { emoji: '🎯', top: '65%', right: '7%', delay: '0.2s', dur: '3.0s' },
+    { emoji: '🏆', top: '40%', left: '4%',  delay: '1.0s', dur: '2.6s' },
+    { emoji: '🎨', top: '35%', right: '5%', delay: '0.6s', dur: '3.4s' },
+    { emoji: '🔬', top: '80%', left: '20%', delay: '1.2s', dur: '2.9s' },
+    { emoji: '🌈', top: '12%', left: '45%', delay: '0.3s', dur: '3.1s' },
+  ];
+
+  const features = [
+    { emoji: '🎓', label: 'Expert Curriculum', sub: 'Grades K – 5' },
+    { emoji: '🕹️', label: 'Interactive Practice', sub: '50+ skills' },
+    { emoji: '📊', label: 'Progress Tracking', sub: 'Real-time reports' },
+    { emoji: '🏅', label: 'Badges & Rewards', sub: 'Stay motivated' },
+  ];
+
+  return (
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(10,20,40,0.62)', backdropFilter: 'blur(6px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '16px',
+        animation: 'popupFadeIn 0.35s ease both',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      {/* floating decorations */}
+      {floaters.map((f, i) => (
+        <span
+          key={i}
+          style={{
+            position: 'fixed', fontSize: 28, userSelect: 'none', pointerEvents: 'none',
+            top: f.top, left: f.left, right: f.right,
+            animation: `floatEmoji ${f.dur} ${f.delay} ease-in-out infinite`,
+            opacity: 0.55,
+          }}
+        >{f.emoji}</span>
+      ))}
+
+      {/* card */}
+      <div style={{
+        background: 'linear-gradient(160deg, #ffffff 0%, #f0fdf4 60%, #eff6ff 100%)',
+        borderRadius: 28, maxWidth: 580, width: '100%',
+        padding: '44px 40px 36px', position: 'relative', overflow: 'hidden',
+        boxShadow: '0 32px 80px rgba(0,0,0,0.28)',
+        animation: 'popupSlideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
+      }}>
+        {/* decorative top bar */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #3DAF52, #06b6d4, #a855f7, #f59e0b)' }} />
+
+        {/* close button */}
+        <button
+          onClick={onClose}
+          className="popup-close"
+          style={{
+            position: 'absolute', top: 16, right: 16,
+            background: '#f3f4f6', border: 'none', borderRadius: '50%',
+            width: 36, height: 36, cursor: 'pointer', fontSize: 18, fontWeight: 700,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#6B7280', transition: 'all 0.18s ease',
+          }}
+          aria-label="Close"
+        >✕</button>
+
+        {/* mascot + headline */}
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{
+            fontSize: 72, lineHeight: 1, marginBottom: 12,
+            animation: 'mascotBounce 2s ease-in-out infinite',
+            display: 'inline-block',
+          }}>🦉</div>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            background: '#dcfce7', color: '#166534', borderRadius: 999,
+            padding: '4px 14px', fontSize: 12, fontWeight: 800, letterSpacing: 0.8,
+            textTransform: 'uppercase', marginBottom: 14,
+          }}>✨ Free for Kids</div>
+          <h2 style={{
+            fontSize: 'clamp(22px, 4vw, 32px)', fontWeight: 900, margin: '0 0 10px',
+            color: '#1a1a2e', lineHeight: 1.15,
+          }}>
+            Learn at Your Own Pace.<br />
+            <span style={{ color: '#3DAF52', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+              Practice Until You Master It.
+            </span>
+          </h2>
+          <p style={{ fontSize: 15, color: '#6B7280', margin: 0, lineHeight: 1.6 }}>
+            The fun, adaptive learning platform built for K–5 students. Pick a grade, choose a skill, and watch your confidence grow — one question at a time.
+          </p>
+        </div>
+
+        {/* feature pills */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 28 }}>
+          {features.map(f => (
+            <div
+              key={f.label}
+              className="popup-feature"
+              style={{
+                background: 'white', borderRadius: 14, padding: '12px 14px',
+                display: 'flex', alignItems: 'center', gap: 10,
+                boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
+                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                cursor: 'default',
+              }}
+            >
+              <span style={{ fontSize: 24 }}>{f.emoji}</span>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: '#1a1a2e' }}>{f.label}</div>
+                <div style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600 }}>{f.sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <button
+          onClick={onSignIn}
+          className="popup-trial-btn"
+          style={{
+            width: '100%', background: 'linear-gradient(135deg, #3DAF52, #22c55e)',
+            color: 'white', border: 'none', borderRadius: 999,
+            padding: '16px 24px', fontSize: 17, fontWeight: 900, cursor: 'pointer',
+            animation: 'pulseGlow 2.4s ease-in-out infinite, trailBounce 3s ease-in-out infinite',
+            transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+            marginBottom: 12, letterSpacing: 0.3,
+          }}
+        >🚀 Join Free Trial — Start Learning Today!</button>
+
+        <button
+          onClick={onClose}
+          className="popup-later"
+          style={{
+            display: 'block', width: '100%', background: 'none', border: 'none',
+            color: '#9CA3AF', fontSize: 13, cursor: 'pointer', textAlign: 'center',
+            transition: 'color 0.15s ease', padding: '4px 0',
+          }}
+        >Maybe later</button>
+      </div>
+    </div>
+  );
+}
+
+function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard, onSignIn }) {
   const [openFaq, setOpenFaq] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('questly.popup.shown')) return;
+    const t = setTimeout(() => setShowPopup(true), 900);
+    return () => clearTimeout(t);
+  }, []);
+
+  const closePopup = () => { setShowPopup(false); sessionStorage.setItem('questly.popup.shown', '1'); };
+  const handleTrial = () => { closePopup(); if (onSignIn) onSignIn(); };
 
   const artS = {
     page: { background: '#FAFAF9', color: '#1a1a2e' },
@@ -2394,20 +1651,21 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
   const gradeColors = ['#FFD6D6','#FFE4C4','#FFF3C4','#E4F4D0','#C8F0D4','#C8EFF8','#D4E4FF','#E4D8FF','#F9D4FF','#FFD6EE','#C8F0D4','#D4E4FF','#FFF3C4','#FFD6D6'];
 
   const faqs = [
-    { q: 'What grades does Gradely cover?', a: 'Gradely covers Pre-Kindergarten through Grade 12 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
-    { q: 'Is Gradely free to use?', a: 'Gradely offers free practice access. Premium plans unlock full curriculum, detailed analytics, and personalized learning paths.' },
-    { q: 'How does adaptive learning work?', a: 'Gradely tracks every answer and adjusts question difficulty in real time, so students are always challenged at the right level for maximum growth.' },
+    { q: 'What grades does Questly cover?', a: 'Questly covers Kindergarten through Grade 5 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
+    { q: 'Is Questly free to use?', a: 'Questly offers free practice access. Premium plans unlock full curriculum, detailed analytics, and personalized learning paths.' },
+    { q: 'How does adaptive learning work?', a: 'Questly tracks every answer and adjusts question difficulty in real time, so students are always challenged at the right level for maximum growth.' },
   ];
 
   return (
     <div style={artS.page}>
+      {showPopup && <WelcomePopup onSignIn={handleTrial} onClose={closePopup} />}
 
       {/* ── Hero ── */}
       <section style={artS.hero} className="art-hero">
         <div style={artS.heroLeft} className="art-hero-left">
-          <div style={artS.welcomePill}>✳ Welcome to Gradely Academy</div>
+          <div style={artS.welcomePill}>✳ Welcome to Questly Academy</div>
           <h1 style={artS.h1}>
-            Learn<br /><em style={artS.h1em}>With Gradely</em>
+            Learn<br /><em style={artS.h1em}>With Questly</em>
           </h1>
           <p style={artS.heroPara}>
             A personalized K–12 learning platform with thousands of practice skills across Math, Language Arts, Science, and Social Studies.
@@ -2421,10 +1679,90 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             ))}
           </div>
         </div>
-        <div style={{ position: 'relative', paddingBottom: 20 }} className="art-hero-right">
-          <div style={artS.avatarRing}>
-            👩‍🎓
-            <span style={artS.badgePill}>✳ GRADELY ACADEMY</span>
+        <div style={{ position: 'relative', flexShrink: 0 }} className="art-hero-right">
+          {/* ── Subject Cards Stack ── */}
+          <div style={{ width: 300, position: 'relative', userSelect: 'none' }}>
+
+            {/* Math card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
+              boxShadow: '0 8px 24px rgba(37,99,235,0.30)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 22 }}>🔢</span>
+                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>MATHEMATICS</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['3 + 7 = 10', '½ + ¼', '6 × 8 = 48', '√16 = 4'].map(f => (
+                  <span key={f} style={{
+                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
+                    padding: '4px 10px', fontSize: 13, fontWeight: 700, fontFamily: 'monospace',
+                  }}>{f}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Science card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #065f46, #059669)',
+              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
+              boxShadow: '0 8px 24px rgba(5,150,105,0.30)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 22 }}>🔬</span>
+                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>SCIENCE</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['🌱 Plants', '☀️ Solar', '🌊 Water', '⚡ Energy'].map(t => (
+                  <span key={t} style={{
+                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
+                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
+                  }}>{t}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* ELA card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #7c2d92, #a855f7)',
+              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
+              boxShadow: '0 8px 24px rgba(168,85,247,0.30)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 22 }}>📖</span>
+                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>ENGLISH / ELA</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['A → Z', 'Phonics', 'Nouns', 'Reading'].map(t => (
+                  <span key={t} style={{
+                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
+                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
+                  }}>{t}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Social Studies card */}
+            <div style={{
+              background: 'linear-gradient(135deg, #92400e, #f59e0b)',
+              borderRadius: 20, padding: '18px 20px', color: 'white',
+              boxShadow: '0 8px 24px rgba(245,158,11,0.30)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 22 }}>🌍</span>
+                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>SOCIAL STUDIES</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['🗺️ Maps', '🏛️ History', '👨‍👩‍👧 Community', '🌐 World'].map(t => (
+                  <span key={t} style={{
+                    background: 'rgba(255,255,255,0.18)', borderRadius: 8,
+                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
+                  }}>{t}</span>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -2437,9 +1775,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
           <div style={artS.cardsGrid} className="art-cards-grid">
             {[
-              { bg: '#C8F0D4', grade: 'Grades Pre-K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
+              { bg: '#C8F0D4', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
               { bg: '#C4B3F5', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
-              { bg: '#FFE566', grade: 'Grade 6 & up', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
+              { bg: '#FFE566', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
             ].map((card) => (
               <button key={card.title} style={{ ...artS.card, background: card.bg }} onClick={() => onSelectGrade(GRADES[0])}>
                 <span style={artS.cardGradeTag}>{card.grade}</span>
@@ -2459,7 +1797,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       <section style={artS.gradesSec} className="art-section">
         <div style={artS.secWrap} className="art-section-wrap">
           <div style={artS.secLabel}>All Grade Levels</div>
-          <h2 style={artS.secTitle}>From Pre-K to <em style={artS.secEm}>Grade 12</em></h2>
+          <h2 style={artS.secTitle}>From Kindergarten to <em style={artS.secEm}>Grade 5</em></h2>
           <div style={artS.gradesRow} className="art-grades-row">
             {GRADES.map((g, i) => (
               <button key={g.id} style={{ ...artS.gradeChip, background: gradeColors[i] || '#E5E7EB', color: '#1a1a2e' }} onClick={() => onSelectGrade(g)}>
@@ -2476,12 +1814,12 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       {/* ── Why Choose ── */}
       <section style={artS.whySec} className="art-section">
         <div style={artS.secWrap} className="art-section-wrap">
-          <div style={artS.secLabel}>Why Gradely</div>
+          <div style={artS.secLabel}>Why Questly</div>
           <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
           <div style={artS.whyGrid} className="art-why-grid">
             {[
               { icon: '📚', bg: '#C8F0D4', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
-              { icon: '🎯', bg: '#E9D8FD', title: 'Adaptive Learning', text: 'Gradely adjusts question difficulty in real time based on student responses for maximum growth.' },
+              { icon: '🎯', bg: '#E9D8FD', title: 'Adaptive Learning', text: 'Questly adjusts question difficulty in real time based on student responses for maximum growth.' },
               { icon: '⭐', bg: '#FEF3C7', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
             ].map((item) => (
               <div key={item.title} style={artS.whyCard}>
@@ -2529,7 +1867,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
         <div style={artS.ctaCard} className="art-cta-card">
           <div style={{ fontSize: 52 }}>👧</div>
           <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>Free Practice</em></h2>
-          <p style={artS.ctaSub}>Join thousands of students already learning with Gradely.</p>
+          <p style={artS.ctaSub}>Join thousands of students already learning with Questly.</p>
           <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
         </div>
       </section>
@@ -2538,7 +1876,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       <section style={artS.contactSec} className="art-section">
         <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
         <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>to talking</em></h2>
-        <p style={artS.contactSub}>Have questions about Gradely? Reach out — we're here to help.</p>
+        <p style={artS.contactSub}>Have questions about Questly? Reach out — we're here to help.</p>
         <div style={artS.contactBtns}>
           <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#3DAF52', color: '#fff' }}>Contact us</button>
           <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#C4B3F5', color: '#1a1a2e' }}>Call us</button>
@@ -2633,7 +1971,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           <h2 style={styles.siCardTitle}>{mode === 'create' ? 'Create your account' : 'Sign in'}</h2>
           <p style={{ margin: '-8px 0 18px', color: '#64748B', fontSize: 14 }}>
             {mode === 'create'
-              ? 'Choose a username and password to save your Gradely progress.'
+              ? 'Choose a username and password to save your Questly progress.'
               : 'Log in to keep practicing where you left off.'}
           </p>
 
@@ -2725,7 +2063,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           </div>
 
           <div style={styles.siLaunchCard}>
-            {mode === 'create' ? 'Already have an account?' : 'New to Gradely?'}{' '}
+            {mode === 'create' ? 'Already have an account?' : 'New to Questly?'}{' '}
             <button
               type="button"
               onClick={() => { setMode(mode === 'create' ? 'signin' : 'create'); setError(''); }}
@@ -2743,7 +2081,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
       {/* ── Not a member yet? ── */}
       <div style={styles.siMemberSection}>
         <h2 style={styles.siNotMemberTitle}>Not a member yet?</h2>
-        <p style={styles.siNotMemberSub}>Experience personalized learning with Gradely!</p>
+        <p style={styles.siNotMemberSub}>Experience personalized learning with Questly!</p>
 
         <div style={styles.siFeatureList}>
           {features.map(f => (
@@ -2762,7 +2100,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
         <p style={styles.siCelebrate}>
           Plus, celebrate success with <strong>fun awards</strong>, and much more!
         </p>
-        <button onClick={onJoin} style={styles.siJoinBtn}>Join Gradely today</button>
+        <button onClick={onJoin} style={styles.siJoinBtn}>Join Questly today</button>
       </div>
 
       {/* ── Sign-in footer ── */}
@@ -2776,7 +2114,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           ))}
         </div>
         <div style={styles.siFooterCopy}>
-          🎓 &nbsp;Gradely &nbsp;·&nbsp; © {new Date().getFullYear()} Gradely, LLC. All rights reserved.
+          🎓 &nbsp;Questly &nbsp;·&nbsp; © {new Date().getFullYear()} Questly, LLC. All rights reserved.
         </div>
       </div>
     </div>
@@ -2789,7 +2127,6 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   const [activeView, setActiveView] = useState('Grades');
 
   const GRADE_DISPLAY = {
-    prek: { name: 'Pre-K', badge: 'P' },
     k: { name: 'Kindergarten', badge: 'K' },
     '1': { name: 'First grade', badge: '1' },
     '2': { name: 'Second grade', badge: '2' },
@@ -2820,8 +2157,8 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
 
   const heroConfigs = {
     math: {
-      title: 'Gradely Math',
-      desc: 'Gain fluency and confidence in math! Gradely helps students master essential skills at their own pace through fun and interactive questions, built-in support, and motivating awards.',
+      title: 'Questly Math',
+      desc: 'Gain fluency and confidence in math! Questly helps students master essential skills at their own pace through fun and interactive questions, built-in support, and motivating awards.',
       bg: 'linear-gradient(160deg, #C8EEFF 0%, #E0F8FF 50%, #B8F0E0 100%)',
       accent: '#1A8FD1',
       decoLeft: '🏰',
@@ -2829,7 +2166,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#5CBF72',
     },
     ela: {
-      title: 'Gradely Language Arts',
+      title: 'Questly Language Arts',
       desc: 'Build strong reading, writing, and communication skills! Explore phonics, grammar, comprehension, and more through engaging interactive practice.',
       bg: 'linear-gradient(160deg, #FFE0EF 0%, #FFD0EC 50%, #FFE8F5 100%)',
       accent: '#C2147A',
@@ -2838,7 +2175,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#E84D9F',
     },
     science: {
-      title: 'Gradely Science',
+      title: 'Questly Science',
       desc: 'Explore the natural world! Discover living things, earth science, physics, and chemistry through hands-on practice questions.',
       bg: 'linear-gradient(160deg, #C8F0D0 0%, #D8F5DC 50%, #B8EBC8 100%)',
       accent: '#2A8C2E',
@@ -2847,7 +2184,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#4CAF50',
     },
     social: {
-      title: 'Gradely Social Studies',
+      title: 'Questly Social Studies',
       desc: 'Understand the world and its history! Geography, civics, economics, and history — all the knowledge you need to be an informed citizen.',
       bg: 'linear-gradient(160deg, #FFF0C0 0%, #FFF5CC 50%, #FFE8A0 100%)',
       accent: '#A06800',
@@ -3161,40 +2498,6 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress }) {
   const skills = getSkillsFor(grade.id, subject);
   const Icon = sub.icon;
 
-  if (grade.id === '8' && subject === 'math') {
-    return (
-      <EighthGradeMathScreen
-        grade={grade}
-        subject={sub}
-        skills={skills}
-        progress={progress}
-        onBack={onBack}
-        onSelectSkill={onSelectSkill}
-      />
-    );
-  }
-
-  if (grade.id === '6' && subject === 'science') {
-    return (
-      <GroupedSkillPlanScreen
-        title="Sixth grade science"
-        intro="Explore sixth grade science skills by category. Select a skill to begin a short adaptive Gradely science quiz."
-        accent="#F97316"
-        groups={GRADE_6_SCIENCE_GROUPS}
-        skills={skills}
-        progress={progress}
-        onBack={onBack}
-        onSelectSkill={onSelectSkill}
-        backLabel={`Back to ${grade.label}`}
-        stats={[
-          { icon: <GemIcon />, value: skills.length, label: 'skills' },
-          { icon: <BookOpen size={22} />, value: Math.max(30, Math.round(skills.length * 1.3)), label: 'lessons' },
-          { icon: <Play size={22} />, value: Math.max(100, skills.length * 5), label: 'videos' },
-        ]}
-      />
-    );
-  }
-
   return (
     <div style={styles.container}>
       <BackBtn onClick={onBack} label={`Back to ${grade.label}`} />
@@ -3256,105 +2559,198 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress }) {
   );
 }
 
-function EighthGradeMathScreen({ grade, subject, skills, progress, onBack, onSelectSkill }) {
+// ---------- SKILL PRACTICE SCREEN ----------
+// ── Sound effects via Web Audio API (no external files needed) ─────────────
+function useSoundEffect(muted) {
+  return useCallback((type) => {
+    if (muted) return;
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const tone = (freq, start, dur, wave = 'sine', vol = 0.26) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = wave; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(vol, ctx.currentTime + start);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+        osc.start(ctx.currentTime + start);
+        osc.stop(ctx.currentTime + start + dur + 0.01);
+      };
+      if (type === 'correct')   { tone(523,0,0.12); tone(659,0.11,0.13); tone(784,0.22,0.25); }
+      if (type === 'incorrect') { tone(330,0,0.08,'sawtooth',0.17); tone(220,0.1,0.25,'sawtooth',0.12); }
+      if (type === 'complete')  { [523,659,784,1047].forEach((f,i) => tone(f,i*0.14,0.28,'sine',0.28)); }
+      if (type === 'click')     { tone(880,0,0.04,'sine',0.07); }
+      if (type === 'start')     { tone(440,0,0.09); tone(660,0.11,0.18); }
+    } catch(_) {}
+  }, [muted]);
+}
+
+// ── Confetti particles ──────────────────────────────────────────────────────
+function Confetti({ active }) {
+  if (!active) return null;
+  const COLORS = ['#FF6B9D','#FFB627','#3DB2FF','#7DCE82','#9B5DE5','#FF8C42','#FFE44D','#00F5D4'];
+  const pieces = Array.from({ length: 52 }, (_, i) => ({
+    id: i,
+    left: (4 + Math.random() * 92).toFixed(1),
+    color: COLORS[i % COLORS.length],
+    delay: (Math.random() * 0.95).toFixed(2),
+    dur:   (1.5 + Math.random() * 1.1).toFixed(2),
+    size:  Math.round(7 + Math.random() * 9),
+    rot:   Math.round(Math.random() * 360),
+    shape: i % 3,
+  }));
   return (
-    <GroupedSkillPlanScreen
-      title="Eighth grade math"
-      intro="Explore eighth grade math skills by category. Select a skill to begin a short adaptive Gradely practice quiz."
-      accent="#E6B400"
-      groups={GRADE_8_MATH_GROUPS}
-      skills={skills}
-      progress={progress}
-      onBack={onBack}
-      onSelectSkill={onSelectSkill}
-      backLabel={`Back to ${grade.label}`}
-      stats={[
-        { icon: <GemIcon />, value: skills.length, label: 'skills' },
-        { icon: <BookOpen size={22} />, value: Math.max(24, Math.round(skills.length * 1.5)), label: 'lessons' },
-        { icon: <Play size={22} />, value: Math.max(120, skills.length * 6), label: 'videos' },
-      ]}
-    />
+    <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:9999, overflow:'hidden' }}>
+      {pieces.map(p => (
+        <div key={p.id} style={{
+          position:'absolute', left:`${p.left}%`, top:-22,
+          width:p.size, height:p.size,
+          background:p.color,
+          borderRadius: p.shape === 0 ? '50%' : p.shape === 1 ? 3 : 0,
+          transform:`rotate(${p.rot}deg)`,
+          animation:`confettiFall ${p.dur}s ease-in ${p.delay}s forwards`,
+        }} />
+      ))}
+    </div>
   );
 }
 
-function GroupedSkillPlanScreen({ title, intro, accent, groups, skills, progress, onBack, onSelectSkill, backLabel, stats }) {
-  const grouped = groups.map(group => ({
-    ...group,
-    skills: skills
-      .filter(skill => skill.categoryLetter === group.letter)
-      .sort((a, b) => a.categoryIndex - b.categoryIndex),
-  })).filter(group => group.skills.length > 0);
-
+// ── Stars that burst upward on correct answers ──────────────────────────────
+function StarBurst({ trigger }) {
+  const [items, setItems] = useState([]);
+  const prev = useRef(0);
+  useEffect(() => {
+    if (!trigger || trigger === prev.current) return;
+    prev.current = trigger;
+    setItems([
+      { id: trigger*10+1, x:-44, e:'⭐' },
+      { id: trigger*10+2, x: 44, e:'🌟' },
+      { id: trigger*10+3, x:  0, e:'✨' },
+      { id: trigger*10+4, x:-62, e:'💫' },
+      { id: trigger*10+5, x: 62, e:'⭐' },
+    ]);
+    const t = setTimeout(() => setItems([]), 800);
+    return () => clearTimeout(t);
+  }, [trigger]);
   return (
-    <div style={styles.grade8MathPage}>
-      <BackBtn onClick={onBack} label={backLabel} />
+    <>
+      {items.map((item, i) => (
+        <div key={item.id} style={{
+          position:'fixed', top:'42%',
+          left:`calc(50% + ${item.x}px)`,
+          fontSize:22, pointerEvents:'none', zIndex:500,
+          animation:'starFloat 0.72s ease-out forwards',
+          animationDelay:`${i * 0.055}s`,
+        }}>{item.e}</div>
+      ))}
+    </>
+  );
+}
 
-      <div style={styles.grade8TopTabs}>
-        {['Grades', 'Topics', 'Week by week', 'Skill plans'].map((tab, index) => (
-          <span key={tab} style={index === 0 ? { ...styles.grade8TabActive, background: '#3DB2FF' } : styles.grade8Tab}>{tab}</span>
-        ))}
+// ── Pip the Owl — mascot guide character ────────────────────────────────────
+const PIP = {
+  idle:        { face:'🦉', msg:"Ready when you are! 💪" },
+  thinking:    { face:'🦉', msg:'Think it through...' },
+  correct:     { face:'🎉', msg:'Amazing answer! ⭐' },
+  incorrect:   { face:'😅', msg:"That's okay — keep going!" },
+  celebrating: { face:'🏆', msg:"YOU DID IT! Incredible!" },
+  encouraging: { face:'🦉', msg:'Almost there! You\'ve got this! 🌟' },
+};
+
+function Mascot({ state, visible }) {
+  const [bubbleKey, setBubbleKey] = useState(0);
+  const pip = PIP[state] || PIP.idle;
+
+  useEffect(() => { setBubbleKey(k => k + 1); }, [state]);
+
+  const faceAnim =
+    state === 'correct' || state === 'celebrating' ? 'mascotBounce 0.5s ease 3' :
+    state === 'incorrect' ? 'shake 0.42s ease' :
+    'float 3s ease-in-out infinite';
+
+  if (!visible) return null;
+  return (
+    <div style={{
+      position:'fixed', bottom:20, right:14,
+      display:'flex', flexDirection:'column', alignItems:'center',
+      gap:6, zIndex:200, maxWidth:150,
+      animation:'slideUp 0.4s ease',
+      pointerEvents:'none',
+    }}>
+      <div key={bubbleKey} style={{
+        background:'white', borderRadius:12, padding:'7px 11px',
+        fontSize:12, fontWeight:700, color:'#374151',
+        boxShadow:'0 4px 16px rgba(0,0,0,0.1)',
+        textAlign:'center', lineHeight:1.4,
+        border:'2px solid #F3F4F6',
+        animation:'slideUp 0.25s ease',
+      }}>
+        {pip.msg}
       </div>
-
-      <div style={styles.grade8Header}>
-        <div>
-          <h1 style={{ ...styles.grade8Title, color: accent }}>{title}</h1>
-          <p style={styles.grade8Intro}>{intro}</p>
-          <p style={styles.grade8Switch}>Prefer to view by week? <span>Switch now</span> <ChevronRight size={14} /></p>
-        </div>
-        <div style={styles.grade8Stats}>
-          {stats.map(stat => (
-            <div key={stat.label} style={{ ...styles.grade8StatPill, color: accent, borderColor: accent }}>
-              {stat.icon} <strong>{stat.value}</strong><span>{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={styles.grade8SkillColumns} className="grade8-skill-columns">
-        {grouped.map(group => (
-          <section key={group.letter} style={styles.grade8Group}>
-            <h2 style={styles.grade8GroupTitle}>
-              <span>{group.letter}.</span> {group.title}
-            </h2>
-            <ol style={styles.grade8SkillList}>
-              {group.skills.map(skill => {
-                const mastery = calcMastery(progress[skill.id]);
-                return (
-                  <li key={skill.id} style={styles.grade8SkillItem}>
-                    <button onClick={() => onSelectSkill(skill)} style={styles.grade8SkillLink}>
-                      {skill.categoryIndex} <span>{skill.title}</span>
-                      <span style={styles.grade8Icons}>✎ ⊙</span>
-                      {mastery > 0 && <strong style={styles.grade8Mastery}>{mastery}%</strong>}
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          </section>
-        ))}
+      <div style={{
+        width:54, height:54, background:'white',
+        borderRadius:'50%',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        fontSize:30,
+        boxShadow:'0 4px 18px rgba(0,0,0,0.13)',
+        border:'3px solid #FFB627',
+        animation: faceAnim,
+      }}>
+        {pip.face}
       </div>
     </div>
   );
 }
 
-function GemIcon() {
-  return <span style={{ fontSize: 22, lineHeight: 1 }}>◇</span>;
+// ── Mute button ─────────────────────────────────────────────────────────────
+function MuteBtn({ muted, onToggle }) {
+  return (
+    <button
+      onClick={onToggle}
+      title={muted ? 'Unmute sounds' : 'Mute sounds'}
+      style={{
+        background:'none', border:'1.5px solid #E5E7EB',
+        borderRadius:8, padding:'5px 9px',
+        cursor:'pointer', fontSize:17, color:'#6B7280',
+        transition:'border-color 0.15s',
+      }}
+    >
+      {muted ? '🔇' : '🔊'}
+    </button>
+  );
 }
 
-// ---------- SKILL PRACTICE SCREEN ----------
+// ────────────────────────────────────────────────────────────────────────────
 function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
   const [phase, setPhase] = useState('intro'); // intro | practice | result
   const [currentQ, setCurrentQ] = useState(null);
   const [askedIds, setAskedIds] = useState([]);
-  const [history, setHistory] = useState([]); // local session history
+  const [history, setHistory] = useState([]);
   const [userAnswer, setUserAnswer] = useState('');
-  const [feedback, setFeedback] = useState(null); // { correct, message, hint }
+  const [feedback, setFeedback] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
   const [questionsToAnswer] = useState(5);
 
+  // Animation & sound state
+  const [mascotState, setMascotState] = useState('idle');
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [qKey, setQKey] = useState(0);
+  const [starTrigger, setStarTrigger] = useState(0);
+  const [muted, setMuted] = useState(() => localStorage.getItem('questlyMuted') === 'true');
+
+  const playSound = useSoundEffect(muted);
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    localStorage.setItem('questlyMuted', String(next));
+  };
+
   const startPractice = () => {
+    playSound('start');
     setPhase('practice');
+    setMascotState('thinking');
     nextQuestion([]);
   };
 
@@ -3369,31 +2765,54 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
     setUserAnswer('');
     setFeedback(null);
     setShowHint(false);
+    setMascotState('thinking');
+    setQKey(k => k + 1);
   };
 
   const submit = () => {
     if (!userAnswer && userAnswer !== '0') return;
-    const normUser = String(userAnswer).trim().toLowerCase();
+    const normUser    = String(userAnswer).trim().toLowerCase();
     const normCorrect = String(currentQ.answer).trim().toLowerCase();
     const correct = normUser === normCorrect;
 
-    setFeedback({
-      correct,
-      message: correct ? randomCheer() : 'Not quite!',
-      hint: currentQ.hint,
-    });
-
+    setFeedback({ correct, message: correct ? randomCheer() : 'Not quite!', hint: currentQ.hint });
     onAnswer(skill.id, currentQ.id, correct, currentQ.difficulty);
 
     const newHistory = [...history, correct];
-    const newAsked = askedIds.includes(currentQ.id) ? askedIds : [...askedIds, currentQ.id];
+    const newAsked   = askedIds.includes(currentQ.id) ? askedIds : [...askedIds, currentQ.id];
     setHistory(newHistory);
     setAskedIds(newAsked);
-    setSessionStats(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
+    const newStats = { correct: sessionStats.correct + (correct ? 1 : 0), total: sessionStats.total + 1 };
+    setSessionStats(newStats);
+
+    if (correct) {
+      playSound('correct');
+      setMascotState('correct');
+      setStarTrigger(t => t + 1);
+      // Perfect score: fire confetti + celebration
+      if (newStats.total >= questionsToAnswer && newStats.correct === questionsToAnswer) {
+        setTimeout(() => { setShowConfetti(true); playSound('complete'); setMascotState('celebrating'); }, 350);
+        setTimeout(() => setShowConfetti(false), 3800);
+      }
+    } else {
+      playSound('incorrect');
+      setMascotState('incorrect');
+      // Switch to encouraging after a beat if struggling
+      if (newStats.total >= 3 && newStats.correct < newStats.total * 0.5) {
+        setTimeout(() => setMascotState('encouraging'), 1300);
+      }
+    }
   };
 
   const handleNext = () => {
-    if (sessionStats.total >= questionsToAnswer) {
+    const isLast = sessionStats.total >= questionsToAnswer;
+    if (isLast) {
+      const pct = sessionStats.correct / questionsToAnswer;
+      if (pct >= 0.8 && sessionStats.correct < questionsToAnswer) {
+        setShowConfetti(true);
+        playSound('complete');
+        setTimeout(() => setShowConfetti(false), 3200);
+      }
       setPhase('result');
       onComplete?.(`Great session — ${sessionStats.correct}/${sessionStats.total} correct!`);
     } else {
@@ -3408,74 +2827,96 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
     setSessionStats({ correct: 0, total: 0 });
     setCurrentQ(null);
     setFeedback(null);
+    setMascotState('idle');
+    setShowConfetti(false);
   };
 
   const sub = SUBJECTS[skill.subject];
 
   return (
     <div style={styles.container}>
-      <BackBtn onClick={onBack} label="Exit practice" />
+      <Confetti active={showConfetti} />
+      <StarBurst trigger={starTrigger} />
+      <Mascot state={mascotState} visible={phase === 'practice'} />
 
+      {/* Header row */}
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 4 }}>
+        <BackBtn onClick={onBack} label="Exit practice" />
+        {phase === 'practice' && <MuteBtn muted={muted} onToggle={toggleMute} />}
+      </div>
+
+      {/* ── INTRO ── */}
       {phase === 'intro' && (
-        <div style={styles.skillIntro}>
-          <div style={{ ...styles.skillIntroIcon, background: sub.color }}>
+        <div style={{ ...styles.skillIntro, animation:'slideUp 0.4s ease' }}>
+          {/* Pip welcome */}
+          <div style={{ textAlign:'center', marginBottom:10 }}>
+            <div style={{ fontSize:56, display:'inline-block', animation:'float 2.8s ease-in-out infinite' }}>🦉</div>
+            <div style={{ fontSize:13, color:'#6B7280', fontWeight:600, marginTop:4 }}>Pip the Wise Owl is ready to help!</div>
+          </div>
+
+          <div style={{ ...styles.skillIntroIcon, background:sub.color, animation:'pipPop 0.5s ease' }}>
             <BookOpen size={36} color="white" />
           </div>
           <h1 style={styles.skillIntroTitle}>{skill.title}</h1>
           <p style={styles.skillIntroDesc}>{skill.description}</p>
 
-          <div style={styles.explainBox}>
+          <div style={{ ...styles.explainBox, animation:'slideUp 0.4s ease 0.15s both' }}>
             <div style={styles.explainHead}>
               <Lightbulb size={18} color="#FFB627" /> <strong>How it works</strong>
             </div>
             <p style={styles.explainText}>{skill.explanation}</p>
           </div>
 
-          <div style={styles.skillMetaRow}>
-            <div style={styles.skillMetaItem}>
-              <Target size={16} color="#3DB2FF" /> <span>{questionsToAnswer} questions</span>
-            </div>
-            <div style={styles.skillMetaItem}>
-              <Brain size={16} color="#0891B2" /> <span>Adaptive difficulty</span>
-            </div>
-            <div style={styles.skillMetaItem}>
-              <Lightbulb size={16} color="#FFB627" /> <span>Hints available</span>
-            </div>
+          <div style={{ ...styles.skillMetaRow, animation:'slideUp 0.4s ease 0.25s both' }}>
+            <div style={styles.skillMetaItem}><Target size={16} color="#3DB2FF" /> <span>{questionsToAnswer} questions</span></div>
+            <div style={styles.skillMetaItem}><Brain size={16} color="#0891B2" /> <span>Adaptive difficulty</span></div>
+            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#FFB627" /> <span>Hints available</span></div>
           </div>
 
-          <button onClick={startPractice} style={{ ...styles.primaryBtn, background: sub.color }}>
+          <button
+            onClick={startPractice}
+            className="practice-start-btn"
+            style={{ ...styles.primaryBtn, background:sub.color, animation:'slideUp 0.4s ease 0.35s both' }}
+          >
             <Play size={18} fill="white" /> Start Practice
           </button>
         </div>
       )}
 
+      {/* ── PRACTICE ── */}
       {phase === 'practice' && currentQ && (
         <div style={styles.practiceWrap}>
-          {/* Progress bar */}
+          {/* Animated progress dots */}
           <div style={styles.practiceHeader}>
             <div style={styles.practiceProgressBar}>
-              {Array.from({ length: questionsToAnswer }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{
+              {Array.from({ length: questionsToAnswer }).map((_, i) => {
+                const isCurrent = i === sessionStats.total;
+                const isDone    = i < sessionStats.total;
+                return (
+                  <div key={i} style={{
                     ...styles.progressDot,
-                    background: i < sessionStats.total
+                    background: isDone
                       ? (history[i] ? '#059669' : '#DC2626')
-                      : i === sessionStats.total ? sub.color : '#E5E7EB',
-                    transform: i === sessionStats.total ? 'scale(1.2)' : 'scale(1)',
-                  }}
-                />
-              ))}
+                      : isCurrent ? sub.color : '#E5E7EB',
+                    transform: isCurrent ? 'scale(1.38)' : isDone ? 'scale(1)' : 'scale(0.88)',
+                    transition: 'all 0.4s cubic-bezier(0.175,0.885,0.32,1.275)',
+                    boxShadow: isCurrent ? `0 0 0 4px ${sub.color}30` : 'none',
+                  }} />
+                );
+              })}
             </div>
             <div style={styles.practiceCounter}>
               Question {sessionStats.total + 1} of {questionsToAnswer}
             </div>
           </div>
 
-          {/* Question card */}
-          <div style={styles.questionCard}>
+          {/* Question card slides in on each new question */}
+          <div
+            key={qKey}
+            style={{ ...styles.questionCard, animation:'questionSlide 0.36s cubic-bezier(0.22,1,0.36,1)', position:'relative' }}
+          >
             <div style={styles.questionMeta}>
-              <span style={{ ...styles.diffBadge, background: difficultyColor(currentQ.difficulty) }}>
+              <span style={{ ...styles.diffBadge, background:difficultyColor(currentQ.difficulty) }}>
                 {difficultyLabel(currentQ.difficulty)}
               </span>
               <span style={styles.questionType}>
@@ -3485,10 +2926,10 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
             <h2 style={styles.questionPrompt}>{currentQ.prompt}</h2>
 
-            {/* Answer input */}
+            {/* MCQ options */}
             {currentQ.type === 'mcq' && (
               <div style={styles.mcqGrid}>
-                {currentQ.options.map(opt => {
+                {currentQ.options.map((opt, idx) => {
                   const isSelected = userAnswer === opt;
                   const isCorrect  = feedback && opt === currentQ.answer;
                   const isWrong    = feedback && isSelected && !feedback.correct;
@@ -3496,25 +2937,28 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                     <button
                       key={opt}
                       disabled={!!feedback}
-                      onClick={() => setUserAnswer(opt)}
+                      onClick={() => { playSound('click'); setUserAnswer(opt); }}
+                      className={`mcq-btn-wrap${isCorrect ? ' correct-flash' : ''}${isWrong ? ' wrong-shake' : ''}`}
                       style={{
                         ...styles.mcqBtn,
                         borderColor: isCorrect ? '#059669' : isWrong ? '#DC2626' : isSelected ? sub.color : '#E5E7EB',
-                        background: isCorrect ? '#F0FDF4' : isWrong ? '#FEF2F2' : isSelected ? `${sub.color}15` : 'white',
-                        color: isCorrect ? '#065F46' : isWrong ? '#991B1B' : '#1F2937',
+                        background:  isCorrect ? '#F0FDF4' : isWrong ? '#FEF2F2' : isSelected ? `${sub.color}18` : 'white',
+                        color:       isCorrect ? '#065F46' : isWrong ? '#991B1B' : '#1F2937',
+                        animationDelay: `${idx * 0.055}s`,
                       }}
                     >
-                      <span style={{ flex: 1, textAlign: 'left' }}>{opt}</span>
+                      <span style={{ flex:1, textAlign:'left' }}>{opt}</span>
                       {isCorrect && <Check size={20} color="#059669" />}
-                      {isWrong && <X size={20} color="#DC2626" />}
+                      {isWrong   && <X    size={20} color="#DC2626" />}
                     </button>
                   );
                 })}
               </div>
             )}
 
+            {/* Fill-in answer */}
             {currentQ.type === 'fill' && (
-              <div>
+              <div style={{ animation: feedback && !feedback.correct ? 'shake 0.4s ease' : 'none' }}>
                 <input
                   type="text"
                   value={userAnswer}
@@ -3524,7 +2968,8 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                   style={{
                     ...styles.fillInput,
                     borderColor: feedback ? (feedback.correct ? '#059669' : '#DC2626') : '#E5E7EB',
-                    background: feedback ? (feedback.correct ? '#F0FDF4' : '#FEF2F2') : 'white',
+                    background:  feedback ? (feedback.correct ? '#F0FDF4' : '#FEF2F2') : 'white',
+                    transition: 'border-color 0.2s, background 0.2s',
                   }}
                   onKeyDown={e => e.key === 'Enter' && !feedback && submit()}
                   autoFocus
@@ -3534,43 +2979,44 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
             {/* Hint */}
             {showHint && !feedback && (
-              <div style={styles.hintBox}>
+              <div style={{ ...styles.hintBox, animation:'slideUp 0.3s ease' }}>
                 <Lightbulb size={16} color="#FFB627" /> <span>{currentQ.hint}</span>
               </div>
             )}
 
-            {/* Feedback */}
+            {/* Feedback banner */}
             {feedback && (
               <div style={{
                 ...styles.feedback,
-                background: feedback.correct ? '#F0FDF4' : '#FEF2F2',
-                borderColor: feedback.correct ? '#059669' : '#DC2626',
+                background:   feedback.correct ? '#F0FDF4' : '#FEF2F2',
+                borderColor:  feedback.correct ? '#059669' : '#DC2626',
+                animation: 'bounceIn 0.38s cubic-bezier(0.175,0.885,0.32,1.275)',
               }}>
                 <div style={styles.feedbackTop}>
                   <div style={{
                     ...styles.feedbackIcon,
                     background: feedback.correct ? '#059669' : '#DC2626',
+                    animation:  feedback.correct ? 'pop 0.4s ease' : 'shake 0.3s ease',
                   }}>
                     {feedback.correct ? <Check size={20} color="white" /> : <X size={20} color="white" />}
                   </div>
                   <div>
-                    <div style={{
-                      fontWeight: 700, fontSize: 16,
-                      color: feedback.correct ? '#15803D' : '#B91C1C',
-                    }}>
+                    <div style={{ fontWeight:700, fontSize:16, color: feedback.correct ? '#15803D' : '#B91C1C' }}>
                       {feedback.message}
                     </div>
-                    <div style={{ fontSize: 14, color: '#374151', marginTop: 4 }}>
+                    <div style={{ fontSize:14, color:'#374151', marginTop:4 }}>
                       {feedback.correct
-                        ? `+${5 + currentQ.difficulty * 3} points!`
+                        ? <span style={{ animation:'slideUp 0.3s ease 0.1s both', display:'block' }}>
+                            +{5 + currentQ.difficulty * 3} points! 🎯
+                          </span>
                         : <>The correct answer is <strong>{currentQ.answer}</strong>.</>}
                     </div>
                   </div>
                 </div>
                 {!feedback.correct && (
-                  <div style={styles.solutionBox}>
-                    <strong style={{ fontSize: 13 }}>💡 Step-by-step:</strong>
-                    <p style={{ marginTop: 4, fontSize: 14, color: '#374151' }}>{feedback.hint}</p>
+                  <div style={{ ...styles.solutionBox, animation:'slideUp 0.3s ease 0.1s both' }}>
+                    <strong style={{ fontSize:13 }}>💡 Step-by-step:</strong>
+                    <p style={{ marginTop:4, fontSize:14, color:'#374151' }}>{feedback.hint}</p>
                   </div>
                 )}
               </div>
@@ -3579,7 +3025,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
             {/* Action buttons */}
             <div style={styles.questionActions}>
               {!feedback && !showHint && (
-                <button onClick={() => setShowHint(true)} style={styles.hintBtn}>
+                <button onClick={() => setShowHint(true)} className="hint-btn-anim" style={styles.hintBtn}>
                   <Lightbulb size={16} /> Need a hint?
                 </button>
               )}
@@ -3587,6 +3033,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                 <button
                   onClick={submit}
                   disabled={!userAnswer && userAnswer !== '0'}
+                  className="next-btn"
                   style={{
                     ...styles.primaryBtn,
                     background: sub.color,
@@ -3597,8 +3044,8 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                   Check Answer
                 </button>
               ) : (
-                <button onClick={handleNext} style={{ ...styles.primaryBtn, background: sub.color, marginLeft: 'auto' }}>
-                  {sessionStats.total >= questionsToAnswer ? 'See Results' : 'Next Question'} <ArrowRight size={18} />
+                <button onClick={handleNext} className="next-btn" style={{ ...styles.primaryBtn, background:sub.color, marginLeft:'auto' }}>
+                  {sessionStats.total >= questionsToAnswer ? 'See Results 🎯' : 'Next Question'} <ArrowRight size={18} />
                 </button>
               )}
             </div>
@@ -3606,6 +3053,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
         </div>
       )}
 
+      {/* ── RESULT ── */}
       {phase === 'result' && (
         <ResultsScreen
           stats={sessionStats}
@@ -3621,40 +3069,83 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
 function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
   const accuracy = Math.round((stats.correct / stats.total) * 100);
-  const message =
-    accuracy === 100 ? { title: 'Perfect score! 🎉', sub: 'You absolutely crushed this!' } :
-    accuracy >= 80   ? { title: 'Excellent work! 🌟', sub: "You're getting really good!" } :
-    accuracy >= 60   ? { title: 'Nice effort! 👏',     sub: 'Keep practicing — mastery is close.' } :
-                       { title: 'Good try! 💪',        sub: 'Practice makes perfect. Try again!' };
+  const [confettiOn, setConfettiOn] = useState(false);
+
+  useEffect(() => {
+    if (accuracy >= 80) {
+      const t1 = setTimeout(() => setConfettiOn(true), 200);
+      const t2 = setTimeout(() => setConfettiOn(false), 3800);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+  }, []); // eslint-disable-line
+
+  const msg =
+    accuracy === 100 ? { title:'Perfect score! 🎉', sub:'You absolutely crushed this!',   pip:'🏆', pipMsg:'WOW! A perfect 5 out of 5! Pip is SO proud! 🌟' } :
+    accuracy >= 80   ? { title:'Excellent work! 🌟', sub:"You're getting really good!",    pip:'🦉', pipMsg:"Great job! Pip sees you working hard. Keep it up!" } :
+    accuracy >= 60   ? { title:'Nice effort! 👏',    sub:'Keep practicing — mastery is close.', pip:'💪', pipMsg:"Pip believes in you! Every practice makes you smarter! 💡" } :
+                       { title:'Good try! 💪',       sub:'Practice makes perfect. Try again!',  pip:'😊', pipMsg:"It's okay to make mistakes — that's how we learn! 🌱" };
 
   return (
-    <div style={styles.resultWrap}>
-      <div style={styles.resultEmoji}>{accuracy === 100 ? '🏆' : accuracy >= 80 ? '⭐' : accuracy >= 60 ? '👍' : '💪'}</div>
-      <h1 style={styles.resultTitle}>{message.title}</h1>
-      <p style={styles.resultSub}>{message.sub}</p>
+    <div style={{ ...styles.resultWrap, animation:'slideUp 0.5s ease' }}>
+      <Confetti active={confettiOn} />
 
+      {/* Trophy / mascot */}
+      <div style={{
+        fontSize:72, textAlign:'center', display:'block',
+        animation: accuracy >= 80 ? 'mascotBounce 0.6s ease 3' : 'pop 0.5s ease',
+      }}>
+        {msg.pip}
+      </div>
+
+      <h1 style={styles.resultTitle}>{msg.title}</h1>
+      <p  style={styles.resultSub}>{msg.sub}</p>
+
+      {/* Pip speech bubble */}
+      <div style={{
+        background:'linear-gradient(135deg,#FFF9E6,#FFFBF0)',
+        border:'2px solid #FFB627', borderRadius:16,
+        padding:'12px 18px',
+        display:'flex', alignItems:'center', gap:12,
+        marginBottom:22, fontSize:14, color:'#374151',
+        animation:'slideUp 0.4s ease 0.2s both',
+      }}>
+        <span style={{ fontSize:26, flexShrink:0 }}>🦉</span>
+        <span>{msg.pipMsg}</span>
+      </div>
+
+      {/* Stat cards */}
       <div style={styles.resultStats}>
-        <div style={styles.resultStat}>
+        <div style={{ ...styles.resultStat, animation:'pop 0.4s ease 0.1s both' }}>
           <div style={{ ...styles.resultStatValue, color }}>{stats.correct}</div>
           <div style={styles.resultStatLabel}>Correct</div>
         </div>
         <div style={styles.resultDivider} />
-        <div style={styles.resultStat}>
-          <div style={{ ...styles.resultStatValue, color: '#1F2937' }}>{stats.total}</div>
+        <div style={{ ...styles.resultStat, animation:'pop 0.4s ease 0.2s both' }}>
+          <div style={{ ...styles.resultStatValue, color:'#1F2937' }}>{stats.total}</div>
           <div style={styles.resultStatLabel}>Questions</div>
         </div>
         <div style={styles.resultDivider} />
-        <div style={styles.resultStat}>
-          <div style={{ ...styles.resultStatValue, color: '#059669' }}>{accuracy}%</div>
+        <div style={{ ...styles.resultStat, animation:'pop 0.4s ease 0.3s both' }}>
+          <div style={{ ...styles.resultStatValue, color:'#059669' }}>{accuracy}%</div>
           <div style={styles.resultStatLabel}>Accuracy</div>
         </div>
       </div>
 
+      {/* Animated accuracy bar */}
+      <div style={{ margin:'12px 0 24px', background:'#F3F4F6', borderRadius:999, height:10, overflow:'hidden' }}>
+        <div style={{
+          height:'100%', borderRadius:999,
+          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#3DB2FF' : accuracy >= 60 ? '#FFB627' : '#DC2626',
+          width:`${accuracy}%`,
+          animation:'growBar 1s cubic-bezier(0.22,1,0.36,1) 0.35s both',
+        }} />
+      </div>
+
       <div style={styles.resultActions}>
-        <button onClick={onRestart} style={styles.secondaryBtn}>
+        <button onClick={onRestart} className="next-btn" style={styles.secondaryBtn}>
           <RotateCcw size={16} /> Practice Again
         </button>
-        <button onClick={onBack} style={{ ...styles.primaryBtn, background: color }}>
+        <button onClick={onBack} className="next-btn" style={{ ...styles.primaryBtn, background:color }}>
           Back to Skills <ArrowRight size={16} />
         </button>
       </div>
@@ -3864,7 +3355,7 @@ function SubscriptionScreen({ onBack, onJoin }) {
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>SUBSCRIPTION</div>
-          <h1 style={styles.dashHeroTitle}>Choose a Gradely plan</h1>
+          <h1 style={styles.dashHeroTitle}>Choose a Questly plan</h1>
           <p style={styles.dashHeroSub}>A payment-ready subscription page with plan selection and checkout details.</p>
         </div>
       </div>
@@ -3957,7 +3448,7 @@ function AdminContentManagement({ onPractice, onReports }) {
         <SectionHeader title="Create content" subtitle="Fast editor controls for future API integration" />
         <div style={styles.adminForm} className="admin-form">
           <label>Skill title<input placeholder="Add a new skill title" /></label>
-          <label>Grade<select><option>Pre-K</option><option>Grade 1</option><option>Grade 6</option><option>Grade 12</option></select></label>
+          <label>Grade<select><option>Kindergarten</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option></select></label>
           <label>Subject<select><option>Math</option><option>Language arts</option><option>Science</option><option>Social studies</option></select></label>
           <label>Question prompt<textarea placeholder="Write a quiz prompt..." /></label>
           <button style={styles.primaryAction}>Save draft</button>
@@ -4205,7 +3696,7 @@ function Footer() {
   const cols = [
     {
       heading: 'What we offer',
-      links: ['For schools', 'For teachers', 'For students', 'For parents', 'For high schools', 'For homeschools', 'Gradely Analytics', 'Gradely ELA'],
+      links: ['For schools', 'For teachers', 'For students', 'For parents', 'For high schools', 'For homeschools', 'Questly Analytics', 'Questly ELA'],
     },
     {
       heading: 'Resources',
@@ -4227,10 +3718,10 @@ function Footer() {
           <div style={styles.footerBrand}>
             <span style={styles.footerLogo}>
               <span style={styles.logoCapSection}>🎓</span>
-              <span style={styles.logoWordmark}>Gradely</span>
+              <span style={styles.logoWordmark}>Questly</span>
             </span>
             <p style={styles.footerTagline}>
-              Personalized learning for Pre-K through Grade 12.
+              Personalized learning for Kindergarten through Grade 5.
             </p>
             <button style={styles.footerJoinBtn}>Join now</button>
           </div>
@@ -4246,7 +3737,7 @@ function Footer() {
           </div>
         </div>
         <div style={styles.footerBottom}>
-          <span>© {new Date().getFullYear()} Gradely, LLC. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Questly, LLC. All rights reserved.</span>
           <span style={{ color: '#9CA3AF', marginLeft: 16 }}>Privacy policy · Terms of service</span>
         </div>
       </div>
@@ -4290,6 +3781,106 @@ function StyleInjector() {
         0% { background-position: -200% 0; }
         100% { background-position: 200% 0; }
       }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%      { transform: translateX(-10px); }
+        40%      { transform: translateX(10px); }
+        60%      { transform: translateX(-6px); }
+        80%      { transform: translateX(6px); }
+      }
+      @keyframes bounceIn {
+        0%   { transform: scale(0.5); opacity: 0; }
+        60%  { transform: scale(1.09); }
+        100% { transform: scale(1);   opacity: 1; }
+      }
+      @keyframes confettiFall {
+        0%   { transform: translateY(0)    rotate(0deg);   opacity: 1; }
+        85%  { opacity: 0.9; }
+        100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+      }
+      @keyframes mascotBounce {
+        0%, 100% { transform: translateY(0)   scale(1);    }
+        30%      { transform: translateY(-18px) scale(1.2); }
+        60%      { transform: translateY(-8px)  scale(1.08); }
+      }
+      @keyframes questionSlide {
+        from { opacity: 0; transform: translateX(32px) scale(0.98); }
+        to   { opacity: 1; transform: translateX(0)    scale(1);    }
+      }
+      @keyframes correctPulse {
+        0%   { box-shadow: 0 0 0 0   rgba(5,150,105,0.5); }
+        70%  { box-shadow: 0 0 0 14px rgba(5,150,105,0);  }
+        100% { box-shadow: 0 0 0 0   rgba(5,150,105,0);   }
+      }
+      @keyframes starFloat {
+        from { opacity: 1; transform: translateY(0)    scale(0.8); }
+        to   { opacity: 0; transform: translateY(-90px) scale(1.4); }
+      }
+      @keyframes growBar {
+        from { width: 0 !important; }
+      }
+      @keyframes wiggle {
+        0%, 100% { transform: rotate(0);    }
+        25%      { transform: rotate(-8deg); }
+        75%      { transform: rotate(8deg);  }
+      }
+      @keyframes pipPop {
+        0%   { transform: scale(0.6); opacity: 0; }
+        70%  { transform: scale(1.12); }
+        100% { transform: scale(1);   opacity: 1; }
+      }
+      @keyframes popupFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+      @keyframes popupSlideUp {
+        from { opacity: 0; transform: translateY(40px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0)    scale(1); }
+      }
+      @keyframes floatEmoji {
+        0%,100% { transform: translateY(0)    rotate(0deg); }
+        33%     { transform: translateY(-14px) rotate(6deg); }
+        66%     { transform: translateY(-7px)  rotate(-4deg); }
+      }
+      @keyframes pulseGlow {
+        0%,100% { box-shadow: 0 0 0 0 rgba(61,175,82,0.45); }
+        50%     { box-shadow: 0 0 0 12px rgba(61,175,82,0); }
+      }
+      @keyframes trailBounce {
+        0%,100% { transform: translateY(0) scale(1); }
+        40%     { transform: translateY(-6px) scale(1.06); }
+      }
+
+      @keyframes dropdownSlide {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .mega-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; color: #374151; font-weight: 500; transition: background 0.15s, color 0.15s; }
+      .mega-link:hover { background: #f0fdf4; color: #166534; }
+      .mega-sub-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; color: #6B7280; font-weight: 500; transition: background 0.15s, color 0.15s; }
+      .mega-sub-link:hover { background: #f0fdf4; color: #3DAF52; }
+      .nav-learning-wrap { position: relative; }
+
+      .popup-close:hover { background: #fee2e2 !important; color: #dc2626 !important; transform: scale(1.12); }
+      .popup-trial-btn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 28px rgba(61,175,82,0.45) !important; }
+      .popup-later:hover { text-decoration: underline; color: #374151 !important; }
+      .popup-feature:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.10) !important; }
+
+      .mcq-btn-wrap { transition: transform 0.13s ease, box-shadow 0.13s ease; }
+      .mcq-btn-wrap:not([disabled]):hover {
+        transform: scale(1.025) translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.11) !important;
+        z-index: 1;
+      }
+      .correct-flash { animation: correctPulse 0.55s ease; }
+      .wrong-shake   { animation: shake 0.42s ease; }
+      .practice-start-btn { transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease; }
+      .practice-start-btn:hover { transform: scale(1.05) !important; filter: brightness(1.06) !important; box-shadow: 0 8px 28px rgba(0,0,0,0.16) !important; }
+      .hint-btn-anim { animation: wiggle 1.5s ease-in-out 1.8s 2; }
+      .next-btn { transition: transform 0.13s ease, box-shadow 0.13s ease; }
+      .next-btn:hover { transform: scale(1.04) !important; box-shadow: 0 6px 18px rgba(0,0,0,0.13) !important; }
+      .subject-card-anim:hover { transform: translateY(-4px) scale(1.01) !important; box-shadow: 0 12px 28px rgba(0,0,0,0.1) !important; }
+      .badge-card-anim:hover { transform: scale(1.06) !important; }
 
       .grade-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
       .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }

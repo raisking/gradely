@@ -1,9 +1,11 @@
 {
-  "name": "gradely",
+  "name": "questly",
   "version": "1.0.0",
-  "description": "Gradely - A comprehensive educational platform for Pre-K to Grade 12 students",
+  "description": "Questly - A comprehensive educational platform for Pre-K to Grade 12 students",
   "private": true,
   "dependencies": {
+    "dotenv": "^17.4.2",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.263.1",
     "pg": "^8.11.5",
     "react": "^18.2.0",
