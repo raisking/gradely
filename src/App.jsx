@@ -14,6 +14,16 @@ import {
   saveLearningState,
   signInAccount,
 } from './services/accountStorage';
+import {
+  getPlans,
+  getStatus as getSubStatus,
+  createCheckout,
+  cancelSubscription as cancelSub,
+  reactivateSubscription as reactivateSub,
+  changePlan as changePlanAPI,
+  getInvoices,
+  getBillingPortal,
+} from './services/paymentService';
 
 /* =========================================================================
    Questly — A complete educational platform inspired by Questly
@@ -26,19 +36,20 @@ import {
 // content management trivial: just add to these objects.
 
 const GRADES = [
-  { id: 'k',    label: 'Kindergarten', color: '#FF8C42', emoji: '🎨' },
-  { id: '1',    label: 'Grade 1', color: '#FFB627', emoji: '⭐' },
-  { id: '2',    label: 'Grade 2', color: '#7DCE82', emoji: '🌱' },
-  { id: '3',    label: 'Grade 3', color: '#3DB2FF', emoji: '🚀' },
-  { id: '4',    label: 'Grade 4', color: '#5C7AEA', emoji: '🔬' },
-  { id: '5',    label: 'Grade 5', color: '#9B5DE5', emoji: '📚' },
+  { id: 'prek', label: 'Pre-K',       color: '#0284C7', emoji: '🌟' },
+  { id: 'k',    label: 'Kindergarten', color: '#0369A1', emoji: '🎨' },
+  { id: '1',    label: 'Grade 1',      color: '#1D4ED8', emoji: '⭐' },
+  { id: '2',    label: 'Grade 2',      color: '#1E40AF', emoji: '🌱' },
+  { id: '3',    label: 'Grade 3',      color: '#2563EB', emoji: '🚀' },
+  { id: '4',    label: 'Grade 4',      color: '#3B82F6', emoji: '🔬' },
+  { id: '5',    label: 'Grade 5',      color: '#4F46E5', emoji: '📚' },
 ];
 
 const SUBJECTS = {
-  math:    { label: 'Math',           icon: Calculator,   color: '#2563EB', bg: '#EFF6FF', tagline: 'Numbers, shapes & patterns' },
-  ela:     { label: 'ELA',            icon: BookOpen,     color: '#D946EF', bg: '#FDF4FF', tagline: 'Reading, writing & grammar' },
-  science: { label: 'Science',        icon: FlaskConical, color: '#059669', bg: '#ECFDF5', tagline: 'Discover how the world works' },
-  social:  { label: 'Social Studies', icon: Globe2,       color: '#D97706', bg: '#FFFBEB', tagline: 'History, geography & civics' },
+  math:    { label: 'Math',           icon: Calculator,   color: '#1D4ED8', bg: '#EFF6FF', tagline: 'Numbers, shapes & patterns' },
+  ela:     { label: 'ELA',            icon: BookOpen,     color: '#4F46E5', bg: '#EEF2FF', tagline: 'Reading, writing & grammar' },
+  science: { label: 'Science',        icon: FlaskConical, color: '#0284C7', bg: '#F0F9FF', tagline: 'Discover how the world works' },
+  social:  { label: 'Social Studies', icon: Globe2,       color: '#475569', bg: '#F8FAFC', tagline: 'History, geography & civics' },
 };
 
 // Skill catalog. Each skill has a curated set of questions across types.
@@ -666,8 +677,8 @@ const calcMastery = (skillProgress) => {
 const masteryLabel = (m) => {
   if (m >= 85) return { label: 'Mastery', color: '#059669', icon: Crown };
   if (m >= 60) return { label: 'Proficient', color: '#2563EB', icon: Star };
-  if (m >= 30) return { label: 'Developing', color: '#D97706', icon: TrendingUp };
-  if (m > 0)   return { label: 'Beginner', color: '#D946EF', icon: Circle };
+  if (m >= 30) return { label: 'Developing', color: '#0284C7', icon: TrendingUp };
+  if (m > 0)   return { label: 'Beginner', color: '#64748B', icon: Circle };
   return { label: 'Not Started', color: '#9CA3AF', icon: Circle };
 };
 
@@ -684,14 +695,55 @@ const BADGES = [
   { id: 'explorer',    name: 'Explorer',     icon: '🗺️', desc: 'Try all 4 subjects',      check: (s) => s.subjectsTried >= 4 },
 ];
 
+// ---------- URL ROUTING HELPERS ----------
+const _gradeToSlug   = (id)   => id === 'prek' ? 'pre-k' : id === 'k' ? 'kindergarten' : `grade-${id}`;
+const _slugToGradeId = (slug) => slug === 'pre-k' ? 'prek' : slug === 'kindergarten' ? 'k' : slug.startsWith('grade-') ? slug.slice(6) : null;
+const _toSkillSlug   = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// Reverse slug → skill lookup (built once at module load)
+const SKILL_BY_SLUG = Object.fromEntries(Object.values(SKILLS).map(s => [_toSkillSlug(s.title), s]));
+
+// Parse any URL pathname into { view, gradeId?, subject?, skillId? }
+const parseLearnPath = (pathname) => {
+  const exact = {
+    '/student': 'dashboard', '/parent': 'parent', '/admin': 'admin',
+    '/subscription': 'subscription', '/subscription/success': 'subscription-success',
+    '/subscription/cancel': 'subscription',
+  };
+  if (exact[pathname]) return { view: exact[pathname] };
+  const parts = pathname.replace(/^\//, '').split('/').filter(Boolean);
+  if (parts[0] === 'learn') {
+    const subject  = parts[1];
+    const gradeId  = parts[2] ? _slugToGradeId(parts[2]) : null;
+    const slugStr  = parts[3];
+    if (gradeId && subject && slugStr) {
+      const skill = SKILL_BY_SLUG[slugStr];
+      if (skill) return { view: 'skill', gradeId, subject: skill.subject, skillId: skill.id };
+    }
+    if (gradeId && subject && SUBJECTS[subject]) return { view: 'subject', gradeId, subject };
+    if (gradeId) return { view: 'grade', gradeId };
+  }
+  return { view: 'home' };
+};
+
+// Build the URL path for any view + context combination
+const learnPath = (v, grade, subj, skill) => {
+  if (v === 'skill'   && grade && subj && skill) return `/learn/${subj}/${_gradeToSlug(grade.id)}/${_toSkillSlug(skill.title)}`;
+  if (v === 'subject' && grade && subj)          return `/learn/${subj}/${_gradeToSlug(grade.id)}`;
+  if (v === 'grade'   && grade)                  return `/learn/${_gradeToSlug(grade.id)}`;
+  const fixed = { dashboard: '/student', parent: '/parent', admin: '/admin', subscription: '/subscription' };
+  return fixed[v] || '/';
+};
+
 // ---------- MAIN APP ----------
 export default function QuestlyApp() {
-  // Persistent app state (in-memory only — instructions explicitly forbid storage APIs in artifacts)
-  const [view, setView] = useState(() => window.location.pathname === '/admin' ? 'admin' : 'home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
-  const [user, setUser] = useState({ name: 'Learner', role: 'student' });
-  const [selectedGrade, setSelectedGrade] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [activeSkill, setActiveSkill] = useState(null);
+  // Persistent app state — initialize view + context from the current URL so deep links work
+  const [_init]           = useState(() => parseLearnPath(window.location.pathname));
+  const [view, setView]   = useState(() => _init.view || 'home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
+  const [user, setUser]   = useState({ name: 'Learner', role: 'student' });
+  const [selectedGrade,   setSelectedGrade]   = useState(() => _init.gradeId ? GRADES.find(g => g.id === _init.gradeId) || null : null);
+  const [selectedSubject, setSelectedSubject] = useState(() => _init.subject || null);
+  const [activeSkill,     setActiveSkill]     = useState(() => _init.skillId ? SKILLS[_init.skillId] || null : null);
 
   // Progress is keyed by skillId → { attempts, correct, history, asked }
   const [progress, setProgress] = useState({});
@@ -723,16 +775,6 @@ export default function QuestlyApp() {
     saveLearningState(user, progress, stats);
   }, [authReady, user, progress, stats]);
 
-  // Sync /admin URL path with admin view
-  useEffect(() => {
-    const target = view === 'admin' ? '/admin' : '/';
-    if (window.location.pathname !== target) window.history.pushState(null, '', target);
-  }, [view]);
-  useEffect(() => {
-    const onPop = () => setView(window.location.pathname === '/admin' ? 'admin' : 'home');
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
-  }, []);
 
   const recordAnswer = (skillId, questionId, correct, difficulty) => {
     // 1. Update skill progress
@@ -745,6 +787,7 @@ export default function QuestlyApp() {
           correct: sp.correct + (correct ? 1 : 0),
           history: [...sp.history, correct],
           asked: sp.asked.includes(questionId) ? sp.asked : [...sp.asked, questionId],
+          lastPracticed: new Date().toISOString(),
         },
       };
     });
@@ -790,17 +833,19 @@ export default function QuestlyApp() {
 
   // Restore state when the user hits the browser back/forward button
   useEffect(() => {
+    const init = parseLearnPath(window.location.pathname);
     window.history.replaceState(
-      { view: 'home', selectedGradeId: null, selectedSubject: null, activeSkillId: null },
-      ''
+      { view: init.view, selectedGradeId: init.gradeId || null, selectedSubject: init.subject || null, activeSkillId: init.skillId || null },
+      '',
+      window.location.pathname
     );
     const onPop = (e) => {
-      if (!e.state) return;
       _histFromPop.current = true;
-      setView(e.state.view || 'home');
-      setSelectedGrade(e.state.selectedGradeId ? GRADES.find(g => g.id === e.state.selectedGradeId) || null : null);
-      setSelectedSubject(e.state.selectedSubject || null);
-      setActiveSkill(e.state.activeSkillId ? SKILLS[e.state.activeSkillId] || null : null);
+      const v = e.state?.view || parseLearnPath(window.location.pathname).view;
+      setView(v);
+      setSelectedGrade(e.state?.selectedGradeId ? GRADES.find(g => g.id === e.state.selectedGradeId) || null : null);
+      setSelectedSubject(e.state?.selectedSubject || null);
+      setActiveSkill(e.state?.activeSkillId ? SKILLS[e.state.activeSkillId] || null : null);
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -812,10 +857,10 @@ export default function QuestlyApp() {
     if (_histFromPop.current)  { _histFromPop.current  = false; return; }
     window.history.pushState({
       view,
-      selectedGradeId:   selectedGrade?.id  || null,
-      selectedSubject:   selectedSubject    || null,
-      activeSkillId:     activeSkill?.id    || null,
-    }, '');
+      selectedGradeId: selectedGrade?.id || null,
+      selectedSubject: selectedSubject   || null,
+      activeSkillId:   activeSkill?.id   || null,
+    }, '', learnPath(view, selectedGrade, selectedSubject, activeSkill));
   }, [view, selectedGrade, selectedSubject, activeSkill]);
 
   // ----- ROUTING HANDLERS -----
@@ -871,6 +916,12 @@ export default function QuestlyApp() {
         onSubscribe={() => setView('subscription')}
         onReset={handleLogout}
         onSelectGrade={(g) => { setSelectedGrade(g); setView('grade'); }}
+        onPickSkill={(skill) => {
+          setSelectedGrade(GRADES.find(g => g.id === skill.grade));
+          setSelectedSubject(skill.subject);
+          setActiveSkill(skill);
+          setView('skill');
+        }}
       />
 
       <main style={styles.main}>
@@ -921,6 +972,7 @@ export default function QuestlyApp() {
                                   />}
         {view === 'dashboard' && <Dashboard
                                     title="Student Dashboard"
+                                    user={user}
                                     stats={stats}
                                     progress={progress}
                                     onPickSkill={(skill) => {
@@ -943,8 +995,20 @@ export default function QuestlyApp() {
                                   />}
         {view === 'subscription' && <SubscriptionScreen
                                     onBack={goHome}
-                                    onJoin={() => pushToast('Subscription selected. Payment flow ready for checkout.', 'success')}
+                                    user={user}
+                                    pushToast={pushToast}
                                   />}
+        {view === 'subscription-success' && (
+          <div style={{ ...styles.container, textAlign: 'center', paddingTop: 60 }}>
+            <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
+            <h1 style={{ ...styles.dashHeroTitle, marginBottom: 12 }}>You&apos;re all set!</h1>
+            <p style={{ color: '#64748B', marginBottom: 28, fontSize: 16 }}>Your subscription is now active. Happy learning!</p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+              <button onClick={() => setView('subscription')} style={styles.secondaryAction}>View my plan</button>
+              <button onClick={goHome} style={styles.primaryAction}>Start learning</button>
+            </div>
+          </div>
+        )}
         {view === 'admin'     && <AdminContentManagement
                                     onPractice={() => setView('practice')}
                                     onReports={() => setView('reports')}
@@ -971,226 +1035,316 @@ export default function QuestlyApp() {
 }
 
 // ---------- HEADER ----------
-function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset, onSelectGrade }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownTimer = useRef(null);
-  const learningViews = new Set(['learning', 'grade', 'subject', 'skill']);
+function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset, onSelectGrade, onPickSkill }) {
+  const [menuOpen, setMenuOpen]           = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery]     = useState('');
+  const [searchOpen, setSearchOpen]       = useState(false);
+  const searchRef = useRef(null);
+  const [openNav,  setOpenNav]  = useState(null);
+  const timerRef = useRef(null);
 
-  const openDropdown  = () => { clearTimeout(dropdownTimer.current); setDropdownOpen(true); };
-  const closeDropdown = () => { dropdownTimer.current = setTimeout(() => setDropdownOpen(false), 160); };
-  useEffect(() => () => clearTimeout(dropdownTimer.current), []);
+  const openDrop  = (key) => { clearTimeout(timerRef.current); setOpenNav(key); };
+  const closeDrop = ()    => { timerRef.current = setTimeout(() => setOpenNav(null), 160); };
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    const handler = (e) => { if (searchRef.current && !searchRef.current.contains(e.target)) setSearchOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Build suggestions from SKILLS + SUBJECTS + GRADES
+  const suggestions = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return [];
+    const results = [];
+    // Skills
+    Object.values(SKILLS).filter(s => s.title.toLowerCase().includes(q) || s.description?.toLowerCase().includes(q))
+      .slice(0, 5)
+      .forEach(s => results.push({ kind: 'skill', label: s.title, sub: `${SUBJECTS[s.subject]?.label || s.subject} · ${GRADES.find(g => g.id === s.grade)?.label || s.grade}`, data: s }));
+    // Subjects
+    Object.entries(SUBJECTS).filter(([, v]) => v.label.toLowerCase().includes(q))
+      .forEach(([k, v]) => results.push({ kind: 'subject', label: v.label, sub: v.tagline, data: k }));
+    // Grades
+    GRADES.filter(g => g.label.toLowerCase().includes(q))
+      .forEach(g => results.push({ kind: 'grade', label: g.label, sub: 'Browse all skills', data: g }));
+    return results.slice(0, 8);
+  }, [searchQuery]);
+
+  const isSignedIn = !!user?.username;
+  const firstName  = isSignedIn ? (user.name || user.username).split(' ')[0] : null;
+
+  const learningMega = [
+    {
+      col: 'subjects',
+      items: [
+        { icon: <Calculator size={15}/>, label: 'Math',          links: ['Skills','Lessons','Videos','Games'], badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+        { icon: <BookOpen size={15}/>,   label: 'Language arts', links: ['Skills','Videos','Games'],           badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+        { icon: <FlaskConical size={15}/>, label: 'Science',     links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+        { icon: <Globe2 size={15}/>,     label: 'Social studies',links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+        { icon: <BookOpen size={15}/>,   label: 'Spanish',       links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+      ],
+    },
+    {
+      col: 'recommendations',
+      items: [
+        { icon: <Star size={15}/>,     label: 'Recommendations', links: ['Recommendations wall'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
+      ],
+    },
+    {
+      col: 'skillplans',
+      items: [
+        { icon: <BarChart3 size={15}/>, label: 'Skill plans', links: ['Questly plans','State standards','Textbooks','Test prep'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
+      ],
+    },
+    {
+      col: 'awards',
+      items: [
+        { icon: <Trophy size={15}/>, label: 'Awards', links: ['Student awards'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
+      ],
+    },
+  ];
 
   const navItems = [
-    { label: 'Learning',   onClick: onLearning,  active: learningViews.has(view), hasDropdown: true },
-    { label: 'Practice',   onClick: onPractice,  active: view === 'practice' },
-    { label: 'Student',    onClick: onDashboard, active: view === 'dashboard' },
-    { label: 'Parent',     onClick: onParent,    active: view === 'parent' },
-    { label: 'Reports',    onClick: onReports,   active: view === 'reports' },
-    { label: 'Takeoff',    onClick: onBadges,    active: view === 'badges', icon: <Sparkles size={15} /> },
+    {
+      key: 'learning', label: 'Learning', onClick: onLearning,
+      active: ['learning', 'grade', 'subject', 'skill'].includes(view),
+      hasMega: true,
+    },
+    { key: 'practice', label: 'Practice', onClick: onPractice,  active: view === 'practice'  },
+    ...(isSignedIn && user?.role === 'student' ? [
+      { key: 'student', label: 'Student', onClick: onDashboard, active: view === 'dashboard' },
+    ] : []),
+    ...(isSignedIn && user?.role === 'parent' ? [
+      { key: 'parent',  label: 'Parent',  onClick: onParent,    active: view === 'parent'    },
+    ] : []),
+    { key: 'reports',  label: 'Reports',  onClick: onReports,   active: view === 'reports'   },
+    { key: 'takeoff',  label: 'Takeoff',  onClick: onBadges,    active: view === 'badges', icon: <Sparkles size={14} /> },
   ];
 
   const closeMenu = (fn) => { fn(); setMenuOpen(false); };
 
-  const subjects = [
-    { icon: '🔢', label: 'Math',           sub: 'Numbers, algebra & geometry',      key: 'math' },
-    { icon: '📖', label: 'Language Arts',  sub: 'Reading, writing & phonics',        key: 'ela' },
-    { icon: '🔬', label: 'Science',        sub: 'Life, earth & physical science',    key: 'science' },
-    { icon: '🌍', label: 'Social Studies', sub: 'History, maps & community',         key: 'social' },
-  ];
-
-  const features = [
-    { icon: '🎯', label: 'Practice Mode',    onClick: () => { onPractice(); setDropdownOpen(false); } },
-    { icon: '📊', label: 'Progress Reports', onClick: () => { onReports();  setDropdownOpen(false); } },
-    { icon: '🗂️', label: 'Skill Catalog',    onClick: () => { onLearning(); setDropdownOpen(false); } },
-  ];
-
-  const achievements = [
-    { icon: '🏅', label: 'Badges & Awards',   onClick: () => { onBadges();    setDropdownOpen(false); } },
-    { icon: '📋', label: 'Student Dashboard', onClick: () => { onDashboard(); setDropdownOpen(false); } },
-    { icon: '👨‍👩‍👧', label: 'Parent Dashboard',  onClick: () => { onParent();    setDropdownOpen(false); } },
-  ];
-
   return (
-    <header style={styles.header}>
-      <div style={styles.headerInner}>
-        {/* Top row: logo | search | actions | hamburger */}
-        <div style={styles.headerTopRow} className="header-top-row">
-          <button onClick={onHome} style={styles.logo}>
-            <span style={styles.logoMark}>
-              <span style={styles.logoCapSection}>🎓</span>
-              <span style={styles.logoWordmark}>Questly</span>
-            </span>
-          </button>
+    <header style={hStyles.header}>
 
-          <label style={styles.searchWrap} className="header-search">
-            <span style={styles.searchIcon}><Search size={18} color="white" /></span>
-            <input style={styles.searchInput} placeholder="Search topics, skills, and more" />
-            <button type="button" style={styles.searchSubmit}><ChevronRight size={22} color="#9CA3AF" /></button>
-          </label>
+      {/* ── Row 1: logo | search | role toggles | actions | hamburger ── */}
+      <div style={hStyles.topRow}>
 
-          <div style={styles.headerActions} className="header-desktop-actions">
-            <div style={styles.topRoleGroup}>
-              {[
-                { id: 'student', label: 'Student', icon: GraduationCap, onClick: onDashboard },
-                { id: 'parent',  label: 'Parent',  icon: Heart,          onClick: onParent },
-              ].map(role => {
-                const Icon = role.icon;
-                const active = user?.role === role.id;
-                return (
-                  <button
-                    key={role.id}
-                    onClick={() => { onRoleChange(role.id); role.onClick(); }}
-                    style={{ ...styles.topRoleBtn, ...(active ? styles.topRoleBtnActive : {}) }}
-                  >
-                    <Icon size={13} />
-                    <span>{role.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <button onClick={onSignIn} style={styles.signInBtn}>
-              <UserCircle size={17} /> Sign in
-            </button>
-            <button onClick={onSubscribe} style={styles.membershipBtn}>Membership</button>
-            <button onClick={onReset} style={styles.resetBtn} title="Reset session"><RotateCcw size={14} /></button>
+        {/* Logo */}
+        <button onClick={onHome} style={hStyles.logo}>
+          <span style={hStyles.logoMark}>🎓</span>
+          <span style={hStyles.logoText}>Questly</span>
+        </button>
+
+        {/* Search bar */}
+        <div ref={searchRef} style={{ position: 'relative', flex: '1 1 auto', maxWidth: 400, minWidth: 180 }} className="h-search">
+          <div
+            style={{ ...hStyles.searchBar, flex: 'unset', maxWidth: 'unset', minWidth: 'unset', width: '100%', boxSizing: 'border-box' }}
+            className={searchFocused ? 'h-search-focus' : ''}
+            onFocus={() => { setSearchFocused(true); setSearchOpen(true); }}
+            onBlur={() => setSearchFocused(false)}
+          >
+            <span style={hStyles.searchIconWrap}><Search size={16} color="#6B7280" /></span>
+            <input
+              style={hStyles.searchInput}
+              placeholder="Search topics, skills, and more"
+              value={searchQuery}
+              onChange={e => { setSearchQuery(e.target.value); setSearchOpen(true); }}
+              onFocus={() => setSearchOpen(true)}
+            />
+            {searchQuery && (
+              <button style={hStyles.searchSubmit} onClick={() => { setSearchQuery(''); setSearchOpen(false); }} aria-label="Clear">
+                <X size={14} color="#9CA3AF" />
+              </button>
+            )}
+            {!searchQuery && (
+              <button style={hStyles.searchSubmit} aria-label="Search">
+                <ChevronRight size={18} color="#9CA3AF" />
+              </button>
+            )}
           </div>
 
-          {/* Hamburger — shown on mobile via CSS */}
-          <button
-            className="header-hamburger"
-            onClick={() => setMenuOpen(o => !o)}
-            style={styles.hamburgerBtn}
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X size={22} color="white" /> : <Menu size={22} color="white" />}
-          </button>
-        </div>
-
-        {/* Desktop nav row — hidden on mobile via CSS */}
-        <nav style={styles.headerNav} className="header-desktop-nav" aria-label="Primary">
-          {navItems.map(item => item.hasDropdown ? (
-            <div
-              key={item.label}
-              className="nav-learning-wrap"
-              onMouseEnter={openDropdown}
-              onMouseLeave={closeDropdown}
-            >
-              <button
-                onClick={() => { item.onClick(); setDropdownOpen(false); }}
-                style={{ ...styles.navLink, ...(item.active ? styles.navLinkActive : {}) }}
-              >
-                {item.label}
-                <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.75 }}>▾</span>
-                {item.active && <span style={styles.navActiveCaret} />}
-              </button>
-
-              {dropdownOpen && (
-                <div
-                  onMouseEnter={openDropdown}
-                  onMouseLeave={closeDropdown}
-                  style={{
-                    position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-40%)',
-                    background: 'white', borderRadius: 16, zIndex: 500,
-                    boxShadow: '0 20px 60px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
-                    border: '1px solid #E5E7EB', padding: '28px 28px 24px',
-                    display: 'grid', gridTemplateColumns: 'repeat(4, 200px)', gap: 0,
-                    animation: 'dropdownSlide 0.2s ease both',
-                    marginTop: 4,
+          {/* Suggestions dropdown */}
+          {searchOpen && suggestions.length > 0 && (
+            <div style={hStyles.suggestPanel}>
+              {suggestions.map((s, i) => (
+                <button
+                  key={i}
+                  style={hStyles.suggestItem}
+                  className="h-suggest-item"
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    if (s.kind === 'skill')   { onPickSkill(s.data); }
+                    if (s.kind === 'grade')   { onSelectGrade(s.data); }
+                    if (s.kind === 'subject') { onLearning(); }
+                    setSearchQuery(''); setSearchOpen(false);
                   }}
                 >
-                  {/* Col 1 — Subjects → Learning catalog */}
-                  <div style={{ paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Subjects</div>
-                    {subjects.map(s => (
-                      <button key={s.key} className="mega-link" onClick={() => { onLearning(); setDropdownOpen(false); }}>
-                        <span style={{ marginRight: 8 }}>{s.icon}</span>
-                        <span style={{ fontWeight: 700, color: '#1a1a2e' }}>{s.label}</span>
-                        <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1, paddingLeft: 26 }}>{s.sub}</div>
-                      </button>
-                    ))}
+                  <span style={hStyles.suggestIcon}>
+                    {s.kind === 'skill'   && <BookOpen size={13} color="#6B7280" />}
+                    {s.kind === 'subject' && <Star size={13} color="#6B7280" />}
+                    {s.kind === 'grade'   && <GraduationCap size={13} color="#6B7280" />}
+                  </span>
+                  <div style={hStyles.suggestText}>
+                    <span style={hStyles.suggestLabel}>{s.label}</span>
+                    <span style={hStyles.suggestSub}>{s.sub}</span>
                   </div>
-
-                  {/* Col 2 — By Grade → navigates directly to grade screen */}
-                  <div style={{ paddingLeft: 20, paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>By Grade</div>
-                    {GRADES.map(g => (
-                      <button
-                        key={g.id}
-                        className="mega-link"
-                        onClick={() => { if (onSelectGrade) onSelectGrade(g); setDropdownOpen(false); }}
-                        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                      >
-                        <span style={{ fontSize: 16 }}>{g.emoji}</span>
-                        <span>{g.label}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Col 3 — Features */}
-                  <div style={{ paddingLeft: 20, paddingRight: 20, borderRight: '1px solid #F3F4F6' }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Features</div>
-                    {features.map(f => (
-                      <button key={f.label} className="mega-link" onClick={f.onClick}>
-                        <span style={{ marginRight: 8 }}>{f.icon}</span>{f.label}
-                      </button>
-                    ))}
-                    <button
-                      onClick={() => { onSubscribe(); setDropdownOpen(false); }}
-                      style={{ marginTop: 16, marginLeft: 10, background: 'linear-gradient(135deg, #dcfce7, #d1fae5)', borderRadius: 10, padding: '10px 12px', border: 'none', cursor: 'pointer', textAlign: 'left', width: 'calc(100% - 10px)' }}
-                    >
-                      <div style={{ fontSize: 12, fontWeight: 800, color: '#166534' }}>✨ Free Trial</div>
-                      <div style={{ fontSize: 11, color: '#4B5563', marginTop: 2 }}>Start learning today — no credit card needed</div>
-                    </button>
-                  </div>
-
-                  {/* Col 4 — Dashboards */}
-                  <div style={{ paddingLeft: 20 }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.2, color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 12, paddingLeft: 10 }}>Dashboards</div>
-                    {achievements.map(a => (
-                      <button key={a.label} className="mega-link" onClick={a.onClick}>
-                        <span style={{ marginRight: 8 }}>{a.icon}</span>{a.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  <span style={hStyles.suggestKind}>{s.kind}</span>
+                </button>
+              ))}
             </div>
-          ) : (
+          )}
+        </div>
+
+        {/* Student / Parent role toggle */}
+        <div style={hStyles.roleGroup} className="h-actions">
+          {[
+            { id: 'student', label: 'Student', icon: GraduationCap, onClick: onDashboard },
+            { id: 'parent',  label: 'Parent',  icon: Heart,          onClick: onParent   },
+          ].map(role => {
+            const Icon  = role.icon;
+            const isActive = user?.role === role.id;
+            return (
+              <button
+                key={role.id}
+                onClick={() => { onRoleChange(role.id); role.onClick(); }}
+                style={{ ...hStyles.roleBtn, ...(isActive ? hStyles.roleBtnActive : {}) }}
+              >
+                <Icon size={13} />
+                <span>{role.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sign In */}
+        <button onClick={onSignIn} style={hStyles.signInBtn} className="h-actions">
+          <UserCircle size={16} />
+          <span>{isSignedIn ? firstName : 'Sign In'}</span>
+        </button>
+
+        {/* Membership / Sign out */}
+        {isSignedIn
+          ? <button onClick={onReset} style={{ ...hStyles.membershipBtn, background: '#EF4444' }} className="h-actions">Sign out</button>
+          : <button onClick={onSubscribe} style={hStyles.membershipBtn} className="h-actions">Membership</button>
+        }
+
+        {/* Hamburger — mobile only */}
+        <button
+          className="h-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={hStyles.hamburger}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {/* ── Row 2: nav links ── */}
+      <nav style={hStyles.navRow} className="h-nav" aria-label="Primary">
+        {navItems.map(item => (
+          <div
+            key={item.key}
+            style={{ position: 'relative' }}
+            onMouseEnter={() => (item.hasMega || item.hasDropdown) && openDrop(item.key)}
+            onMouseLeave={() => (item.hasMega || item.hasDropdown) && closeDrop()}
+          >
             <button
-              key={item.label}
-              onClick={item.onClick}
-              style={{ ...styles.navLink, ...(item.active ? styles.navLinkActive : {}) }}
+              onClick={() => { item.onClick(); setOpenNav(null); }}
+              style={{ ...hStyles.navLink, ...(item.active ? hStyles.navActive : {}) }}
             >
               {item.label}
-              {item.icon && <span style={{ display: 'inline-flex', alignItems: 'center' }}>{item.icon}</span>}
-              {item.active && <span style={styles.navActiveCaret} />}
+              {(item.hasMega || item.hasDropdown) && <span style={{ fontSize: 10, marginLeft: 4, opacity: 0.6 }}>▾</span>}
+              {item.icon && <span style={{ marginLeft: 5, display: 'inline-flex', alignItems: 'center' }}>{item.icon}</span>}
+              {item.active && <span style={hStyles.navCaret} />}
+            </button>
+
+            {/* Standard small dropdown */}
+            {item.hasDropdown && openNav === item.key && (
+              <div
+                style={hStyles.dropdown}
+                onMouseEnter={() => openDrop(item.key)}
+                onMouseLeave={closeDrop}
+              >
+                {item.items.map(d => (
+                  <button key={d.label} onClick={d.act} className="h-drop-item" style={hStyles.dropItem}>
+                    <span style={hStyles.dropIcon}>{d.icon}</span>
+                    <div>
+                      <div style={hStyles.dropLabel}>{d.label}</div>
+                      <div style={hStyles.dropSub}>{d.sub}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Mega menu for Learning */}
+            {item.hasMega && openNav === item.key && (
+              <div
+                style={hStyles.megaPanel}
+                onMouseEnter={() => openDrop(item.key)}
+                onMouseLeave={closeDrop}
+              >
+                {learningMega.map(col => (
+                  <div key={col.col} style={hStyles.megaCol}>
+                    {col.items.map(entry => (
+                      <div key={entry.label} style={hStyles.megaGroup}>
+                        <button onClick={entry.act} style={hStyles.megaHeading}>
+                          <span style={hStyles.megaHeadingIcon}>{entry.icon}</span>
+                          {entry.label}
+                          {entry.badge && <span style={hStyles.megaBadge}>{entry.badge}</span>}
+                        </button>
+                        {entry.links.length > 0 && (
+                          entry.links.length > 3
+                            ? /* vertical list for long link sets */
+                              <div style={{ paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                                {entry.links.map(lk => (
+                                  <button key={lk} onClick={entry.act} style={{ ...hStyles.megaLink, display: 'flex', alignItems: 'center', gap: 5, color: '#6B7280' }}>
+                                    <span style={{ fontSize: 10, color: '#D1D5DB' }}>›</span>{lk}
+                                  </button>
+                                ))}
+                              </div>
+                            : /* inline dots for short link sets */
+                              <div style={hStyles.megaLinks}>
+                                {entry.links.map((lk, i) => (
+                                  <span key={lk}>
+                                    {i > 0 && <span style={hStyles.megaDot}> • </span>}
+                                    <button onClick={entry.act} style={hStyles.megaLink}>{lk}</button>
+                                  </span>
+                                ))}
+                              </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      {/* ── Mobile menu ── */}
+      {menuOpen && (
+        <nav style={hStyles.mobileMenu}>
+          {navItems.map(item => (
+            <button
+              key={item.key}
+              onClick={() => closeMenu(item.onClick)}
+              style={{ ...hStyles.mobileLink, ...(item.active ? hStyles.mobileLinkActive : {}) }}
+            >
+              {item.label}
+              {item.icon && <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center' }}>{item.icon}</span>}
             </button>
           ))}
+          <div style={hStyles.mobileDivider} />
+          <button onClick={() => closeMenu(onSignIn)}    style={hStyles.mobileLink}>{isSignedIn ? firstName : 'Sign In'}</button>
+          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#1D4ED8' }}>Membership</button>
+          <button onClick={() => closeMenu(onReset)}     style={{ ...hStyles.mobileLink, color: '#6B7280' }}>Reset session</button>
         </nav>
-
-        {/* Mobile dropdown */}
-        {menuOpen && (
-          <nav style={styles.mobileMenu} aria-label="Mobile navigation">
-            {navItems.map(item => (
-              <button
-                key={item.label}
-                onClick={() => closeMenu(item.onClick)}
-                style={{ ...styles.mobileNavLink, ...(item.active ? styles.mobileNavLinkActive : {}) }}
-              >
-                {item.label}
-                {item.icon && <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center' }}>{item.icon}</span>}
-              </button>
-            ))}
-            <div style={styles.mobileMenuDivider} />
-            <button onClick={() => closeMenu(onSignIn)}    style={styles.mobileNavLink}>Sign in</button>
-            <button onClick={() => closeMenu(onDashboard)} style={styles.mobileNavLink}>Student</button>
-            <button onClick={() => closeMenu(onParent)}    style={styles.mobileNavLink}>Parent</button>
-            <button onClick={() => closeMenu(onSubscribe)} style={{ ...styles.mobileNavLink, color: '#FFE566', fontWeight: 900 }}>Membership</button>
-          </nav>
-        )}
-      </div>
+      )}
     </header>
   );
 }
@@ -1237,9 +1391,9 @@ function LoginScreen({ onLogin }) {
           <div style={styles.roleGrid}>
             {[
               { id: 'student', label: 'Student', icon: GraduationCap, color: '#0C5CA8' },
-              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#D946EF' },
-              { id: 'teacher', label: 'Teacher', icon: Users, color: '#059669' },
-              { id: 'admin',   label: 'Admin',   icon: Settings, color: '#FFB627' },
+              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#4F46E5' },
+              { id: 'teacher', label: 'Teacher', icon: Users, color: '#0284C7' },
+              { id: 'admin',   label: 'Admin',   icon: Settings, color: '#475569' },
             ].map(r => {
               const Icon = r.icon;
               const active = role === r.id;
@@ -1274,8 +1428,8 @@ function LoginScreen({ onLogin }) {
       <div style={styles.loginBg}>
         <FloatingShape style={{ top: '10%', left: '8%', background: '#0C5CA8', size: 80 }} delay={0} />
         <FloatingShape style={{ top: '20%', right: '12%', background: '#0891B2', size: 110 }} delay={1.5} />
-        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#F59E0B', size: 70 }} delay={0.8} />
-        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#059669', size: 95 }} delay={2.2} />
+        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#3B82F6', size: 70 }} delay={0.8} />
+        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#0284C7', size: 95 }} delay={2.2} />
       </div>
     </div>
   );
@@ -1334,9 +1488,9 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
             and track your mastery on every skill.
           </p>
           <div style={styles.heroStats}>
-            <HeroStat value={stats.points} label="Total Points" color="#D97706" />
-            <HeroStat value={`${accuracy}%`} label="Accuracy" color="#7DCE82" />
-            <HeroStat value={stats.streak} label="Day Streak" color="#FB5607" />
+            <HeroStat value={stats.points} label="Total Points" color="#1D4ED8" />
+            <HeroStat value={`${accuracy}%`} label="Accuracy" color="#059669" />
+            <HeroStat value={stats.streak} label="Day Streak" color="#0284C7" />
           </div>
         </div>
         <div style={styles.heroRight}>
@@ -1394,21 +1548,21 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
       {/* Motivational strip */}
       <section style={styles.motivStrip}>
         <div style={styles.motivItem}>
-          <Trophy size={28} color="#FFB627" />
+          <Trophy size={28} color="#1D4ED8" />
           <div>
             <div style={styles.motivLabel}>{BADGES.length} Badges to Earn</div>
             <div style={styles.motivSub}>Unlock by hitting milestones</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Flame size={28} color="#FB5607" />
+          <Flame size={28} color="#0284C7" />
           <div>
             <div style={styles.motivLabel}>Daily Streaks</div>
             <div style={styles.motivSub}>Practice every day to keep it growing</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Crown size={28} color="#059669" />
+          <Crown size={28} color="#1D4ED8" />
           <div>
             <div style={styles.motivLabel}>Skill Mastery</div>
             <div style={styles.motivSub}>Reach 85%+ to fully master a skill</div>
@@ -1478,7 +1632,7 @@ function WelcomePopup({ onSignIn, onClose }) {
         animation: 'popupSlideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         {/* decorative top bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #3DAF52, #06b6d4, #a855f7, #f59e0b)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #1D4ED8, #0284C7, #3B82F6)' }} />
 
         {/* close button */}
         <button
@@ -1512,7 +1666,7 @@ function WelcomePopup({ onSignIn, onClose }) {
             color: '#1a1a2e', lineHeight: 1.15,
           }}>
             Learn at Your Own Pace.<br />
-            <span style={{ color: '#3DAF52', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+            <span style={{ color: '#1D4ED8', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
               Practice Until You Master It.
             </span>
           </h2>
@@ -1549,7 +1703,7 @@ function WelcomePopup({ onSignIn, onClose }) {
           onClick={onSignIn}
           className="popup-trial-btn"
           style={{
-            width: '100%', background: 'linear-gradient(135deg, #3DAF52, #22c55e)',
+            width: '100%', background: 'linear-gradient(135deg, #1D4ED8, #2563EB)',
             color: 'white', border: 'none', borderRadius: 999,
             padding: '16px 24px', fontSize: 17, fontWeight: 900, cursor: 'pointer',
             animation: 'pulseGlow 2.4s ease-in-out infinite, trailBounce 3s ease-in-out infinite',
@@ -1589,20 +1743,20 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     page: { background: '#FAFAF9', color: '#1a1a2e' },
     hero: { background: '#fff', padding: '72px 24px 80px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 64, flexWrap: 'wrap' },
     heroLeft: { maxWidth: 560, flex: '1 1 320px' },
-    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#C8F0D4', color: '#1a6632', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
-    h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1a1a2e' },
-    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#3DAF52' },
-    heroPara: { fontSize: 17, color: '#6B7280', margin: '16px 0 28px', lineHeight: 1.6 },
-    heroBtn: { background: '#3DAF52', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#DBEAFE', color: '#1E40AF', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
+    h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#0F172A' },
+    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#1D4ED8' },
+    heroPara: { fontSize: 17, color: '#64748B', margin: '16px 0 28px', lineHeight: 1.6 },
+    heroBtn: { background: '#1D4ED8', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
     tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
     tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
-    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#C8F0D4', border: '5px solid #3DAF52', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(61,175,82,0.2)', flexShrink: 0 },
-    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#FFE566', color: '#1a1a2e', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
-    programSec: { background: '#F7F3FF', padding: '64px 24px' },
+    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#DBEAFE', border: '5px solid #1D4ED8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(29,78,216,0.15)', flexShrink: 0 },
+    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#EFF6FF', color: '#1E40AF', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
+    programSec: { background: '#F8FAFC', padding: '64px 24px' },
     secWrap: { maxWidth: 1100, margin: '0 auto' },
-    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#9333EA', marginBottom: 8 },
-    secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#1a1a2e' },
-    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#3DAF52' },
+    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D4ED8', marginBottom: 8 },
+    secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#0F172A' },
+    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#1D4ED8' },
     secDesc: { fontSize: 16, color: '#6B7280', margin: '0 0 40px', maxWidth: 560 },
     cardsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 },
     card: { borderRadius: 20, padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer', border: 'none', textAlign: 'left', minHeight: 240 },
@@ -1623,18 +1777,18 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     startSec: { background: '#fff', padding: '64px 24px' },
     startInner: { maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' },
     statsGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 28 },
-    statCard: { background: '#F7F3FF', borderRadius: 14, padding: '20px 18px' },
-    statVal: { fontSize: 28, fontWeight: 900, color: '#3DAF52', margin: 0 },
+    statCard: { background: '#EFF6FF', borderRadius: 14, padding: '20px 18px' },
+    statVal: { fontSize: 28, fontWeight: 900, color: '#1D4ED8', margin: 0 },
     statLabel: { fontSize: 13, color: '#6B7280', margin: '4px 0 0' },
-    readCard: { background: '#C4B3F5', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16 },
+    readCard: { background: '#DBEAFE', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16 },
     readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1a1a2e' },
     readSub: { fontSize: 14, color: '#4B5563', margin: 0, lineHeight: 1.6 },
     readBtn: { alignSelf: 'flex-start', background: '#1a1a2e', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
     ctaSec: { background: '#FAFAF9', padding: '64px 24px' },
-    ctaCard: { maxWidth: 680, margin: '0 auto', background: '#C4B3F5', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 },
+    ctaCard: { maxWidth: 680, margin: '0 auto', background: '#EFF6FF', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 },
     ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1a1a2e' },
     ctaSub: { fontSize: 15, color: '#4B5563', margin: 0 },
-    ctaBtn: { background: '#3DAF52', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    ctaBtn: { background: '#1D4ED8', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
     contactSec: { background: '#fff', padding: '64px 24px', textAlign: 'center' },
     avatarsRow: { fontSize: 36, display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
     contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1a1a2e' },
@@ -1648,7 +1802,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B7280', lineHeight: 1.7, margin: 0 },
   };
 
-  const gradeColors = ['#FFD6D6','#FFE4C4','#FFF3C4','#E4F4D0','#C8F0D4','#C8EFF8','#D4E4FF','#E4D8FF','#F9D4FF','#FFD6EE','#C8F0D4','#D4E4FF','#FFF3C4','#FFD6D6'];
+  const gradeColors = ['#DBEAFE','#BFDBFE','#E0F2FE','#BAE6FD','#EEF2FF','#E0E7FF','#F0F9FF','#DBEAFE','#BFDBFE','#E0F2FE','#EEF2FF','#E0E7FF','#DBEAFE','#BAE6FD'];
 
   const faqs = [
     { q: 'What grades does Questly cover?', a: 'Questly covers Kindergarten through Grade 5 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
@@ -1674,7 +1828,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             Start learning ↗
           </button>
           <div style={artS.tagsRow} className="art-tags-row">
-            {[['#Math','#FFE566'],['#Science','#C8F0D4'],['#ELA','#C4B3F5'],['#History','#F9B8C4']].map(([tag, bg]) => (
+            {[['#Math','#DBEAFE'],['#Science','#E0F2FE'],['#ELA','#EEF2FF'],['#History','#F1F5F9']].map(([tag, bg]) => (
               <span key={tag} style={{ ...artS.tag, background: bg }}>{tag}</span>
             ))}
           </div>
@@ -1705,9 +1859,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
 
             {/* Science card */}
             <div style={{
-              background: 'linear-gradient(135deg, #065f46, #059669)',
+              background: 'linear-gradient(135deg, #0369A1, #0284C7)',
               borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
-              boxShadow: '0 8px 24px rgba(5,150,105,0.30)',
+              boxShadow: '0 8px 24px rgba(2,132,199,0.30)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <span style={{ fontSize: 22 }}>🔬</span>
@@ -1775,9 +1929,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
           <div style={artS.cardsGrid} className="art-cards-grid">
             {[
-              { bg: '#C8F0D4', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
-              { bg: '#C4B3F5', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
-              { bg: '#FFE566', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
+              { bg: '#DBEAFE', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
+              { bg: '#EEF2FF', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
+              { bg: '#E0F2FE', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
             ].map((card) => (
               <button key={card.title} style={{ ...artS.card, background: card.bg }} onClick={() => onSelectGrade(GRADES[0])}>
                 <span style={artS.cardGradeTag}>{card.grade}</span>
@@ -1818,9 +1972,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
           <div style={artS.whyGrid} className="art-why-grid">
             {[
-              { icon: '📚', bg: '#C8F0D4', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
-              { icon: '🎯', bg: '#E9D8FD', title: 'Adaptive Learning', text: 'Questly adjusts question difficulty in real time based on student responses for maximum growth.' },
-              { icon: '⭐', bg: '#FEF3C7', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
+              { icon: '📚', bg: '#DBEAFE', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
+              { icon: '🎯', bg: '#EEF2FF', title: 'Adaptive Learning', text: 'Questly adjusts question difficulty in real time based on student responses for maximum growth.' },
+              { icon: '⭐', bg: '#F0F9FF', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
             ].map((item) => (
               <div key={item.title} style={artS.whyCard}>
                 <div style={{ ...artS.whyIcon, background: item.bg }}>{item.icon}</div>
@@ -1855,7 +2009,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
           <div style={artS.readCard}>
             <div style={{ fontSize: 40 }}>🎓</div>
-            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>explore</em> skills?</h3>
+            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>explore</em> skills?</h3>
             <p style={artS.readSub}>Pick a grade level to see all available practice skills and begin your learning journey.</p>
             <button onClick={() => onSelectGrade(GRADES[0])} style={artS.readBtn}>Browse all grades ↗</button>
           </div>
@@ -1866,7 +2020,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       <section style={artS.ctaSec} className="art-section">
         <div style={artS.ctaCard} className="art-cta-card">
           <div style={{ fontSize: 52 }}>👧</div>
-          <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>Free Practice</em></h2>
+          <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>Free Practice</em></h2>
           <p style={artS.ctaSub}>Join thousands of students already learning with Questly.</p>
           <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
         </div>
@@ -1875,12 +2029,12 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       {/* ── Contact ── */}
       <section style={artS.contactSec} className="art-section">
         <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
-        <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#3DAF52' }}>to talking</em></h2>
+        <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>to talking</em></h2>
         <p style={artS.contactSub}>Have questions about Questly? Reach out — we're here to help.</p>
         <div style={artS.contactBtns}>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#3DAF52', color: '#fff' }}>Contact us</button>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#C4B3F5', color: '#1a1a2e' }}>Call us</button>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#C8F0D4', color: '#1a6632' }}>Video chat</button>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#1D4ED8', color: '#fff' }}>Contact us</button>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EEF2FF', color: '#1E40AF' }}>Call us</button>
+          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EFF6FF', color: '#1D4ED8' }}>Video chat</button>
         </div>
       </section>
 
@@ -1895,7 +2049,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#3DAF52' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#1D4ED8' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
                   {openFaq === i ? '−' : '+'}
                 </span>
               </button>
@@ -1940,9 +2094,9 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
       text: 'More than 17,000 adaptive skills designed to support and challenge every learner' },
     { icon: '📊', color: '#0891B2', title: 'Real-Time Diagnostic',
       text: "Up-to-date, accurate assessment of students' knowledge levels in math and language arts" },
-    { icon: '🎯', color: '#8B5CF6', title: 'Personalized Guidance',
+    { icon: '🎯', color: '#4F46E5', title: 'Personalized Guidance',
       text: 'Targeted skill recommendations help address learning gaps and accelerate growth' },
-    { icon: '📈', color: '#F59E0B', title: 'Actionable Analytics',
+    { icon: '📈', color: '#0284C7', title: 'Actionable Analytics',
       text: 'Easy-to-use reports provide real-time insight into student progress' },
   ];
 
@@ -1999,7 +2153,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
                       style={{
                         padding: '10px 8px',
                         borderRadius: 10,
-                        border: role === option ? '2px solid #3DB2FF' : '1px solid #D1D5DB',
+                        border: role === option ? '2px solid #1D4ED8' : '1px solid #D1D5DB',
                         background: role === option ? '#EFF8FF' : 'white',
                         color: role === option ? '#0369A1' : '#334155',
                         fontWeight: 800,
@@ -2127,19 +2281,13 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   const [activeView, setActiveView] = useState('Grades');
 
   const GRADE_DISPLAY = {
-    k: { name: 'Kindergarten', badge: 'K' },
-    '1': { name: 'First grade', badge: '1' },
-    '2': { name: 'Second grade', badge: '2' },
-    '3': { name: 'Third grade', badge: '3' },
-    '4': { name: 'Fourth grade', badge: '4' },
-    '5': { name: 'Fifth grade', badge: '5' },
-    '6': { name: 'Sixth grade', badge: '6' },
-    '7': { name: 'Seventh grade', badge: '7' },
-    '8': { name: 'Eighth grade', badge: '8' },
-    '9': { name: 'Ninth grade', badge: '9' },
-    '10': { name: 'Tenth grade', badge: '10' },
-    '11': { name: 'Eleventh grade', badge: '11' },
-    '12': { name: 'Twelfth grade', badge: '12' },
+    prek: { name: 'Pre-K',        badge: 'P'  },
+    k:    { name: 'Kindergarten', badge: 'K'  },
+    '1':  { name: 'First grade',  badge: '1'  },
+    '2':  { name: 'Second grade', badge: '2'  },
+    '3':  { name: 'Third grade',  badge: '3'  },
+    '4':  { name: 'Fourth grade', badge: '4'  },
+    '5':  { name: 'Fifth grade',  badge: '5'  },
   };
 
   const subjectTabs = [
@@ -2195,7 +2343,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   };
 
   const hero = heroConfigs[activeSubject] || heroConfigs.math;
-  const subjectColor = SUBJECTS[activeSubject]?.color || '#3DB2FF';
+  const subjectColor = SUBJECTS[activeSubject]?.color || '#1D4ED8';
 
   const getGradeSkills = (gradeId) =>
     Object.values(SKILLS).filter(s => s.grade === gradeId && s.subject === activeSubject);
@@ -2219,8 +2367,8 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
                   ...(tab.disabled ? styles.lcSubjectTabDisabled : {}),
                 }}
               >
-                {Icon && <Icon size={14} />}
-                {tab.label}
+                {Icon && <Icon size={18} strokeWidth={isActive ? 2.2 : 1.7} />}
+                <span style={{ fontSize: 12, marginTop: 2 }}>{tab.label}</span>
               </button>
             );
           })}
@@ -2248,17 +2396,28 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
 
       {/* Hero Banner */}
       <div style={{ ...styles.lcHero, background: hero.bg }}>
-        <div style={styles.lcHeroDecoLeft}>{hero.decoLeft}</div>
+        {/* Sky clouds */}
+        <div style={styles.lcCloud1} />
+        <div style={styles.lcCloud2} />
+        <div style={styles.lcCloud3} />
+        {/* Left decoration */}
+        <div style={styles.lcHeroDecoLeft}>
+          <span style={{ fontSize: 72, lineHeight: 1, filter: 'drop-shadow(2px 4px 8px rgba(0,0,0,0.10))' }}>{hero.decoLeft}</span>
+        </div>
+        {/* Center text */}
         <div style={styles.lcHeroCenter}>
           <h1 style={{ ...styles.lcHeroTitle, color: hero.accent }}>{hero.title}</h1>
           <p style={styles.lcHeroDesc}>{hero.desc}</p>
         </div>
+        {/* Right decorations */}
         <div style={styles.lcHeroDecoRight}>
           {hero.decoRight.map((d, i) => (
-            <span key={i} style={{ ...styles.lcDecoItem, animationDelay: `${i * 0.6}s` }}>{d}</span>
+            <span key={i} style={{ ...styles.lcDecoItem, fontSize: 36, animationDelay: `${i * 0.7}s` }}>{d}</span>
           ))}
         </div>
-        <div style={{ ...styles.lcHeroHill, background: hero.hillColor }} />
+        {/* Landscape hills */}
+        <div style={{ ...styles.lcHeroHillBack,  background: hero.hillColor, opacity: 0.18 }} />
+        <div style={{ ...styles.lcHeroHillFront, background: hero.hillColor, opacity: 0.30 }} />
       </div>
 
       {/* Grade List */}
@@ -2468,7 +2627,7 @@ function GradeScreen({ grade, onBack, onSelectSubject, progress }) {
                 <>
                   <div style={styles.subjectStats}>
                     <span><strong>{skills.length}</strong> skills</span>
-                    <span><strong style={{ color: '#7DCE82' }}>{completed}</strong> mastered</span>
+                    <span><strong style={{ color: '#059669' }}>{completed}</strong> mastered</span>
                   </div>
                   <div style={styles.miniProgressBar}>
                     <div style={{
@@ -2693,7 +2852,7 @@ function Mascot({ state, visible }) {
         display:'flex', alignItems:'center', justifyContent:'center',
         fontSize:30,
         boxShadow:'0 4px 18px rgba(0,0,0,0.13)',
-        border:'3px solid #FFB627',
+        border:'3px solid #1D4ED8',
         animation: faceAnim,
       }}>
         {pip.face}
@@ -2862,15 +3021,15 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
           <div style={{ ...styles.explainBox, animation:'slideUp 0.4s ease 0.15s both' }}>
             <div style={styles.explainHead}>
-              <Lightbulb size={18} color="#FFB627" /> <strong>How it works</strong>
+              <Lightbulb size={18} color="#0284C7" /> <strong>How it works</strong>
             </div>
             <p style={styles.explainText}>{skill.explanation}</p>
           </div>
 
           <div style={{ ...styles.skillMetaRow, animation:'slideUp 0.4s ease 0.25s both' }}>
-            <div style={styles.skillMetaItem}><Target size={16} color="#3DB2FF" /> <span>{questionsToAnswer} questions</span></div>
+            <div style={styles.skillMetaItem}><Target size={16} color="#0284C7" /> <span>{questionsToAnswer} questions</span></div>
             <div style={styles.skillMetaItem}><Brain size={16} color="#0891B2" /> <span>Adaptive difficulty</span></div>
-            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#FFB627" /> <span>Hints available</span></div>
+            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#0284C7" /> <span>Hints available</span></div>
           </div>
 
           <button
@@ -2980,7 +3139,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
             {/* Hint */}
             {showHint && !feedback && (
               <div style={{ ...styles.hintBox, animation:'slideUp 0.3s ease' }}>
-                <Lightbulb size={16} color="#FFB627" /> <span>{currentQ.hint}</span>
+                <Lightbulb size={16} color="#0284C7" /> <span>{currentQ.hint}</span>
               </div>
             )}
 
@@ -3102,8 +3261,8 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
 
       {/* Pip speech bubble */}
       <div style={{
-        background:'linear-gradient(135deg,#FFF9E6,#FFFBF0)',
-        border:'2px solid #FFB627', borderRadius:16,
+        background:'linear-gradient(135deg,#EFF6FF,#F0F9FF)',
+        border:'2px solid #BFDBFE', borderRadius:16,
         padding:'12px 18px',
         display:'flex', alignItems:'center', gap:12,
         marginBottom:22, fontSize:14, color:'#374151',
@@ -3135,7 +3294,7 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
       <div style={{ margin:'12px 0 24px', background:'#F3F4F6', borderRadius:999, height:10, overflow:'hidden' }}>
         <div style={{
           height:'100%', borderRadius:999,
-          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#3DB2FF' : accuracy >= 60 ? '#FFB627' : '#DC2626',
+          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#1D4ED8' : accuracy >= 60 ? '#0284C7' : '#DC2626',
           width:`${accuracy}%`,
           animation:'growBar 1s cubic-bezier(0.22,1,0.36,1) 0.35s both',
         }} />
@@ -3230,9 +3389,9 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
   const weeklyRows = [
     ['Mon', 12, '#0C5CA8'],
     ['Tue', 18, '#0891B2'],
-    ['Wed', 8, '#F59E0B'],
-    ['Thu', 24, '#059669'],
-    ['Fri', 15, '#8B5CF6'],
+    ['Wed', 8, '#3B82F6'],
+    ['Thu', 24, '#0284C7'],
+    ['Fri', 15, '#4F46E5'],
   ];
 
   return (
@@ -3256,7 +3415,7 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
         <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#0C5CA8" />
         <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Accuracy" color="#059669" />
         <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#0891B2" />
-        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#F59E0B" />
+        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#1D4ED8" />
       </div>
 
       <section style={{ marginTop: 36 }}>
@@ -3311,8 +3470,8 @@ function ProgressReports({ stats, progress, onPractice }) {
         <div style={styles.dashHeroStats}>
           <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#0C5CA8" />
           <BigStat icon={<CheckCircle2 size={22}/>} value={stats.totalCorrect} label="Correct" color="#059669" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#F59E0B" />
-          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#8B5CF6" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#0284C7" />
+          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#4F46E5" />
         </div>
       </div>
 
@@ -3342,50 +3501,254 @@ function AwardIcon() {
 }
 
 // ---------- SUBSCRIPTION / PAYMENT ----------
-function SubscriptionScreen({ onBack, onJoin }) {
-  const plans = [
-    { name: 'Learner', price: '$9', desc: 'For one student practicing at home.', features: ['Adaptive quizzes', 'Progress dashboard', 'Badges and streaks'] },
-    { name: 'Family', price: '$19', desc: 'For parents supporting multiple learners.', features: ['Parent dashboard', 'Progress reports', 'Practice assignments'], featured: true },
-    { name: 'School', price: '$49', desc: 'For classrooms and content teams.', features: ['Admin management', 'Class analytics', 'Curriculum tools'] },
-  ];
+const FALLBACK_PLANS = [
+  { id: 'learner', name: 'Learner', priceCents: 900,  interval: 'month', features: ['Adaptive quizzes', 'Progress tracking', 'Badges & streaks'] },
+  { id: 'family',  name: 'Family',  priceCents: 1900, interval: 'month', features: ['Up to 3 learners', 'Parent dashboard', 'Progress reports'], featured: true },
+  { id: 'school',  name: 'School',  priceCents: 4900, interval: 'month', features: ['Admin panel', 'Class analytics', 'Curriculum tools'] },
+];
+
+const SUB_STATUS_COLORS = {
+  ACTIVE:     { background: '#DCFCE7', color: '#166534' },
+  TRIALING:   { background: '#DBEAFE', color: '#1E40AF' },
+  PAST_DUE:   { background: '#FEF9C3', color: '#854D0E' },
+  CANCELED:   { background: '#F3F4F6', color: '#6B7280' },
+  INCOMPLETE: { background: '#FEE2E2', color: '#991B1B' },
+};
+
+function SubscriptionScreen({ onBack, user, pushToast }) {
+  const isSignedIn = !!user?.username;
+  const [plans,     setPlans]     = useState([]);
+  const [subStatus, setSubStatus] = useState(null);
+  const [invoices,  setInvoices]  = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [busy,      setBusy]      = useState(false);
+
+  useEffect(() => {
+    let dead = false;
+    (async () => {
+      try {
+        const plansData = await getPlans();
+        if (!dead) setPlans(plansData);
+      } catch { /* API unavailable — fallback plans rendered below */ }
+
+      if (isSignedIn) {
+        try {
+          const [s, inv] = await Promise.all([getSubStatus(), getInvoices()]);
+          if (!dead) { setSubStatus(s); setInvoices(inv); }
+        } catch { /* not fatal */ }
+      }
+      if (!dead) setLoading(false);
+    })();
+    return () => { dead = true; };
+  }, [isSignedIn]);
+
+  const activeSub   = subStatus?.subscription;
+  const isActive    = subStatus?.active;
+  const isCanceling = !!activeSub?.cancelAtPeriodEnd;
+
+  const handleSubscribe = async (planId) => {
+    if (!isSignedIn) { pushToast?.('Sign in to subscribe.', 'info'); return; }
+    setBusy(true);
+    try {
+      const { checkoutUrl } = await createCheckout(planId);
+      window.location.href = checkoutUrl;
+    } catch (err) { pushToast?.(err.message, 'error'); setBusy(false); }
+  };
+
+  const handleCancel = async () => {
+    setBusy(true);
+    try {
+      const { subscription } = await cancelSub();
+      setSubStatus(s => ({ ...s, subscription }));
+      pushToast?.('Subscription will cancel at period end.', 'success');
+    } catch (err) { pushToast?.(err.message, 'error'); }
+    setBusy(false);
+  };
+
+  const handleReactivate = async () => {
+    setBusy(true);
+    try {
+      const { subscription } = await reactivateSub();
+      setSubStatus(s => ({ ...s, active: true, subscription }));
+      pushToast?.('Subscription reactivated!', 'success');
+    } catch (err) { pushToast?.(err.message, 'error'); }
+    setBusy(false);
+  };
+
+  const handleChangePlan = async (planId) => {
+    setBusy(true);
+    try {
+      const { subscription } = await changePlanAPI(planId);
+      setSubStatus(s => ({ ...s, subscription }));
+      pushToast?.('Plan updated!', 'success');
+    } catch (err) { pushToast?.(err.message, 'error'); }
+    setBusy(false);
+  };
+
+  const handlePortal = async () => {
+    setBusy(true);
+    try {
+      const { portalUrl } = await getBillingPortal();
+      window.location.href = portalUrl;
+    } catch (err) { pushToast?.(err.message, 'error'); setBusy(false); }
+  };
+
+  const fmtDate  = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  const fmtCents = (c) => `$${(c / 100).toFixed(c % 100 === 0 ? 0 : 2)}`;
+
+  const displayPlans = plans.length ? plans : FALLBACK_PLANS;
 
   return (
     <div style={styles.container}>
       <BackBtn onClick={onBack} label="Back home" />
+
       <div style={styles.productHero}>
         <div>
-          <div style={styles.eyebrow}>SUBSCRIPTION</div>
-          <h1 style={styles.dashHeroTitle}>Choose a Questly plan</h1>
-          <p style={styles.dashHeroSub}>A payment-ready subscription page with plan selection and checkout details.</p>
+          <div style={styles.eyebrow}>BILLING & PLANS</div>
+          <h1 style={styles.dashHeroTitle}>Choose your Questly plan</h1>
+          <p style={styles.dashHeroSub}>Unlock adaptive learning for your students. Cancel any time.</p>
         </div>
       </div>
 
-      <div style={styles.pricingGrid} className="responsive-grid">
-        {plans.map(plan => (
-          <div key={plan.name} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}) }}>
-            {plan.featured && <div style={styles.planBadge}>Best value</div>}
-            <h2 style={styles.planName}>{plan.name}</h2>
-            <div style={styles.planPrice}>{plan.price}<span>/mo</span></div>
-            <p style={styles.actionText}>{plan.desc}</p>
-            {plan.features.map(feature => (
-              <div key={feature} style={styles.planFeature}><Check size={16} /> {feature}</div>
-            ))}
-            <button onClick={onJoin} style={plan.featured ? styles.primaryAction : styles.secondaryAction}>
-              Select {plan.name}
-            </button>
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 60, color: '#64748B', fontSize: 15 }}>Loading plans…</div>
+      ) : (
+        <>
+          {/* ── Active subscription management ── */}
+          {isSignedIn && activeSub && (
+            <div style={{
+              background: 'white',
+              border: '1.5px solid #D9E7FF',
+              borderRadius: 18,
+              padding: '20px 24px',
+              marginBottom: 24,
+              boxShadow: '0 4px 16px rgba(12,92,168,0.07)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: 16,
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#0C5CA8', fontWeight: 900 }}>
+                    {activeSub.plan?.name ?? 'Subscription'}
+                  </span>
+                  <span style={{
+                    ...(SUB_STATUS_COLORS[activeSub.status] || SUB_STATUS_COLORS.CANCELED),
+                    borderRadius: 999, padding: '3px 10px', fontSize: 12, fontWeight: 700,
+                  }}>
+                    {isCanceling ? 'Canceling' : (activeSub.status ?? 'Active')}
+                  </span>
+                </div>
+                <div style={{ fontSize: 13, color: '#64748B' }}>
+                  {isCanceling
+                    ? `Access until ${fmtDate(activeSub.currentPeriodEnd)}`
+                    : `Renews ${fmtDate(activeSub.currentPeriodEnd)}`}
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                {isCanceling ? (
+                  <button onClick={handleReactivate} disabled={busy}
+                    style={{ ...styles.primaryAction, opacity: busy ? 0.6 : 1 }}>
+                    Reactivate
+                  </button>
+                ) : (
+                  <button onClick={handleCancel} disabled={busy}
+                    style={{ ...styles.secondaryAction, color: '#DC2626', borderColor: '#FECACA', opacity: busy ? 0.6 : 1 }}>
+                    Cancel plan
+                  </button>
+                )}
+                <button onClick={handlePortal} disabled={busy}
+                  style={{ ...styles.secondaryAction, opacity: busy ? 0.6 : 1 }}>
+                  Manage billing
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Plans grid ── */}
+          <SectionHeader title="Plans" subtitle="All plans include a 7-day free trial" />
+          <div style={styles.pricingGrid} className="responsive-grid">
+            {displayPlans.map(plan => {
+              const isCurrent  = activeSub?.planId === plan.id;
+              const canSwitch  = isActive && !isCurrent;
+              const featureList = Array.isArray(plan.features) ? plan.features : [];
+              return (
+                <div key={plan.id} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}), position: 'relative' }}>
+                  {plan.featured && <div style={styles.planBadge}>Best value</div>}
+                  {isCurrent && !isCanceling && (
+                    <div style={{ ...styles.planBadge, background: '#1D4ED8', right: 'auto', left: 14 }}>Current</div>
+                  )}
+                  <h2 style={styles.planName}>{plan.name}</h2>
+                  <div style={styles.planPrice}>
+                    {fmtCents(plan.priceCents)}
+                    <span style={{ fontSize: 16, color: '#64748B', fontWeight: 500 }}>/{plan.interval ?? 'mo'}</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+                    {featureList.map((f, i) => (
+                      <div key={i} style={styles.planFeature}><Check size={15} color="#059669" /> {f}</div>
+                    ))}
+                  </div>
+                  {isCurrent && !isCanceling ? (
+                    <button disabled style={{ ...styles.secondaryAction, background: '#F0FDF4', color: '#166534', borderColor: '#BBF7D0', cursor: 'default' }}>
+                      Current plan
+                    </button>
+                  ) : canSwitch ? (
+                    <button onClick={() => handleChangePlan(plan.id)} disabled={busy}
+                      style={{ ...styles.secondaryAction, opacity: busy ? 0.6 : 1 }}>
+                      Switch to {plan.name}
+                    </button>
+                  ) : (
+                    <button onClick={() => handleSubscribe(plan.id)} disabled={busy}
+                      style={{ ...(plan.featured ? styles.primaryAction : styles.secondaryAction), opacity: busy ? 0.6 : 1 }}>
+                      {isSignedIn ? 'Get started' : 'Sign in to subscribe'}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        ))}
-      </div>
 
-      <section style={{ marginTop: 34 }}>
-        <SectionHeader title="Payment details" subtitle="Demo checkout fields for card billing" />
-        <div style={styles.paymentForm} className="payment-form">
-          <label>Cardholder name<input placeholder="Alex Learner" /></label>
-          <label>Card number<input placeholder="4242 4242 4242 4242" /></label>
-          <label>Expiration<input placeholder="MM / YY" /></label>
-          <label>CVC<input placeholder="123" /></label>
-        </div>
-      </section>
+          {/* ── Invoice history ── */}
+          {isSignedIn && invoices.length > 0 && (
+            <section style={{ marginTop: 36 }}>
+              <SectionHeader title="Billing history" subtitle="Your recent payments" />
+              <div style={styles.reportTable}>
+                <div style={{ ...styles.reportRow, ...styles.reportRowHead }} className="report-row">
+                  <span>Date</span><span>Plan</span><span>Amount</span><span>Status</span><span>PDF</span>
+                </div>
+                {invoices.map(inv => (
+                  <div key={inv.id} style={styles.reportRow} className="report-row">
+                    <span>{fmtDate(inv.paidAt || inv.createdAt)}</span>
+                    <span>{inv.subscription?.plan?.name ?? '—'}</span>
+                    <span style={{ fontWeight: 700 }}>{fmtCents(inv.amountCents)}</span>
+                    <span>
+                      <span style={{
+                        ...(inv.status === 'paid' ? { background: '#DCFCE7', color: '#166534' } : { background: '#FEE2E2', color: '#991B1B' }),
+                        borderRadius: 999, padding: '2px 8px', fontSize: 12, fontWeight: 700,
+                      }}>
+                        {inv.status}
+                      </span>
+                    </span>
+                    <span>
+                      {inv.pdfUrl
+                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#0C5CA8', fontWeight: 700, fontSize: 13 }}>Download</a>
+                        : '—'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {!isSignedIn && (
+            <p style={{ textAlign: 'center', color: '#64748B', marginTop: 20, fontSize: 14 }}>
+              Sign in or create an account to subscribe.
+            </p>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -3421,7 +3784,7 @@ function AdminContentManagement({ onPractice, onReports }) {
             icon={[<GraduationCap size={22}/>, <BookOpen size={22}/>, <Target size={22}/>, <CheckCircle2 size={22}/>][idx]}
             value={value}
             label={label}
-            color={['#0C5CA8', '#0891B2', '#059669', '#F59E0B'][idx]}
+            color={['#0C5CA8', '#0891B2', '#1D4ED8', '#0284C7'][idx]}
           />
         ))}
       </div>
@@ -3459,10 +3822,34 @@ function AdminContentManagement({ onPractice, onReports }) {
 }
 
 // ---------- DASHBOARD ----------
-function Dashboard({ title = 'Dashboard', stats, progress, onPickSkill }) {
+function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) {
   const accuracy = stats.totalAnswered > 0
     ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100)
     : 0;
+
+  const firstName = user?.name ? user.name.split(' ')[0] : null;
+
+  const fmtDate = (iso) => {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const diff = Math.floor((Date.now() - d) / 1000);
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+    return d.toLocaleDateString();
+  };
+
+  // All practiced skills sorted by most recently practiced
+  const allActivity = useMemo(() => (
+    Object.entries(progress)
+      .map(([id, p]) => ({ skill: SKILLS[id], p, mastery: calcMastery(p) }))
+      .filter(x => x.skill && x.p.attempts > 0)
+      .sort((a, b) => (b.p.lastPracticed || '').localeCompare(a.p.lastPracticed || ''))
+  ), [progress]);
+
+  const completed  = useMemo(() => allActivity.filter(x => x.mastery >= 85),            [allActivity]);
+  const inProgress = useMemo(() => allActivity.filter(x => x.mastery > 0 && x.mastery < 85), [allActivity]);
 
   // Per-subject breakdown
   const bySubject = useMemo(() => {
@@ -3501,14 +3888,20 @@ function Dashboard({ title = 'Dashboard', stats, progress, onPickSkill }) {
       <div style={styles.dashHero}>
         <div>
           <div style={{ fontSize: 13, fontWeight: 600, color: '#0C5CA8', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
-          <h1 style={styles.dashHeroTitle}>{title}</h1>
-          <p style={styles.dashHeroSub}>Track your progress and find what to learn next.</p>
+          <h1 style={styles.dashHeroTitle}>
+            {firstName ? `Welcome back, ${firstName}!` : title}
+          </h1>
+          <p style={styles.dashHeroSub}>
+            {firstName
+              ? `Here's ${firstName}'s progress — quizzes, completed work, and what's in progress.`
+              : 'Track your progress and find what to learn next.'}
+          </p>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#3DB2FF" />
-          <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#7DCE82" />
-          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#059669" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#FB5607" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#0284C7" />
+          <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#059669" />
+          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#1D4ED8" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#0284C7" />
         </div>
       </div>
 
@@ -3609,6 +4002,124 @@ function Dashboard({ title = 'Dashboard', stats, progress, onPickSkill }) {
           </div>
         </section>
       )}
+
+      {/* Work Completed */}
+      {completed.length > 0 && (
+        <section style={{ marginTop: 40 }}>
+          <SectionHeader
+            title={`Work Completed (${completed.length})`}
+            subtitle="Skills you've mastered — 85% accuracy or better"
+            icon={<CheckCircle2 size={20} color="#059669" />}
+          />
+          <div style={styles.activityTable}>
+            {completed.map(({ skill, p, mastery }) => {
+              const sub = SUBJECTS[skill.subject];
+              const acc = p.attempts > 0 ? Math.round((p.correct / p.attempts) * 100) : 0;
+              return (
+                <button key={skill.id} onClick={() => onPickSkill(skill)} style={styles.activityRow}>
+                  <div style={{ ...styles.activityIcon, background: sub.color }}>
+                    {React.createElement(sub.icon, { size: 16, color: 'white' })}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <div style={styles.activityTitle}>{skill.title}</div>
+                    <div style={styles.activityMeta}>
+                      {GRADES.find(g => g.id === skill.grade)?.label} · {sub.label}
+                    </div>
+                  </div>
+                  <div style={styles.activityStats}>
+                    <span style={{ ...styles.statusBadge, background: '#D1FAE5', color: '#059669' }}>✓ Mastered</span>
+                    <span style={styles.activityStat}>{acc}% accuracy</span>
+                    <span style={styles.activityStat}>{p.attempts} questions</span>
+                    <span style={styles.activityDate}>{fmtDate(p.lastPracticed)}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Work In Progress */}
+      {inProgress.length > 0 && (
+        <section style={{ marginTop: 40 }}>
+          <SectionHeader
+            title={`Work In Progress (${inProgress.length})`}
+            subtitle="Skills you've started — keep going to reach mastery"
+            icon={<Play size={20} color="#0284C7" />}
+          />
+          <div style={styles.activityTable}>
+            {inProgress.map(({ skill, p, mastery }) => {
+              const sub = SUBJECTS[skill.subject];
+              const acc = p.attempts > 0 ? Math.round((p.correct / p.attempts) * 100) : 0;
+              return (
+                <button key={skill.id} onClick={() => onPickSkill(skill)} style={styles.activityRow}>
+                  <div style={{ ...styles.activityIcon, background: sub.color }}>
+                    {React.createElement(sub.icon, { size: 16, color: 'white' })}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <div style={styles.activityTitle}>{skill.title}</div>
+                    <div style={styles.activityMeta}>
+                      {GRADES.find(g => g.id === skill.grade)?.label} · {sub.label}
+                    </div>
+                    <div style={styles.activityProgressBar}>
+                      <div style={{ width: `${mastery}%`, background: sub.color, height: '100%', borderRadius: 2 }} />
+                    </div>
+                  </div>
+                  <div style={styles.activityStats}>
+                    <span style={{ ...styles.statusBadge, background: '#EFF6FF', color: '#0284C7' }}>{mastery}% mastery</span>
+                    <span style={styles.activityStat}>{acc}% accuracy</span>
+                    <span style={styles.activityStat}>{p.attempts} questions</span>
+                    <span style={styles.activityDate}>{fmtDate(p.lastPracticed)}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* All Quiz Records */}
+      {allActivity.length > 0 && (
+        <section style={{ marginTop: 40, marginBottom: 40 }}>
+          <SectionHeader
+            title={`All Quiz Records (${allActivity.length})`}
+            subtitle="Every skill you've ever practiced, sorted by most recent"
+            icon={<BarChart3 size={20} color="#7C3AED" />}
+          />
+          <div style={styles.activityTable}>
+            {allActivity.map(({ skill, p, mastery }) => {
+              const sub = SUBJECTS[skill.subject];
+              const acc = p.attempts > 0 ? Math.round((p.correct / p.attempts) * 100) : 0;
+              const ml = masteryLabel(mastery);
+              return (
+                <button key={skill.id} onClick={() => onPickSkill(skill)} style={styles.activityRow}>
+                  <div style={{ ...styles.activityIcon, background: sub.color }}>
+                    {React.createElement(sub.icon, { size: 16, color: 'white' })}
+                  </div>
+                  <div style={{ flex: 1, textAlign: 'left' }}>
+                    <div style={styles.activityTitle}>{skill.title}</div>
+                    <div style={styles.activityMeta}>
+                      {GRADES.find(g => g.id === skill.grade)?.label} · {sub.label}
+                    </div>
+                  </div>
+                  <div style={styles.activityStats}>
+                    <span style={{ ...styles.statusBadge, background: `${ml.color}22`, color: ml.color }}>{ml.label}</span>
+                    <span style={styles.activityStat}>{acc}% acc.</span>
+                    <span style={styles.activityStat}>{p.correct}/{p.attempts} correct</span>
+                    <span style={styles.activityDate}>{fmtDate(p.lastPracticed)}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {allActivity.length === 0 && (
+        <div style={{ ...styles.emptyState, marginTop: 40 }}>
+          No quiz records yet — start practicing to see your history here!
+        </div>
+      )}
     </div>
   );
 }
@@ -3631,7 +4142,7 @@ function BadgesScreen({ stats, onBack }) {
     <div style={styles.container}>
       <BackBtn onClick={onBack} label="Back home" />
       <div style={styles.badgesHero}>
-        <Trophy size={48} color="#FFB627" />
+        <Trophy size={48} color="#1D4ED8" />
         <div>
           <h1 style={styles.dashHeroTitle}>Badges & Achievements</h1>
           <p style={styles.dashHeroSub}>
@@ -3647,7 +4158,7 @@ function BadgesScreen({ stats, onBack }) {
             <div key={b.id} style={{
               ...styles.badgeCard,
               background: earned ? 'linear-gradient(135deg, #FFF8E1, #FFE082)' : '#F9FAFB',
-              borderColor: earned ? '#FFB627' : '#E5E7EB',
+              borderColor: earned ? '#1D4ED8' : '#E5E7EB',
             }}>
               <div style={{
                 ...styles.badgeEmoji,
@@ -3747,7 +4258,7 @@ function Footer() {
 
 // ---------- HELPERS ----------
 function difficultyLabel(d) { return d === 1 ? 'Easy' : d === 2 ? 'Medium' : 'Hard'; }
-function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#D97706' : '#DC2626'; }
+function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#0284C7' : '#DC2626'; }
 function randomCheer() {
   const cheers = ['Great job! 🎉', 'Awesome! ⭐', 'You got it! 🌟', 'Excellent! 💯', 'Nailed it! 🚀', 'Brilliant! ✨'];
   return cheers[Math.floor(Math.random() * cheers.length)];
@@ -3757,7 +4268,13 @@ function randomCheer() {
 function StyleInjector() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+      @font-face {
+        font-family: 'Mona Sans';
+        src: url('https://github.githubassets.com/assets/mona-sans.woff2') format('woff2-variations');
+        font-weight: 200 900;
+        font-stretch: 75% 125%;
+        font-display: swap;
+      }
 
       html { overflow-x: hidden; }
       body { margin: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
@@ -3855,10 +4372,23 @@ function StyleInjector() {
         from { opacity: 0; transform: translateY(-8px); }
         to   { opacity: 1; transform: translateY(0); }
       }
+
+      @keyframes searchFocusRing {
+        0%   { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
+        25%  { border-color: #7C3AED; box-shadow: 0 0 0 3px rgba(124,58,237,0.18); }
+        50%  { border-color: #0EA5E9; box-shadow: 0 0 0 3px rgba(14,165,233,0.18); }
+        75%  { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.18); }
+        100% { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
+      }
+      .h-search-focus {
+        animation: searchFocusRing 3s linear infinite !important;
+        background: #ffffff !important;
+        transition: background 0.2s ease;
+      }
       .mega-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; color: #374151; font-weight: 500; transition: background 0.15s, color 0.15s; }
       .mega-link:hover { background: #f0fdf4; color: #166534; }
       .mega-sub-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; color: #6B7280; font-weight: 500; transition: background 0.15s, color 0.15s; }
-      .mega-sub-link:hover { background: #f0fdf4; color: #3DAF52; }
+      .mega-sub-link:hover { background: #EFF6FF; color: #1D4ED8; }
       .nav-learning-wrap { position: relative; }
 
       .popup-close:hover { background: #fee2e2 !important; color: #dc2626 !important; transform: scale(1.12); }
@@ -3887,33 +4417,28 @@ function StyleInjector() {
       .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
 
       input:focus, button:focus-visible { outline: 3px solid #0C5CA844; outline-offset: 2px; }
+      .h-search input:focus { outline: none; }
       button { font-family: inherit; }
       input, select, textarea { max-width: 100%; }
 
-      /* ── HEADER RESPONSIVE (mobile-first) ── */
-      /* Mobile default: hamburger visible, desktop elements hidden */
-      .header-hamburger { display: flex !important; }
-      .header-desktop-nav { display: none !important; }
-      .header-desktop-actions { display: none !important; }
-      .header-search { display: none !important; }
+      /* ── HEADER RESPONSIVE ── */
+      .h-hamburger { display: flex !important; }
+      .h-search    { display: none !important; }
+      .h-nav       { display: none !important; }
+      .h-actions   { display: none !important; }
 
-      /* 769px+: show desktop layout */
       @media (min-width: 769px) {
-        .header-hamburger { display: none !important; }
-        .header-desktop-nav { display: flex !important; }
-        .header-desktop-actions { display: flex !important; }
-        .header-search { display: flex !important; }
+        .h-hamburger { display: none !important; }
+        .h-search    { display: flex !important; }
+        .h-nav       { display: flex !important; }
+        .h-actions   { display: flex !important; }
       }
 
-      /* Mobile top row: logo left, hamburger right */
-      @media (max-width: 768px) {
-        .header-top-row {
-          display: flex !important;
-          justify-content: space-between !important;
-          align-items: center !important;
-          padding-bottom: 10px !important;
-        }
-      }
+      .h-drop-item:hover { background: #F9FAFB !important; }
+      .h-drop-item:hover .h-drop-label { color: #111827 !important; }
+      .h-suggest-item:hover { background: #F5F7FF !important; }
+      button[style*="megaHeading"]:hover, .mega-heading:hover { color: #004F7A !important; }
+      .mega-link-btn:hover { color: #0070A0 !important; text-decoration: underline; }
 
       /* ── HOME SCREEN ── */
       /* Hero stacks on tablet/mobile */
@@ -4014,8 +4539,8 @@ function StyleInjector() {
 }
 
 // ---------- STYLES ----------
-const FONT_BODY = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
-const FONT_DISPLAY = "'Fraunces', Georgia, serif";
+const FONT_BODY    = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif';
+const FONT_DISPLAY = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 const styles = {
   app: {
@@ -4247,7 +4772,7 @@ const styles = {
     position: 'absolute',
     top: 14,
     right: 14,
-    background: '#F59E0B',
+    background: '#1D4ED8',
     color: 'white',
     borderRadius: 999,
     padding: '4px 10px',
@@ -4345,7 +4870,7 @@ const styles = {
     background: 'linear-gradient(135deg, #0A4F8A 0%, #1668C7 100%)',
     display: 'flex', alignItems: 'center',
     padding: '0 14px 0 9px',
-    color: '#FFD740',
+    color: '#DBEAFE',
     fontWeight: 900, fontSize: 17,
     fontFamily: FONT_DISPLAY,
     letterSpacing: '-0.01em',
@@ -4409,7 +4934,7 @@ const styles = {
   searchIcon: {
     width: 38,
     height: 36,
-    background: '#5BC700',
+    background: '#1D4ED8',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -4463,12 +4988,12 @@ const styles = {
   },
   topRoleBtnActive: {
     background: 'white',
-    color: '#118BCB',
+    color: '#0284C7',
     borderColor: 'white',
   },
   iconBtn: {
     width: 34, height: 34, borderRadius: 5,
-    background: '#1586d1', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
+    background: '#0284C7', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white', transition: 'all 0.15s',
   },
@@ -4515,7 +5040,7 @@ const styles = {
     padding: '0 18px',
     border: 'none',
     borderRadius: 6,
-    background: '#00B5D4',
+    background: '#1D4ED8',
     color: 'white',
     display: 'inline-flex',
     alignItems: 'center',
@@ -4528,10 +5053,10 @@ const styles = {
   membershipBtn: {
     height: 36,
     padding: '0 18px',
-    border: '1.5px solid #9AE6B4',
+    border: '1.5px solid #BFDBFE',
     borderRadius: 6,
-    background: '#F0FFF4',
-    color: '#276749',
+    background: '#EFF6FF',
+    color: '#1D4ED8',
     fontSize: 14,
     fontWeight: 700,
     cursor: 'pointer',
@@ -4544,7 +5069,7 @@ const styles = {
   },
   avatar: {
     width: 20, height: 20, borderRadius: '50%',
-    background: '#13B5EA',
+    background: '#1D4ED8',
     color: 'white', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
@@ -4624,7 +5149,7 @@ const styles = {
   },
   heroEmphasis: {
     fontStyle: 'italic',
-    color: '#FB5607',
+    color: '#1D4ED8',
   },
   heroDesc: { fontSize: 17, color: '#4B5563', marginTop: 16, lineHeight: 1.6, maxWidth: 540 },
   heroStats: { display: 'flex', gap: 12, marginTop: 28, flexWrap: 'wrap' },
@@ -4669,9 +5194,9 @@ const styles = {
     width: 88,
     height: 136,
     borderRadius: '50% 50% 45% 45%',
-    background: 'radial-gradient(circle at 30% 30%, #FFE169 0 10%, transparent 11%), repeating-linear-gradient(90deg, #FACC15 0 15px, #D6A919 15px 18px)',
-    border: '2px solid #6B8C42',
-    boxShadow: '0 100px 0 -36px #8B5E34',
+    background: 'radial-gradient(circle at 30% 30%, #BFDBFE 0 10%, transparent 11%), repeating-linear-gradient(90deg, #93C5FD 0 15px, #60A5FA 15px 18px)',
+    border: '2px solid #3B82F6',
+    boxShadow: '0 100px 0 -36px #1E40AF',
   },
   heroSun: {
     position: 'absolute',
@@ -4680,8 +5205,8 @@ const styles = {
     width: 70,
     height: 70,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, #FFF6B8 0 30%, #FFD56B 31% 62%, rgba(255,213,107,0.25) 63%)',
-    boxShadow: '0 0 0 12px rgba(255,190,62,0.25)',
+    background: 'radial-gradient(circle, #EFF6FF 0 30%, #BFDBFE 31% 62%, rgba(191,219,254,0.25) 63%)',
+    boxShadow: '0 0 0 12px rgba(147,197,253,0.25)',
   },
   heroRocket: {
     position: 'absolute',
@@ -4689,7 +5214,7 @@ const styles = {
     top: 46,
     width: 82,
     height: 82,
-    background: 'linear-gradient(135deg, transparent 0 46%, #FF9F6E 47% 54%, transparent 55%), linear-gradient(35deg, transparent 0 45%, #FF7B46 46% 54%, transparent 55%)',
+    background: 'linear-gradient(135deg, transparent 0 46%, #93C5FD 47% 54%, transparent 55%), linear-gradient(35deg, transparent 0 45%, #60A5FA 46% 54%, transparent 55%)',
     transform: 'rotate(-12deg)',
   },
   heroKid: {
@@ -4833,7 +5358,7 @@ const styles = {
     lineHeight: 1.6,
   },
   ixlMemberBtn: {
-    background: '#F59E0B',
+    background: '#1D4ED8',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -4841,7 +5366,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 3px 0 #B45309',
+    boxShadow: '0 3px 0 #1E40AF',
     position: 'relative',
     zIndex: 4,
   },
@@ -5104,7 +5629,7 @@ const styles = {
   },
   supportCta: {
     marginTop: 18,
-    background: '#F59E0B',
+    background: '#1D4ED8',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -5323,7 +5848,7 @@ const styles = {
   grade8TabActive: {
     padding: '11px 24px',
     color: 'white',
-    background: '#3DB2FF',
+    background: '#1D4ED8',
     fontSize: 14,
     fontWeight: 800,
     clipPath: 'polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)',
@@ -5687,7 +6212,7 @@ const styles = {
   badgeEarned: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
     padding: '4px 10px', borderRadius: 999,
-    background: '#059669', color: 'white', fontSize: 11, fontWeight: 700,
+    background: '#1D4ED8', color: 'white', fontSize: 11, fontWeight: 700,
   },
   badgeLocked: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -5700,6 +6225,39 @@ const styles = {
     padding: 32, textAlign: 'center', borderRadius: 14,
     background: '#F9FAFB', border: '1px dashed #E5E7EB',
     color: '#6B7280', fontSize: 14,
+  },
+
+  // Activity table (Completed / In Progress / All Quiz Records)
+  activityTable: {
+    display: 'flex', flexDirection: 'column', gap: 8,
+  },
+  activityRow: {
+    display: 'flex', alignItems: 'center', gap: 14,
+    background: 'white', border: '1px solid #E5E7EB', borderRadius: 12,
+    padding: '12px 16px', cursor: 'pointer', width: '100%',
+    transition: 'box-shadow 0.15s',
+    textAlign: 'left',
+  },
+  activityIcon: {
+    width: 34, height: 34, borderRadius: 8,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0,
+  },
+  activityTitle: { fontWeight: 600, fontSize: 14, color: '#111827' },
+  activityMeta:  { fontSize: 12, color: '#9CA3AF', marginTop: 2 },
+  activityProgressBar: {
+    height: 4, borderRadius: 2, background: '#F3F4F6',
+    marginTop: 6, overflow: 'hidden',
+  },
+  activityStats: {
+    display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+  },
+  activityStat: { fontSize: 12, color: '#6B7280' },
+  activityDate:  { fontSize: 11, color: '#9CA3AF', minWidth: 60, textAlign: 'right' },
+  statusBadge: {
+    fontSize: 11, fontWeight: 600, padding: '2px 8px',
+    borderRadius: 20, whiteSpace: 'nowrap',
   },
 
   // Sign In page
@@ -5752,7 +6310,7 @@ const styles = {
   },
   siForgot: {
     fontSize: 12,
-    color: '#F59E0B',
+    color: '#0284C7',
     cursor: 'pointer',
     fontWeight: 500,
   },
@@ -5869,7 +6427,7 @@ const styles = {
     margin: '0 0 22px',
   },
   siJoinBtn: {
-    background: '#F59E0B',
+    background: '#1D4ED8',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -5877,7 +6435,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #B45309',
+    boxShadow: '0 2px 0 #1E40AF',
   },
   siFooter: {
     background: '#F9FAFB',
@@ -5963,7 +6521,7 @@ const styles = {
   },
   testimonialStars: {
     fontSize: 22,
-    color: '#FFB627',
+    color: '#0284C7',
     letterSpacing: 3,
     marginBottom: 16,
   },
@@ -6029,7 +6587,7 @@ const styles = {
     maxWidth: 180,
   },
   footerJoinBtn: {
-    background: '#F59E0B',
+    background: '#1D4ED8',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6090,17 +6648,19 @@ const styles = {
     background: 'transparent',
     border: 'none',
     borderBottom: '3px solid transparent',
-    padding: '14px 18px',
-    fontSize: 13,
-    fontWeight: 600,
-    color: '#374151',
+    padding: '10px 16px 8px',
+    fontSize: 12,
+    fontWeight: 500,
+    color: '#6B7280',
     cursor: 'pointer',
     display: 'inline-flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    gap: 6,
+    gap: 4,
     whiteSpace: 'nowrap',
     fontFamily: FONT_BODY,
     transition: 'color 0.15s, border-color 0.15s',
+    minWidth: 72,
   },
   lcSubjectTabDisabled: {
     color: '#9CA3AF',
@@ -6130,8 +6690,8 @@ const styles = {
     fontFamily: FONT_BODY,
   },
   lcViewTabActive: {
-    background: '#E8F5E9',
-    color: '#2D8E00',
+    background: '#3B82F6',
+    color: '#ffffff',
     fontWeight: 700,
   },
   lcHero: {
@@ -6185,14 +6745,40 @@ const styles = {
     display: 'block',
     animation: 'float 3s ease-in-out infinite',
   },
-  lcHeroHill: {
+  lcHeroHill: { display: 'none' },
+  lcHeroHillBack: {
     position: 'absolute',
     bottom: 0,
-    left: '-10%',
-    right: '-10%',
-    height: 48,
-    borderRadius: '60% 60% 0 0',
-    opacity: 0.25,
+    left: '-5%',
+    right: '-5%',
+    height: 80,
+    borderRadius: '50% 50% 0 0 / 60% 60% 0 0',
+  },
+  lcHeroHillFront: {
+    position: 'absolute',
+    bottom: 0,
+    left: '-15%',
+    right: '-15%',
+    height: 52,
+    borderRadius: '50% 50% 0 0 / 60% 60% 0 0',
+  },
+  lcCloud1: {
+    position: 'absolute', top: 18, left: '15%',
+    width: 90, height: 28, borderRadius: 999,
+    background: 'rgba(255,255,255,0.75)',
+    boxShadow: '0 0 0 14px rgba(255,255,255,0.35)',
+  },
+  lcCloud2: {
+    position: 'absolute', top: 30, left: '22%',
+    width: 60, height: 20, borderRadius: 999,
+    background: 'rgba(255,255,255,0.65)',
+    boxShadow: '0 0 0 10px rgba(255,255,255,0.25)',
+  },
+  lcCloud3: {
+    position: 'absolute', top: 14, right: '20%',
+    width: 80, height: 24, borderRadius: 999,
+    background: 'rgba(255,255,255,0.70)',
+    boxShadow: '0 0 0 12px rgba(255,255,255,0.30)',
   },
   lcGradeList: {
     maxWidth: 900,
@@ -6297,5 +6883,284 @@ const styles = {
   footer: {
     background: '#0F1A2B',
     borderTop: 'none',
+  },
+};
+
+// ── Header styles (Dribbble-style single-row nav) ────────────────────────────
+const hStyles = {
+  header: {
+    position: 'sticky', top: 0, zIndex: 400,
+    background: '#ffffff',
+    borderBottom: '1px solid #EBEBEB',
+  },
+  inner: {
+    maxWidth: 1280, margin: '0 auto', padding: '0 24px',
+    height: 64, display: 'flex', alignItems: 'center', gap: 20,
+  },
+
+  // Logo
+  logo: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0,
+  },
+  logoText: {
+    fontFamily: FONT_BODY, fontWeight: 800, fontSize: 18,
+    color: '#0D2040', letterSpacing: '-0.02em',
+  },
+
+  // Search bar
+  searchBar: {
+    display: 'flex', alignItems: 'center',
+    background: '#F3F4F6', borderRadius: 999,
+    padding: '0 6px 0 16px', height: 48, margin: '8px 0',
+    flex: '1 1 auto', maxWidth: 400, minWidth: 180,
+    border: '1.5px solid transparent',
+  },
+  searchInput: {
+    flex: 1, background: 'none', border: 'none', outline: 'none',
+    fontSize: 14, color: '#374151', fontFamily: FONT_BODY,
+  },
+  searchDivider: { width: 1, height: 18, background: '#D1D5DB', margin: '0 10px' },
+  searchCategory: {
+    fontSize: 13, fontWeight: 600, color: '#374151',
+    fontFamily: FONT_BODY, whiteSpace: 'nowrap', cursor: 'pointer',
+  },
+  searchBtn: {
+    width: 30, height: 30, borderRadius: '50%',
+    background: '#EA4C89', border: 'none', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0, marginLeft: 6,
+    transition: 'filter 0.15s',
+  },
+
+  // Nav
+  nav: {
+    display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0,
+  },
+  navLink: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 14, fontWeight: 500, color: '#374151',
+    fontFamily: FONT_BODY, padding: '8px 12px', borderRadius: 8,
+    display: 'flex', alignItems: 'center',
+    transition: 'background 0.15s, color 0.15s',
+  },
+  navActive: {
+    color: '#111827', fontWeight: 700, background: '#F3F4F6',
+  },
+
+  // Dropdown panel
+  dropdown: {
+    position: 'absolute', top: 'calc(100% + 6px)', left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'white', borderRadius: 14,
+    boxShadow: '0 8px 30px rgba(0,0,0,0.11), 0 1px 4px rgba(0,0,0,0.06)',
+    border: '1px solid #F3F4F6', padding: 8,
+    minWidth: 230, zIndex: 500,
+    animation: 'dropdownSlide 0.15s ease both',
+  },
+  dropItem: {
+    display: 'flex', alignItems: 'flex-start', gap: 10,
+    width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+    padding: '10px 12px', borderRadius: 8, textAlign: 'left',
+    transition: 'background 0.1s',
+  },
+  dropIcon:  { fontSize: 18, lineHeight: 1, marginTop: 1 },
+  dropLabel: { fontSize: 13, fontWeight: 600, color: '#111827', fontFamily: FONT_BODY },
+  dropSub:   { fontSize: 11, color: '#9CA3AF', marginTop: 2,   fontFamily: FONT_BODY },
+
+  // Right actions
+  actions: {
+    display: 'flex', alignItems: 'center', gap: 6,
+    marginLeft: 'auto', flexShrink: 0,
+  },
+  signUpBtn: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 14, fontWeight: 500, color: '#374151',
+    fontFamily: FONT_BODY, padding: '8px 14px', borderRadius: 8,
+    transition: 'color 0.15s',
+  },
+  loginBtn: {
+    background: '#0D2040', border: 'none', cursor: 'pointer',
+    fontSize: 14, fontWeight: 600, color: 'white',
+    fontFamily: FONT_BODY, padding: '9px 20px',
+    borderRadius: 999, transition: 'opacity 0.15s',
+  },
+
+  // Hamburger
+  hamburger: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    color: '#374151', padding: 6, display: 'flex',
+    alignItems: 'center', justifyContent: 'center',
+  },
+
+  // Mobile menu
+  mobileMenu: {
+    display: 'flex', flexDirection: 'column',
+    background: 'white', borderTop: '1px solid #F3F4F6',
+    padding: '8px 16px 16px',
+  },
+  mobileLink: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 15, fontWeight: 500, color: '#374151',
+    fontFamily: FONT_BODY, padding: '13px 8px',
+    borderRadius: 8, textAlign: 'left',
+  },
+  mobileLinkActive: { color: '#0D2040', fontWeight: 700 },
+  mobileDivider: { height: 1, background: '#F3F4F6', margin: '6px 0' },
+
+  // Two-row layout containers
+  topRow: {
+    maxWidth: 1280, margin: '0 auto', padding: '0 24px',
+    height: 56, display: 'flex', alignItems: 'center', gap: 10,
+  },
+  navRow: {
+    maxWidth: 1280, margin: '0 auto', padding: '0 24px',
+    height: 40, display: 'flex', alignItems: 'center', gap: 2,
+    borderTop: '1px solid #F3F4F6',
+  },
+
+  // Logo mark (emoji / icon container)
+  logoMark: {
+    fontSize: 20, lineHeight: 1,
+  },
+
+  // Search bar extras
+  searchIconWrap: {
+    display: 'flex', alignItems: 'center', marginRight: 6, flexShrink: 0,
+  },
+  searchSubmit: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    padding: '4px 2px', flexShrink: 0,
+  },
+
+  // Role toggle group
+  roleGroup: {
+    display: 'flex', alignItems: 'center', gap: 2,
+    background: '#F3F4F6', borderRadius: 999, padding: 3, flexShrink: 0,
+  },
+  roleBtn: {
+    display: 'flex', alignItems: 'center', gap: 5,
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 13, fontWeight: 500, color: '#6B7280',
+    fontFamily: FONT_BODY, padding: '5px 12px', borderRadius: 999,
+    transition: 'background 0.15s, color 0.15s',
+  },
+  roleBtnActive: {
+    background: 'white', color: '#0D2040', fontWeight: 700,
+    boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
+  },
+
+  // Action buttons in top row
+  signInBtn: {
+    display: 'flex', alignItems: 'center', gap: 6,
+    background: 'none', border: '1.5px solid #E5E7EB', cursor: 'pointer',
+    fontSize: 13, fontWeight: 600, color: '#374151',
+    fontFamily: FONT_BODY, padding: '6px 14px', borderRadius: 999,
+    transition: 'border-color 0.15s, color 0.15s',
+    flexShrink: 0,
+  },
+  membershipBtn: {
+    background: '#EA4C89', border: 'none', cursor: 'pointer',
+    fontSize: 13, fontWeight: 700, color: 'white',
+    fontFamily: FONT_BODY, padding: '7px 16px', borderRadius: 999,
+    transition: 'opacity 0.15s', flexShrink: 0,
+  },
+  resetBtn: {
+    background: 'none', border: '1.5px solid #E5E7EB', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    width: 34, height: 34, borderRadius: '50%',
+    color: '#9CA3AF', transition: 'color 0.15s, border-color 0.15s',
+    flexShrink: 0,
+  },
+
+  // Search suggestions
+  suggestPanel: {
+    position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
+    background: 'white', borderRadius: 12,
+    boxShadow: '0 8px 30px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)',
+    border: '1px solid #E5E7EB', overflow: 'hidden',
+    zIndex: 700, animation: 'dropdownSlide 0.15s ease both',
+  },
+  suggestItem: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+    padding: '10px 14px', textAlign: 'left',
+    transition: 'background 0.1s',
+    fontFamily: FONT_BODY,
+  },
+  suggestIcon: {
+    flexShrink: 0, display: 'flex', alignItems: 'center',
+    width: 24, height: 24, borderRadius: 6,
+    background: '#F3F4F6', justifyContent: 'center',
+  },
+  suggestText: {
+    flex: 1, display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0,
+  },
+  suggestLabel: {
+    fontSize: 13, fontWeight: 600, color: '#111827',
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+  },
+  suggestSub: {
+    fontSize: 11, color: '#9CA3AF',
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+  },
+  suggestKind: {
+    fontSize: 10, fontWeight: 600, color: '#9CA3AF',
+    textTransform: 'capitalize', flexShrink: 0,
+  },
+
+  // Mega menu panel
+  megaPanel: {
+    position: 'absolute', top: 'calc(100% + 6px)', left: 0,
+    background: 'white', borderRadius: 16,
+    boxShadow: '0 16px 48px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06)',
+    border: '1px solid #E5E7EB',
+    padding: '28px 36px 32px',
+    display: 'flex', flexDirection: 'row', gap: 48,
+    zIndex: 600, minWidth: 720,
+    animation: 'dropdownSlide 0.15s ease both',
+  },
+  megaCol: {
+    display: 'flex', flexDirection: 'column', gap: 24,
+    minWidth: 155,
+  },
+  megaGroup: {
+    display: 'flex', flexDirection: 'column', gap: 8,
+  },
+  megaHeading: {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 14, fontWeight: 700, color: '#0070A0',
+    fontFamily: FONT_BODY, padding: 0, textAlign: 'left',
+    transition: 'color 0.12s', marginBottom: 2,
+  },
+  megaHeadingIcon: {
+    color: '#0070A0', display: 'flex', alignItems: 'center',
+  },
+  megaBadge: {
+    background: '#0284C7', color: 'white',
+    fontSize: 10, fontWeight: 800, borderRadius: 4,
+    padding: '1px 6px', marginLeft: 4, letterSpacing: '0.02em',
+  },
+  megaLinks: {
+    fontSize: 12.5, color: '#374151', paddingLeft: 24,
+    display: 'flex', flexDirection: 'row', flexWrap: 'nowrap',
+    alignItems: 'center', gap: 0, whiteSpace: 'nowrap',
+  },
+  megaLink: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 12.5, color: '#374151', fontFamily: FONT_BODY,
+    padding: 0, transition: 'color 0.12s',
+  },
+  megaDot: {
+    color: '#D1D5DB', fontSize: 13, padding: '0 5px',
+  },
+
+  // Active nav indicator dot
+  navCaret: {
+    display: 'block', width: 4, height: 4, borderRadius: '50%',
+    background: '#EA4C89', margin: '0 auto', marginTop: 2,
+    position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)',
   },
 };

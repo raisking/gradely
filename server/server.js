@@ -5,14 +5,13 @@ const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 
 const PORT = Number(process.env.PORT || 4000);
-const JWT_SECRET = process.env.JWT_SECRET || (() => {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('JWT_SECRET env var is required in production.');
-  }
-  console.warn('[questly] WARNING: JWT_SECRET not set — using insecure dev default. Set JWT_SECRET in production.');
-  return 'questly-dev-secret-change-in-production';
-})();
-const JWT_EXPIRES_IN = '30d';
+// C-4/H-5: Always require a strong secret — no fallback, no environment gate.
+// A missing or weak secret makes every JWT token forgeable.
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET env var must be set and at least 32 characters. Run: node -e "console.log(require(\'crypto\').randomBytes(48).toString(\'hex\')"');
+}
+const JWT_EXPIRES_IN = '24h';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -52,14 +51,15 @@ const verifyPassword = (password, stored) => {
   return crypto.timingSafeEqual(Buffer.from(candidate, 'hex'), Buffer.from(original, 'hex'));
 };
 
-const signToken = (userId) => jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+// C-5: Lock algorithm to HS256 — prevents "alg:none" bypass and algorithm confusion attacks.
+const signToken = (userId) => jwt.sign({ sub: userId }, JWT_SECRET, { algorithm: 'HS256', expiresIn: JWT_EXPIRES_IN });
 
 const verifyToken = (req) => {
   const auth = req.headers['authorization'] || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
   if (!token) throw Object.assign(new Error('Missing auth token.'), { status: 401 });
   try {
-    return jwt.verify(token, JWT_SECRET); // returns { sub: userId, iat, exp }
+    return jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
   } catch {
     throw Object.assign(new Error('Invalid or expired token.'), { status: 401 });
   }
@@ -135,7 +135,9 @@ const server = http.createServer(async (req, res) => {
       const username = String(body.username || '').trim().toLowerCase();
       const password = String(body.password || '');
       const name = String(body.name || username).trim();
-      const role = ['student', 'parent', 'teacher', 'admin'].includes(body.role) ? body.role : 'student';
+      // C-1: Only student and parent are self-registerable.
+      // Teacher/admin accounts must be provisioned directly in the database.
+      const role = ['student', 'parent'].includes(body.role) ? body.role : 'student';
 
       if (!username || password.length < 6)
         return send(res, 400, { error: 'Username and a password of at least 6 characters are required.' });
