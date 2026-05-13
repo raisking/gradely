@@ -3422,7 +3422,7 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
         <SectionHeader title="Weekly activity" subtitle="Practice volume by day" />
         <div style={styles.reportPanel}>
           {weeklyRows.map(([day, value, color]) => (
-          <div key={day} style={styles.activityRow} className="activity-row">
+          <div key={day} style={styles.activityWeekRow} className="activity-row">
               <span>{day}</span>
               <div style={styles.activityTrack}>
                 <div style={{ ...styles.activityFill, width: `${value * 3}%`, background: color }} />
@@ -4673,7 +4673,7 @@ const styles = {
     marginBottom: 16,
     color: '#334155',
   },
-  activityRow: {
+  activityWeekRow: {
     display: 'grid',
     gridTemplateColumns: '48px 1fr 64px',
     gap: 12,
