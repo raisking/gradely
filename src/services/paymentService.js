@@ -1,5 +1,5 @@
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
-const SESSION_KEY = 'questly.session';
+const SESSION_KEY = 'wijs.session';
 
 const getToken = () => {
   try {

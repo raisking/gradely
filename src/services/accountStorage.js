@@ -1,9 +1,8 @@
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
 
-// C-3: Session stored in sessionStorage (tab-scoped) instead of localStorage.
-// This prevents persistent token exposure across browser sessions and reduces
-// the blast radius of XSS — a stolen token expires when the tab closes.
-const SESSION_KEY = 'questly.session';
+const SESSION_KEY     = 'questly.session';
+const LOCAL_ACCTS_KEY = 'questly.local_accounts';
+const LOCAL_TOKENS_KEY = 'questly.local_tokens';
 
 export const emptyStats = {
   points: 0,
@@ -17,7 +16,7 @@ export const emptyStats = {
   earnedBadges: [],
 };
 
-// ---------- storage helpers ----------
+// ── session storage (tab-scoped) ──────────────────────────────────────────────
 
 const readSession = () => {
   try {
@@ -32,7 +31,43 @@ const writeSession = ({ username, userId, token }) => {
   } catch { }
 };
 
-// ---------- API ----------
+// ── local account store (used when server is unreachable) ─────────────────────
+
+const readLocalAccounts = () => {
+  try { return JSON.parse(localStorage.getItem(LOCAL_ACCTS_KEY) || '{}'); }
+  catch { return {}; }
+};
+
+const writeLocalAccounts = (accounts) => {
+  try { localStorage.setItem(LOCAL_ACCTS_KEY, JSON.stringify(accounts)); }
+  catch { }
+};
+
+const readLocalTokens = () => {
+  try { return JSON.parse(localStorage.getItem(LOCAL_TOKENS_KEY) || '{}'); }
+  catch { return {}; }
+};
+
+const writeLocalTokens = (tokens) => {
+  try { localStorage.setItem(LOCAL_TOKENS_KEY, JSON.stringify(tokens)); }
+  catch { }
+};
+
+const genId = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+const hashPassword = async (password, salt) => {
+  const data = new TextEncoder().encode(password + salt);
+  const buf  = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
+const isNetworkError = (err) =>
+  err instanceof TypeError ||
+  err.message === 'Failed to fetch' ||
+  err.message.includes('NetworkError') ||
+  err.message.includes('network');
+
+// ── server request helper ─────────────────────────────────────────────────────
 
 const request = async (path, options = {}) => {
   const session = readSession();
@@ -49,48 +84,107 @@ const request = async (path, options = {}) => {
 
 const normalizeUsername = (u) => String(u || '').trim().toLowerCase();
 
-// ---------- public API ----------
+// ── public API ────────────────────────────────────────────────────────────────
 
 export const createAccount = async ({ username, password, name, role }) => {
-  if (!normalizeUsername(username)) throw new Error('Choose a username.');
+  const norm = normalizeUsername(username);
+  if (!norm) throw new Error('Choose a username.');
   if (String(password || '').length < 6) throw new Error('Password must be at least 6 characters.');
 
-  // C-2: All auth is server-side only. Client-side password hashing and local
-  // account storage have been removed — they used unsalted SHA-256 and stored
-  // the full account database (including password hashes) in localStorage.
-  const payload = await request('/auth/register', {
-    method: 'POST',
-    body: JSON.stringify({ username: normalizeUsername(username), password, name, role }),
-  });
-  writeSession({ username: payload.user.username, userId: payload.user.id, token: payload.token });
-  return { ...payload, source: 'database' };
+  try {
+    const payload = await request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ username: norm, password, name, role }),
+    });
+    writeSession({ username: payload.user.username, userId: payload.user.id, token: payload.token });
+    return { ...payload, source: 'database' };
+  } catch (err) {
+    if (!isNetworkError(err)) throw err;
+
+    // ── offline fallback ──
+    const accounts = readLocalAccounts();
+    if (accounts[norm]) throw new Error('That username is already taken. Try another.');
+    const salt   = genId();
+    const hash   = await hashPassword(password, salt);
+    const userId = 'local_' + genId();
+    const token  = 'local_' + genId();
+
+    accounts[norm] = { userId, username: norm, name: name || norm, role: role || 'student', hash, salt };
+    writeLocalAccounts(accounts);
+
+    const tokens = readLocalTokens();
+    tokens[token] = norm;
+    writeLocalTokens(tokens);
+
+    writeSession({ username: norm, userId, token });
+    return {
+      user: { id: userId, username: norm, name: name || norm, role: role || 'student' },
+      token,
+      source: 'local',
+    };
+  }
 };
 
 export const signInAccount = async ({ username, password }) => {
-  if (!normalizeUsername(username)) throw new Error('Enter your username.');
+  const norm = normalizeUsername(username);
+  if (!norm) throw new Error('Enter your username.');
   if (!password) throw new Error('Enter your password.');
 
-  const payload = await request('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ username: normalizeUsername(username), password }),
-  });
-  writeSession({ username: payload.user.username, userId: payload.user.id, token: payload.token });
-  return { ...payload, source: 'database' };
+  try {
+    const payload = await request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username: norm, password }),
+    });
+    writeSession({ username: payload.user.username, userId: payload.user.id, token: payload.token });
+    return { ...payload, source: 'database' };
+  } catch (err) {
+    if (!isNetworkError(err)) throw err;
+
+    // ── offline fallback ──
+    const accounts = readLocalAccounts();
+    const acct = accounts[norm];
+    if (!acct) throw new Error('No account found for that username.');
+    const hash = await hashPassword(password, acct.salt);
+    if (hash !== acct.hash) throw new Error('Incorrect password.');
+
+    const token = 'local_' + genId();
+    const tokens = readLocalTokens();
+    tokens[token] = norm;
+    writeLocalTokens(tokens);
+
+    writeSession({ username: norm, userId: acct.userId, token });
+    return {
+      user: { id: acct.userId, username: norm, name: acct.name, role: acct.role },
+      token,
+      source: 'local',
+    };
+  }
 };
 
-// Restores session from the server using the stored JWT.
-// Returns null if no session exists, the token is expired, or the server is unreachable.
 export const loadSavedSession = async () => {
   const session = readSession();
   if (!session?.token) return null;
 
+  // Local token — resolve from localStorage directly
+  if (session.token.startsWith('local_')) {
+    const tokens = readLocalTokens();
+    const norm = tokens[session.token];
+    if (!norm) { clearSavedSession(); return null; }
+    const accounts = readLocalAccounts();
+    const acct = accounts[norm];
+    if (!acct) { clearSavedSession(); return null; }
+    return {
+      user: { id: acct.userId, username: norm, name: acct.name, role: acct.role },
+      token: session.token,
+      source: 'local',
+    };
+  }
+
+  // Server token — verify with backend
   try {
     const payload = await request('/auth/me');
     return { ...payload, source: 'database' };
   } catch {
-    // Token invalid, expired, or server unreachable — clear the session and
-    // require the user to sign in again. No local fallback: storing accounts
-    // client-side is a critical security vulnerability (unsalted hashes, XSS exposure).
     clearSavedSession();
     return null;
   }
@@ -98,6 +192,7 @@ export const loadSavedSession = async () => {
 
 export const saveLearningState = async (user, progress, stats) => {
   if (!user?.username) return;
+  if (user.source === 'local') return; // no server to sync to
 
   try {
     await request('/learning-state', {
@@ -105,13 +200,13 @@ export const saveLearningState = async (user, progress, stats) => {
       body: JSON.stringify({ progress, stats }),
     });
   } catch {
-    // Offline — progress is held in React state until the next successful sync.
+    // offline — progress held in React state until next sync
   }
 };
 
 export const clearSavedSession = () => {
   try { window.sessionStorage.removeItem(SESSION_KEY); } catch { }
-  // Purge any legacy localStorage data left over from before this security fix.
-  try { window.localStorage.removeItem('questly.session'); } catch { }
-  try { window.localStorage.removeItem('questly.accounts'); } catch { }
+  // legacy cleanup
+  try { window.localStorage.removeItem('wijs.session'); } catch { }
+  try { window.localStorage.removeItem('wijs.accounts'); } catch { }
 };

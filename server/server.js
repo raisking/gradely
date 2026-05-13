@@ -250,4 +250,4 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => console.log(`Questly API listening on http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Wijs API listening on http://localhost:${PORT}`));

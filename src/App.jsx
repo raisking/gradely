@@ -26,7 +26,7 @@ import {
 } from './services/paymentService';
 
 /* =========================================================================
-   Questly — A complete educational platform inspired by Questly
+   Wijs — A complete educational platform inspired by Wijs
    Single-file React app with working practice engine, progress tracking,
    gamification, and adaptive difficulty.
    ========================================================================= */
@@ -36,20 +36,20 @@ import {
 // content management trivial: just add to these objects.
 
 const GRADES = [
-  { id: 'prek', label: 'Pre-K',       color: '#0284C7', emoji: '🌟' },
-  { id: 'k',    label: 'Kindergarten', color: '#0369A1', emoji: '🎨' },
-  { id: '1',    label: 'Grade 1',      color: '#1D4ED8', emoji: '⭐' },
-  { id: '2',    label: 'Grade 2',      color: '#1E40AF', emoji: '🌱' },
-  { id: '3',    label: 'Grade 3',      color: '#2563EB', emoji: '🚀' },
-  { id: '4',    label: 'Grade 4',      color: '#3B82F6', emoji: '🔬' },
-  { id: '5',    label: 'Grade 5',      color: '#4F46E5', emoji: '📚' },
+  { id: 'prek', label: 'Pre-K',        color: '#F97316', emoji: '🌟' },
+  { id: 'k',    label: 'Kindergarten', color: '#EAB308', emoji: '🎨' },
+  { id: '1',    label: 'Grade 1',      color: '#22C55E', emoji: '⭐' },
+  { id: '2',    label: 'Grade 2',      color: '#06B6D4', emoji: '🌱' },
+  { id: '3',    label: 'Grade 3',      color: '#8B5CF6', emoji: '🚀' },
+  { id: '4',    label: 'Grade 4',      color: '#EC4899', emoji: '🔬' },
+  { id: '5',    label: 'Grade 5',      color: '#F43F5E', emoji: '📚' },
 ];
 
 const SUBJECTS = {
-  math:    { label: 'Math',           icon: Calculator,   color: '#1D4ED8', bg: '#EFF6FF', tagline: 'Numbers, shapes & patterns' },
-  ela:     { label: 'ELA',            icon: BookOpen,     color: '#4F46E5', bg: '#EEF2FF', tagline: 'Reading, writing & grammar' },
-  science: { label: 'Science',        icon: FlaskConical, color: '#0284C7', bg: '#F0F9FF', tagline: 'Discover how the world works' },
-  social:  { label: 'Social Studies', icon: Globe2,       color: '#475569', bg: '#F8FAFC', tagline: 'History, geography & civics' },
+  math:    { label: 'Math',           icon: Calculator,   color: '#7C3AED', bg: '#F5F3FF', tagline: 'Numbers, shapes & patterns' },
+  ela:     { label: 'ELA',            icon: BookOpen,     color: '#DB2777', bg: '#FDF2F8', tagline: 'Reading, writing & grammar' },
+  science: { label: 'Science',        icon: FlaskConical, color: '#0D9488', bg: '#F0FDFA', tagline: 'Discover how the world works' },
+  social:  { label: 'Social Studies', icon: Globe2,       color: '#B45309', bg: '#FFFBEB', tagline: 'History, geography & civics' },
 };
 
 // Skill catalog. Each skill has a curated set of questions across types.
@@ -652,6 +652,164 @@ const SKILLS = {
 const getSkillsFor = (grade, subject) =>
   Object.values(SKILLS).filter(s => s.grade === grade && s.subject === subject);
 
+// IXL-style skill catalog: organized into named sections per grade+subject
+const SKILL_CATALOG = {
+  'math-prek': [
+    { section:'A', title:'Numbers 1–5', skills:[{title:'Count to 5',skillId:'math-k-counting-10'},{title:'Count objects up to 5',skillId:'math-k-counting-10'},{title:'Which group has more?',skillId:'math-k-counting-10'}]},
+    { section:'B', title:'Numbers 1–10', skills:[{title:'Count to 10',skillId:'math-k-counting-10'},{title:'Count objects up to 10',skillId:'math-k-counting-10'},{title:'Compare numbers up to 10',skillId:'math-k-counting-10'}]},
+    { section:'C', title:'Shapes & Patterns', skills:[{title:'Name the shape',skillId:'math-k-shapes-2d'},{title:'Count the sides',skillId:'math-k-shapes-2d'},{title:'Simple patterns',skillId:'math-k-odd-even'}]},
+  ],
+  'math-k': [
+    { section:'A', title:'Counting to 10', skills:[{title:'Counting review — up to 10',skillId:'math-k-counting-10'},{title:'Count objects to 10',skillId:'math-k-counting-10'},{title:'What number comes next?',skillId:'math-k-counting-10'},{title:'Compare groups: more or fewer',skillId:'math-k-counting-10'}]},
+    { section:'B', title:'Adding & Subtracting to 5', skills:[{title:'Adding to 5',skillId:'math-k-add-subtract-5'},{title:'Subtracting to 5',skillId:'math-k-add-subtract-5'},{title:'Adding with pictures',skillId:'math-k-add-subtract-5'},{title:'Number stories',skillId:'math-k-add-subtract-5'}]},
+    { section:'C', title:'2D Shapes', skills:[{title:'Name 2D shapes',skillId:'math-k-shapes-2d'},{title:'Count sides and corners',skillId:'math-k-shapes-2d'},{title:'Sort shapes by attribute',skillId:'math-k-shapes-2d'}]},
+    { section:'D', title:'Patterns', skills:[{title:'Identify AB patterns',skillId:'math-k-odd-even'},{title:'Extend a pattern',skillId:'math-k-odd-even'},{title:'Create a pattern',skillId:'math-k-odd-even'}]},
+    { section:'E', title:'Ten Frames', skills:[{title:'Count using ten frames',skillId:'math-k-ten-frames'},{title:'Fill the ten frame',skillId:'math-k-ten-frames'},{title:'Compare using ten frames',skillId:'math-k-ten-frames'}]},
+  ],
+  'math-1': [
+    { section:'A', title:'Counting to 100', skills:[{title:'Count by 1s to 100',skillId:'math-k-counting-10'},{title:'Count by 2s',skillId:'math-k-counting-10'},{title:'Count by 5s',skillId:'math-k-counting-10'},{title:'Count by 10s',skillId:'math-k-counting-10'},{title:'Odd and even numbers',skillId:'math-k-odd-even'}]},
+    { section:'B', title:'Addition within 20', skills:[{title:'Add within 20',skillId:'math-1-addition'},{title:'Add three numbers',skillId:'math-1-addition'},{title:'Addition word problems',skillId:'math-1-addition'},{title:'Missing addend',skillId:'math-1-addition'}]},
+    { section:'C', title:'Subtraction within 20', skills:[{title:'Subtract within 20',skillId:'math-1-subtraction'},{title:'Related addition & subtraction facts',skillId:'math-1-subtraction'},{title:'Subtraction word problems',skillId:'math-1-subtraction'}]},
+    { section:'D', title:'Place Value', skills:[{title:'Tens and ones',skillId:'math-1-place-value'},{title:'Compare 2-digit numbers',skillId:'math-1-place-value'},{title:'Order numbers to 100',skillId:'math-1-place-value'}]},
+    { section:'E', title:'Number Bonds', skills:[{title:'Number bonds — sums of 8',skillId:'math-1-number-bonds-8'},{title:'Number bonds — sums of 10',skillId:'math-1-number-bonds-8'},{title:'Number bonds — mixed',skillId:'math-1-number-bonds-8'}]},
+    { section:'F', title:'Measurement & Time', skills:[{title:'Compare lengths',skillId:'math-1-place-value'},{title:'Measure with units',skillId:'math-1-place-value'},{title:'Tell time to the hour',skillId:'math-1-place-value'}]},
+  ],
+  'math-2': [
+    { section:'A', title:'Place Value to 1,000', skills:[{title:'Hundreds, tens, and ones',skillId:'math-2-place-value-100'},{title:'Write numbers in words',skillId:'math-2-place-value-100'},{title:'Compare 3-digit numbers',skillId:'math-2-place-value-100'},{title:'Order 3-digit numbers',skillId:'math-2-place-value-100'}]},
+    { section:'B', title:'Addition & Subtraction', skills:[{title:'Add within 100',skillId:'math-2-add-subtract-100'},{title:'Subtract within 100',skillId:'math-2-add-subtract-100'},{title:'Add and subtract word problems',skillId:'math-2-add-subtract-100'},{title:'Add three numbers',skillId:'math-2-add-subtract-100'}]},
+    { section:'C', title:'Time & Money', skills:[{title:'Tell time to the quarter hour',skillId:'math-2-time-money'},{title:'Count coins',skillId:'math-2-time-money'},{title:'Add dollar amounts',skillId:'math-2-time-money'}]},
+    { section:'D', title:'Fractions', skills:[{title:'Equal parts',skillId:'math-2-time-money'},{title:'Halves, thirds, fourths',skillId:'math-2-time-money'},{title:'Identify fractions',skillId:'math-2-time-money'}]},
+    { section:'E', title:'Data & Graphs', skills:[{title:'Read a bar graph',skillId:'math-2-add-subtract-100'},{title:'Make a bar graph',skillId:'math-2-add-subtract-100'},{title:'Read a picture graph',skillId:'math-2-add-subtract-100'}]},
+  ],
+  'math-3': [
+    { section:'A', title:'Multiplication Facts', skills:[{title:'Multiply by 2',skillId:'math-3-multiplication'},{title:'Multiply by 5',skillId:'math-3-multiplication'},{title:'Multiply by 10',skillId:'math-3-multiplication'},{title:'Multiply by 3 and 4',skillId:'math-3-multiplication'},{title:'Mixed multiplication facts',skillId:'math-3-multiplication'}]},
+    { section:'B', title:'Division Basics', skills:[{title:'Divide by 2',skillId:'math-3-division'},{title:'Divide by 5',skillId:'math-3-division'},{title:'Related multiplication & division',skillId:'math-3-division'},{title:'Division word problems',skillId:'math-3-division'}]},
+    { section:'C', title:'Fractions', skills:[{title:'Identify fractions',skillId:'math-3-fractions-intro'},{title:'Compare fractions',skillId:'math-3-fractions-intro'},{title:'Fractions on a number line',skillId:'math-3-fractions-intro'},{title:'Equivalent fractions',skillId:'math-3-fractions-intro'}]},
+    { section:'D', title:'Measurement', skills:[{title:'Measure in centimeters',skillId:'math-3-multiplication'},{title:'Perimeter of shapes',skillId:'math-3-multiplication'},{title:'Area of rectangles',skillId:'math-3-multiplication'}]},
+    { section:'E', title:'Time & Data', skills:[{title:'Elapsed time',skillId:'math-3-division'},{title:'Read a line plot',skillId:'math-3-division'},{title:'Bar graphs and pictographs',skillId:'math-3-division'}]},
+  ],
+  'math-4': [
+    { section:'A', title:'Multi-Digit Multiplication', skills:[{title:'Multiply 2-digit numbers',skillId:'math-4-multiplication'},{title:'Multiply 3-digit by 1-digit',skillId:'math-4-multiplication'},{title:'Multiply with area models',skillId:'math-4-multiplication'},{title:'Estimate products',skillId:'math-4-multiplication'}]},
+    { section:'B', title:'Division', skills:[{title:'Divide 2-digit by 1-digit',skillId:'math-4-multiplication'},{title:'Divide with remainders',skillId:'math-4-multiplication'},{title:'Division word problems',skillId:'math-4-multiplication'}]},
+    { section:'C', title:'Fractions & Decimals', skills:[{title:'Add and subtract fractions',skillId:'math-4-fractions'},{title:'Mixed numbers',skillId:'math-4-fractions'},{title:'Multiply fractions by whole numbers',skillId:'math-4-fractions'},{title:'Decimals to hundredths',skillId:'math-4-fractions'}]},
+    { section:'D', title:'Geometry', skills:[{title:'Types of angles',skillId:'math-4-geometry'},{title:'Classify triangles',skillId:'math-4-geometry'},{title:'Lines of symmetry',skillId:'math-4-geometry'}]},
+    { section:'E', title:'Measurement & Data', skills:[{title:'Convert units of length',skillId:'math-4-fractions'},{title:'Area and perimeter',skillId:'math-4-geometry'},{title:'Line plots with fractions',skillId:'math-4-fractions'}]},
+  ],
+  'math-5': [
+    { section:'A', title:'Decimals', skills:[{title:'Multiply decimals',skillId:'math-5-fractions'},{title:'Divide decimals',skillId:'math-5-fractions'},{title:'Rounding decimals',skillId:'math-5-fractions'}]},
+    { section:'B', title:'Fractions', skills:[{title:'Add fractions — unlike denominators',skillId:'math-5-fractions'},{title:'Subtract fractions — unlike denominators',skillId:'math-5-fractions'},{title:'Multiply fractions',skillId:'math-5-fractions'},{title:'Divide fractions',skillId:'math-5-fractions'}]},
+    { section:'C', title:'Expressions & Equations', skills:[{title:'Order of operations',skillId:'math-5-fractions'},{title:'Write numerical expressions',skillId:'math-5-fractions'},{title:'Evaluate expressions',skillId:'math-5-fractions'}]},
+    { section:'D', title:'Geometry & Volume', skills:[{title:'Coordinate plane',skillId:'math-5-fractions'},{title:'Classify quadrilaterals',skillId:'math-5-fractions'},{title:'Volume of rectangular prisms',skillId:'math-5-fractions'}]},
+    { section:'E', title:'Data & Statistics', skills:[{title:'Dot plots and frequency tables',skillId:'math-5-fractions'},{title:'Mean, median, mode',skillId:'math-5-fractions'},{title:'Line graphs',skillId:'math-5-fractions'}]},
+  ],
+  'ela-prek': [
+    { section:'A', title:'Letters', skills:[{title:'Recognize uppercase letters',skillId:'ela-k-letters'},{title:'Recognize lowercase letters',skillId:'ela-k-letters'},{title:'Match uppercase and lowercase',skillId:'ela-k-letters'}]},
+    { section:'B', title:'Sounds', skills:[{title:'Words that start with the same sound',skillId:'ela-k-beginning-sounds'},{title:'Find the beginning sound',skillId:'ela-k-beginning-sounds'}]},
+  ],
+  'ela-k': [
+    { section:'A', title:'Letter Sounds', skills:[{title:'Letter sounds — consonants',skillId:'ela-k-letters'},{title:'Letter sounds — vowels',skillId:'ela-k-letters'},{title:'Match letter to sound',skillId:'ela-k-letters'}]},
+    { section:'B', title:'Sight Words', skills:[{title:'Sight words — set 1',skillId:'ela-k-sight-words'},{title:'Sight words — set 2',skillId:'ela-k-sight-words'},{title:'Read sight words in sentences',skillId:'ela-k-sight-words'}]},
+    { section:'C', title:'Beginning Sounds', skills:[{title:'Identify beginning sounds',skillId:'ela-k-beginning-sounds'},{title:'Match beginning sounds',skillId:'ela-k-beginning-sounds'}]},
+    { section:'D', title:'Rhyming', skills:[{title:'Do the words rhyme?',skillId:'ela-k-letters'},{title:'Complete the rhyme',skillId:'ela-k-letters'}]},
+  ],
+  'ela-1': [
+    { section:'A', title:'Short Vowel Words', skills:[{title:'Short vowel CVC words',skillId:'ela-1-cvc-words'},{title:'Blend CVC words',skillId:'ela-1-cvc-words'},{title:'Read short vowel sentences',skillId:'ela-1-cvc-words'}]},
+    { section:'B', title:'Word Families', skills:[{title:'-at and -an words',skillId:'ela-1-word-families'},{title:'-ig and -og words',skillId:'ela-1-word-families'},{title:'-ot and -ut words',skillId:'ela-1-word-families'}]},
+    { section:'C', title:'Sentences', skills:[{title:'Build a sentence',skillId:'ela-1-sentences'},{title:'Capitalize the first word',skillId:'ela-1-sentences'},{title:'End punctuation',skillId:'ela-1-sentences'}]},
+    { section:'D', title:'Sight Words', skills:[{title:'Grade 1 sight words — set 1',skillId:'ela-k-sight-words'},{title:'Grade 1 sight words — set 2',skillId:'ela-k-sight-words'}]},
+  ],
+  'ela-2': [
+    { section:'A', title:'Nouns & Verbs', skills:[{title:'Common and proper nouns',skillId:'ela-2-grammar'},{title:'Action and linking verbs',skillId:'ela-2-grammar'},{title:'Subject-verb agreement',skillId:'ela-2-grammar'}]},
+    { section:'B', title:'Plurals & Possessives', skills:[{title:'Singular and plural nouns',skillId:'ela-2-plurals'},{title:'Irregular plural nouns',skillId:'ela-2-plurals'},{title:'Possessive nouns',skillId:'ela-2-plurals'}]},
+    { section:'C', title:'Reading Stories', skills:[{title:'Identify the main idea',skillId:'ela-2-reading-basic'},{title:'Key details in a story',skillId:'ela-2-reading-basic'},{title:'Character and setting',skillId:'ela-2-reading-basic'}]},
+    { section:'D', title:'Vocabulary', skills:[{title:'Compound words',skillId:'ela-2-grammar'},{title:'Contractions',skillId:'ela-2-grammar'},{title:'Context clues',skillId:'ela-2-reading-basic'}]},
+  ],
+  'ela-3': [
+    { section:'A', title:'Grammar', skills:[{title:'Adjectives and their uses',skillId:'ela-3-grammar'},{title:'Adverbs — how and when',skillId:'ela-3-grammar'},{title:'Comparative adjectives',skillId:'ela-3-grammar'}]},
+    { section:'B', title:'Vocabulary', skills:[{title:'Synonyms',skillId:'ela-3-vocabulary'},{title:'Antonyms',skillId:'ela-3-vocabulary'},{title:'Prefixes and suffixes',skillId:'ela-3-vocabulary'}]},
+    { section:'C', title:'Reading Comprehension', skills:[{title:'Main idea and details',skillId:'ela-3-reading-comprehension'},{title:'Compare and contrast',skillId:'ela-3-reading-comprehension'},{title:'Cause and effect',skillId:'ela-3-reading-comprehension'},{title:"Author's purpose",skillId:'ela-3-reading-comprehension'}]},
+    { section:'D', title:'Writing', skills:[{title:'Topic sentences',skillId:'ela-3-grammar'},{title:'Supporting details',skillId:'ela-3-grammar'},{title:'Paragraph structure',skillId:'ela-3-grammar'}]},
+  ],
+  'ela-4': [
+    { section:'A', title:'Grammar & Usage', skills:[{title:'Subject and predicate',skillId:'ela-3-grammar'},{title:'Compound sentences',skillId:'ela-3-grammar'},{title:'Pronoun agreement',skillId:'ela-3-grammar'}]},
+    { section:'B', title:'Vocabulary', skills:[{title:'Context clues',skillId:'ela-3-vocabulary'},{title:'Figurative language',skillId:'ela-3-vocabulary'},{title:'Multiple-meaning words',skillId:'ela-3-vocabulary'}]},
+    { section:'C', title:'Reading Comprehension', skills:[{title:'Main idea vs. supporting details',skillId:'ela-3-reading-comprehension'},{title:'Point of view',skillId:'ela-3-reading-comprehension'},{title:'Summarize a text',skillId:'ela-3-reading-comprehension'}]},
+  ],
+  'ela-5': [
+    { section:'A', title:'Grammar', skills:[{title:'Verb tenses',skillId:'ela-3-grammar'},{title:'Comma usage',skillId:'ela-3-grammar'},{title:'Active and passive voice',skillId:'ela-3-grammar'}]},
+    { section:'B', title:'Vocabulary', skills:[{title:'Connotation and denotation',skillId:'ela-3-vocabulary'},{title:'Greek and Latin roots',skillId:'ela-3-vocabulary'},{title:'Analogies',skillId:'ela-3-vocabulary'}]},
+    { section:'C', title:'Reading Comprehension', skills:[{title:'Theme and central message',skillId:'ela-3-reading-comprehension'},{title:'Compare texts',skillId:'ela-3-reading-comprehension'},{title:'Text structure',skillId:'ela-3-reading-comprehension'}]},
+  ],
+  'science-prek': [
+    { section:'A', title:'Living Things', skills:[{title:'Plants and animals',skillId:'science-1-animals'},{title:'Needs of living things',skillId:'science-1-animals'}]},
+    { section:'B', title:'My World', skills:[{title:'Weather and seasons',skillId:'science-1-animals'},{title:'Day and night',skillId:'science-1-animals'}]},
+  ],
+  'science-k': [
+    { section:'A', title:'Living Things', skills:[{title:'Plants vs. animals',skillId:'science-1-animals'},{title:'Animal body coverings',skillId:'science-1-animals'}]},
+    { section:'B', title:'Earth Science', skills:[{title:'Weather patterns',skillId:'science-1-animals'},{title:'Types of weather',skillId:'science-1-animals'}]},
+    { section:'C', title:'Physical Science', skills:[{title:'Properties of objects',skillId:'science-1-animals'},{title:'Sorting objects',skillId:'science-1-animals'}]},
+  ],
+  'science-1': [
+    { section:'A', title:'Animal Habitats', skills:[{title:'Animal homes and habitats',skillId:'science-1-animals'},{title:'Animals and their needs',skillId:'science-1-animals'},{title:'Land vs. water animals',skillId:'science-1-animals'}]},
+    { section:'B', title:'Plants', skills:[{title:'Parts of a plant',skillId:'science-3-plants'},{title:'What plants need to grow',skillId:'science-3-plants'}]},
+    { section:'C', title:'Earth Science', skills:[{title:'Soil, rock, and water',skillId:'science-1-animals'},{title:'Weather and seasons',skillId:'science-1-animals'}]},
+  ],
+  'science-2': [
+    { section:'A', title:'Life Science', skills:[{title:'Life cycles',skillId:'science-3-plants'},{title:'Ecosystems',skillId:'science-1-animals'},{title:'Food chains',skillId:'science-1-animals'}]},
+    { section:'B', title:'Earth Science', skills:[{title:'Landforms and water',skillId:'science-1-animals'},{title:'Natural resources',skillId:'science-1-animals'}]},
+    { section:'C', title:'Physical Science', skills:[{title:'Forces and motion',skillId:'science-5-states'},{title:'Energy forms',skillId:'science-5-states'}]},
+  ],
+  'science-3': [
+    { section:'A', title:'Plant Life Cycle', skills:[{title:'Parts of a flower',skillId:'science-3-plants'},{title:'Seed to plant',skillId:'science-3-plants'},{title:'How plants reproduce',skillId:'science-3-plants'}]},
+    { section:'B', title:'Animal Adaptations', skills:[{title:'Adaptations for survival',skillId:'science-1-animals'},{title:'Camouflage and mimicry',skillId:'science-1-animals'}]},
+    { section:'C', title:'Forces', skills:[{title:'Push and pull',skillId:'science-5-states'},{title:'Gravity and friction',skillId:'science-5-states'}]},
+  ],
+  'science-4': [
+    { section:'A', title:'States of Matter', skills:[{title:'Solids, liquids, gases',skillId:'science-5-states'},{title:'Changes of state',skillId:'science-5-states'},{title:'Physical vs. chemical changes',skillId:'science-5-states'}]},
+    { section:'B', title:'Ecosystems', skills:[{title:'Producers, consumers, decomposers',skillId:'science-1-animals'},{title:'Food webs',skillId:'science-1-animals'}]},
+    { section:'C', title:'Earth Science', skills:[{title:'The water cycle',skillId:'science-5-states'},{title:'Rock cycle',skillId:'science-5-states'}]},
+  ],
+  'science-5': [
+    { section:'A', title:'States of Matter', skills:[{title:'Properties of solids, liquids, gases',skillId:'science-5-states'},{title:'Mixtures and solutions',skillId:'science-5-states'},{title:'Chemical reactions',skillId:'science-5-states'}]},
+    { section:'B', title:'Energy', skills:[{title:'Light and sound energy',skillId:'science-5-states'},{title:'Heat transfer',skillId:'science-5-states'},{title:'Electrical energy',skillId:'science-5-states'}]},
+    { section:'C', title:'Earth & Space', skills:[{title:"Earth's layers",skillId:'science-5-states'},{title:'Solar system',skillId:'science-5-states'},{title:'Moon phases',skillId:'science-5-states'}]},
+  ],
+  'social-prek': [
+    { section:'A', title:'My Family & Me', skills:[{title:'Family members',skillId:'social-2-community'},{title:'My home',skillId:'social-2-community'}]},
+    { section:'B', title:'My Community', skills:[{title:'Neighborhoods',skillId:'social-2-community'},{title:'Community helpers',skillId:'social-2-community'}]},
+  ],
+  'social-k': [
+    { section:'A', title:'All About Me', skills:[{title:'Feelings and emotions',skillId:'social-2-community'},{title:'Taking turns and sharing',skillId:'social-2-community'}]},
+    { section:'B', title:'Community', skills:[{title:'Community helpers',skillId:'social-2-community'},{title:'Rules and laws',skillId:'social-2-community'}]},
+    { section:'C', title:'Maps & Geography', skills:[{title:'Use a map',skillId:'social-4-geography'},{title:'Land and water',skillId:'social-4-geography'}]},
+  ],
+  'social-1': [
+    { section:'A', title:'Community Helpers', skills:[{title:'Who helps in our community?',skillId:'social-2-community'},{title:'Jobs in the community',skillId:'social-2-community'},{title:'Community services',skillId:'social-2-community'}]},
+    { section:'B', title:'Maps & Location', skills:[{title:'Map skills',skillId:'social-4-geography'},{title:'Cardinal directions',skillId:'social-4-geography'}]},
+    { section:'C', title:'American Symbols', skills:[{title:'National symbols',skillId:'social-2-community'},{title:'Holidays and traditions',skillId:'social-2-community'}]},
+  ],
+  'social-2': [
+    { section:'A', title:'Community Helpers', skills:[{title:'Community workers and their tools',skillId:'social-2-community'},{title:'Government workers',skillId:'social-2-community'},{title:'Goods and services',skillId:'social-2-community'}]},
+    { section:'B', title:'History', skills:[{title:'Then and now',skillId:'social-2-community'},{title:'Important people in history',skillId:'social-2-community'}]},
+    { section:'C', title:'Geography', skills:[{title:'Continents and oceans',skillId:'social-4-geography'},{title:'Read a map',skillId:'social-4-geography'}]},
+  ],
+  'social-3': [
+    { section:'A', title:'Communities', skills:[{title:'Types of communities',skillId:'social-2-community'},{title:'Rural, suburban, urban',skillId:'social-2-community'}]},
+    { section:'B', title:'Geography', skills:[{title:'Map skills — latitude & longitude',skillId:'social-4-geography'},{title:'Landforms',skillId:'social-4-geography'},{title:'Natural resources',skillId:'social-4-geography'}]},
+    { section:'C', title:'Economics', skills:[{title:'Producers and consumers',skillId:'social-2-community'},{title:'Supply and demand',skillId:'social-2-community'}]},
+  ],
+  'social-4': [
+    { section:'A', title:'US Geography', skills:[{title:'Regions of the United States',skillId:'social-4-geography'},{title:'State capitals',skillId:'social-4-geography'},{title:'Rivers and mountains',skillId:'social-4-geography'}]},
+    { section:'B', title:'US History', skills:[{title:'Native American cultures',skillId:'social-2-community'},{title:'Colonial America',skillId:'social-2-community'},{title:'The American Revolution',skillId:'social-2-community'}]},
+    { section:'C', title:'Government', skills:[{title:'Three branches of government',skillId:'social-2-community'},{title:'Rights and responsibilities',skillId:'social-2-community'}]},
+  ],
+  'social-5': [
+    { section:'A', title:'World Geography', skills:[{title:'Continents and countries',skillId:'social-4-geography'},{title:'World climate zones',skillId:'social-4-geography'},{title:'Physical features of continents',skillId:'social-4-geography'}]},
+    { section:'B', title:'World History', skills:[{title:'Ancient civilizations',skillId:'social-2-community'},{title:'Age of exploration',skillId:'social-2-community'}]},
+    { section:'C', title:'Economics & Civics', skills:[{title:'Global trade',skillId:'social-4-geography'},{title:'International organizations',skillId:'social-2-community'}]},
+  ],
+};
+
 // Adaptive engine: pick next question based on recent performance
 const pickAdaptiveQuestion = (questions, history, askedIds) => {
   const remaining = questions.filter(q => !askedIds.includes(q.id));
@@ -676,8 +834,8 @@ const calcMastery = (skillProgress) => {
 
 const masteryLabel = (m) => {
   if (m >= 85) return { label: 'Mastery', color: '#059669', icon: Crown };
-  if (m >= 60) return { label: 'Proficient', color: '#2563EB', icon: Star };
-  if (m >= 30) return { label: 'Developing', color: '#0284C7', icon: TrendingUp };
+  if (m >= 60) return { label: 'Proficient', color: '#8B5CF6', icon: Star };
+  if (m >= 30) return { label: 'Developing', color: '#8B5CF6', icon: TrendingUp };
   if (m > 0)   return { label: 'Beginner', color: '#64748B', icon: Circle };
   return { label: 'Not Started', color: '#9CA3AF', icon: Circle };
 };
@@ -736,7 +894,7 @@ const learnPath = (v, grade, subj, skill) => {
 };
 
 // ---------- MAIN APP ----------
-export default function QuestlyApp() {
+export default function WijsApp() {
   // Persistent app state — initialize view + context from the current URL so deep links work
   const [_init]           = useState(() => parseLearnPath(window.location.pathname));
   const [view, setView]   = useState(() => _init.view || 'home'); // home | learning | practice | reports | dashboard | parent | admin | subscription | grade | subject | skill | badges
@@ -961,6 +1119,7 @@ export default function QuestlyApp() {
                                     subject={selectedSubject}
                                     onBack={() => setView('grade')}
                                     onSelectSkill={(skill) => { setActiveSkill(skill); setView('skill'); }}
+                                    onSelectGrade={(g) => { setSelectedGrade(g); setView('grade'); }}
                                     progress={progress}
                                   />}
         {view === 'skill'     && activeSkill && <SkillScreen
@@ -1001,7 +1160,7 @@ export default function QuestlyApp() {
         {view === 'subscription-success' && (
           <div style={{ ...styles.container, textAlign: 'center', paddingTop: 60 }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
-            <h1 style={{ ...styles.dashHeroTitle, marginBottom: 12 }}>You&apos;re all set!</h1>
+            <h1 style={{ ...styles.dashHeroTitle, marginBottom: 12 }} className="dash-hero-title">You&apos;re all set!</h1>
             <p style={{ color: '#64748B', marginBottom: 28, fontSize: 16 }}>Your subscription is now active. Happy learning!</p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
               <button onClick={() => setView('subscription')} style={styles.secondaryAction}>View my plan</button>
@@ -1022,7 +1181,7 @@ export default function QuestlyApp() {
         {toasts.map(t => (
           <div key={t.id} style={{
             ...styles.toast,
-            background: t.kind === 'success' ? '#059669' : t.kind === 'error' ? '#DC2626' : '#0891B2',
+            background: t.kind === 'success' ? '#059669' : t.kind === 'error' ? '#DC2626' : '#A855F7',
           }}>
             {t.msg}
           </div>
@@ -1096,7 +1255,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
     {
       col: 'skillplans',
       items: [
-        { icon: <BarChart3 size={15}/>, label: 'Skill plans', links: ['Questly plans','State standards','Textbooks','Test prep'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
+        { icon: <BarChart3 size={15}/>, label: 'Skill plans', links: ['Wijs plans','State standards','Textbooks','Test prep'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
       ],
     },
     {
@@ -1135,7 +1294,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
         {/* Logo */}
         <button onClick={onHome} style={hStyles.logo}>
           <span style={hStyles.logoMark}>🎓</span>
-          <span style={hStyles.logoText}>Questly</span>
+          <span style={hStyles.logoText}>Wijs</span>
         </button>
 
         {/* Search bar */}
@@ -1341,7 +1500,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
           ))}
           <div style={hStyles.mobileDivider} />
           <button onClick={() => closeMenu(onSignIn)}    style={hStyles.mobileLink}>{isSignedIn ? firstName : 'Sign In'}</button>
-          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#1D4ED8' }}>Membership</button>
+          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#7C3AED' }}>Membership</button>
           <button onClick={() => closeMenu(onReset)}     style={{ ...hStyles.mobileLink, color: '#6B7280' }}>Reset session</button>
         </nav>
       )}
@@ -1367,12 +1526,12 @@ function LoginScreen({ onLogin }) {
   const [role, setRole] = useState('student');
   return (
     <div style={styles.loginWrap}>
-      <div style={styles.loginCard}>
+      <div style={styles.loginCard} className="login-card">
         <div style={styles.loginHero}>
           <div style={styles.loginLogo}>
             <Sparkles size={36} strokeWidth={2.5} />
           </div>
-          <h1 style={styles.loginTitle}>Questly</h1>
+          <h1 style={styles.loginTitle}>Wijs</h1>
           <p style={styles.loginSub}>Where every kid becomes a learning champion</p>
         </div>
 
@@ -1388,11 +1547,11 @@ function LoginScreen({ onLogin }) {
           />
 
           <label style={{ ...styles.fieldLabel, marginTop: 16 }}>I'm a...</label>
-          <div style={styles.roleGrid}>
+          <div style={styles.roleGrid} className="role-grid">
             {[
-              { id: 'student', label: 'Student', icon: GraduationCap, color: '#0C5CA8' },
-              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#4F46E5' },
-              { id: 'teacher', label: 'Teacher', icon: Users, color: '#0284C7' },
+              { id: 'student', label: 'Student', icon: GraduationCap, color: '#7C3AED' },
+              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#7C3AED' },
+              { id: 'teacher', label: 'Teacher', icon: Users, color: '#8B5CF6' },
               { id: 'admin',   label: 'Admin',   icon: Settings, color: '#475569' },
             ].map(r => {
               const Icon = r.icon;
@@ -1426,10 +1585,10 @@ function LoginScreen({ onLogin }) {
       </div>
 
       <div style={styles.loginBg}>
-        <FloatingShape style={{ top: '10%', left: '8%', background: '#0C5CA8', size: 80 }} delay={0} />
-        <FloatingShape style={{ top: '20%', right: '12%', background: '#0891B2', size: 110 }} delay={1.5} />
-        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#3B82F6', size: 70 }} delay={0.8} />
-        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#0284C7', size: 95 }} delay={2.2} />
+        <FloatingShape style={{ top: '10%', left: '8%', background: '#7C3AED', size: 80 }} delay={0} />
+        <FloatingShape style={{ top: '20%', right: '12%', background: '#A855F7', size: 110 }} delay={1.5} />
+        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#A78BFA', size: 70 }} delay={0.8} />
+        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#8B5CF6', size: 95 }} delay={2.2} />
       </div>
     </div>
   );
@@ -1472,7 +1631,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
   }
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       {/* Hero */}
       <section style={styles.hero}>
         <div style={styles.heroLeft}>
@@ -1488,9 +1647,9 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
             and track your mastery on every skill.
           </p>
           <div style={styles.heroStats}>
-            <HeroStat value={stats.points} label="Total Points" color="#1D4ED8" />
+            <HeroStat value={stats.points} label="Total Points" color="#7C3AED" />
             <HeroStat value={`${accuracy}%`} label="Accuracy" color="#059669" />
-            <HeroStat value={stats.streak} label="Day Streak" color="#0284C7" />
+            <HeroStat value={stats.streak} label="Day Streak" color="#8B5CF6" />
           </div>
         </div>
         <div style={styles.heroRight}>
@@ -1548,28 +1707,28 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
       {/* Motivational strip */}
       <section style={styles.motivStrip}>
         <div style={styles.motivItem}>
-          <Trophy size={28} color="#1D4ED8" />
+          <Trophy size={28} color="#7C3AED" />
           <div>
             <div style={styles.motivLabel}>{BADGES.length} Badges to Earn</div>
             <div style={styles.motivSub}>Unlock by hitting milestones</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Flame size={28} color="#0284C7" />
+          <Flame size={28} color="#8B5CF6" />
           <div>
             <div style={styles.motivLabel}>Daily Streaks</div>
             <div style={styles.motivSub}>Practice every day to keep it growing</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Crown size={28} color="#1D4ED8" />
+          <Crown size={28} color="#7C3AED" />
           <div>
             <div style={styles.motivLabel}>Skill Mastery</div>
             <div style={styles.motivSub}>Reach 85%+ to fully master a skill</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Brain size={28} color="#0891B2" />
+          <Brain size={28} color="#A855F7" />
           <div>
             <div style={styles.motivLabel}>Adaptive Practice</div>
             <div style={styles.motivSub}>Questions adjust to your skill level</div>
@@ -1632,7 +1791,7 @@ function WelcomePopup({ onSignIn, onClose }) {
         animation: 'popupSlideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         {/* decorative top bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #1D4ED8, #0284C7, #3B82F6)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #7C3AED, #8B5CF6, #A78BFA)' }} />
 
         {/* close button */}
         <button
@@ -1666,7 +1825,7 @@ function WelcomePopup({ onSignIn, onClose }) {
             color: '#1a1a2e', lineHeight: 1.15,
           }}>
             Learn at Your Own Pace.<br />
-            <span style={{ color: '#1D4ED8', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+            <span style={{ color: '#7C3AED', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
               Practice Until You Master It.
             </span>
           </h2>
@@ -1703,7 +1862,7 @@ function WelcomePopup({ onSignIn, onClose }) {
           onClick={onSignIn}
           className="popup-trial-btn"
           style={{
-            width: '100%', background: 'linear-gradient(135deg, #1D4ED8, #2563EB)',
+            width: '100%', background: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
             color: 'white', border: 'none', borderRadius: 999,
             padding: '16px 24px', fontSize: 17, fontWeight: 900, cursor: 'pointer',
             animation: 'pulseGlow 2.4s ease-in-out infinite, trailBounce 3s ease-in-out infinite',
@@ -1731,83 +1890,85 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem('questly.popup.shown')) return;
+    if (sessionStorage.getItem('wijs.popup.shown')) return;
     const t = setTimeout(() => setShowPopup(true), 900);
     return () => clearTimeout(t);
   }, []);
 
-  const closePopup = () => { setShowPopup(false); sessionStorage.setItem('questly.popup.shown', '1'); };
+  const closePopup = () => { setShowPopup(false); sessionStorage.setItem('wijs.popup.shown', '1'); };
   const handleTrial = () => { closePopup(); if (onSignIn) onSignIn(); };
 
   const artS = {
-    page: { background: '#FAFAF9', color: '#1a1a2e' },
-    hero: { background: '#fff', padding: '72px 24px 80px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 64, flexWrap: 'wrap' },
+    page: { background: '#FFFBF5', color: '#1C1215' },
+    hero: { background: '#fff', padding: '72px 24px 80px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, flexWrap: 'wrap' },
     heroLeft: { maxWidth: 560, flex: '1 1 320px' },
-    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#DBEAFE', color: '#1E40AF', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
-    h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#0F172A' },
-    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#1D4ED8' },
-    heroPara: { fontSize: 17, color: '#64748B', margin: '16px 0 28px', lineHeight: 1.6 },
-    heroBtn: { background: '#1D4ED8', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EDE9FE', color: '#5B21B6', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
+    h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1C1215' },
+    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#7C3AED' },
+    heroPara: { fontSize: 17, color: '#6B5E55', margin: '16px 0 28px', lineHeight: 1.6 },
+    heroBtn: { background: '#7C3AED', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(124,58,237,0.32)' },
     tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
     tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
-    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#DBEAFE', border: '5px solid #1D4ED8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(29,78,216,0.15)', flexShrink: 0 },
-    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#EFF6FF', color: '#1E40AF', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
-    programSec: { background: '#F8FAFC', padding: '64px 24px' },
+    heroVisual: { position: 'relative', flex: '1 1 620px', maxWidth: 680, minHeight: 446, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' },
+    subjectStack: { width: 300, position: 'relative', userSelect: 'none', zIndex: 2 },
+    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#EDE9FE', border: '5px solid #7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(124,58,237,0.18)', flexShrink: 0 },
+    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#F5F3FF', color: '#5B21B6', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
+    programSec: { background: '#FFFBF5', padding: '64px 24px' },
     secWrap: { maxWidth: 1100, margin: '0 auto' },
-    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D4ED8', marginBottom: 8 },
-    secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#0F172A' },
-    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#1D4ED8' },
-    secDesc: { fontSize: 16, color: '#6B7280', margin: '0 0 40px', maxWidth: 560 },
+    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#7C3AED', marginBottom: 8 },
+    secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
+    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#7C3AED' },
+    secDesc: { fontSize: 16, color: '#6B5E55', margin: '0 0 40px', maxWidth: 560 },
     cardsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 },
     card: { borderRadius: 20, padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer', border: 'none', textAlign: 'left', minHeight: 240 },
     cardGradeTag: { display: 'inline-block', background: 'rgba(255,255,255,0.55)', borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 700, alignSelf: 'flex-start' },
-    cardTitle: { fontSize: 22, fontWeight: 900, margin: 0, color: '#1a1a2e' },
-    cardSub: { fontSize: 14, color: '#4B5563', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif' },
-    cardArrow: { width: 36, height: 36, borderRadius: '50%', background: '#1a1a2e', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, alignSelf: 'flex-start', marginTop: 'auto', pointerEvents: 'none' },
+    cardTitle: { fontSize: 22, fontWeight: 900, margin: 0, color: '#1C1215' },
+    cardSub: { fontSize: 14, color: '#6B5E55', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif' },
+    cardArrow: { width: 36, height: 36, borderRadius: '50%', background: '#1C1215', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, alignSelf: 'flex-start', marginTop: 'auto', pointerEvents: 'none' },
     cardEmoji: { position: 'absolute', right: 20, bottom: 16, fontSize: 56, opacity: 0.28, pointerEvents: 'none' },
     gradesSec: { background: '#fff', padding: '56px 24px' },
     gradesRow: { display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 28 },
     gradeChip: { borderRadius: 999, padding: '8px 20px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    whySec: { background: '#FAFAF9', padding: '64px 24px' },
+    whySec: { background: '#FFFBF5', padding: '64px 24px' },
     whyGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 40 },
-    whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12 },
+    whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12, border: '1px solid #F0E6D6' },
     whyIcon: { width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 },
-    whyTitle: { fontSize: 18, fontWeight: 800, margin: 0, color: '#1a1a2e' },
-    whyText: { fontSize: 14, color: '#6B7280', margin: 0, lineHeight: 1.6 },
+    whyTitle: { fontSize: 18, fontWeight: 800, margin: 0, color: '#1C1215' },
+    whyText: { fontSize: 14, color: '#6B5E55', margin: 0, lineHeight: 1.6 },
     startSec: { background: '#fff', padding: '64px 24px' },
     startInner: { maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' },
     statsGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 28 },
-    statCard: { background: '#EFF6FF', borderRadius: 14, padding: '20px 18px' },
-    statVal: { fontSize: 28, fontWeight: 900, color: '#1D4ED8', margin: 0 },
-    statLabel: { fontSize: 13, color: '#6B7280', margin: '4px 0 0' },
-    readCard: { background: '#DBEAFE', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16 },
-    readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1a1a2e' },
-    readSub: { fontSize: 14, color: '#4B5563', margin: 0, lineHeight: 1.6 },
-    readBtn: { alignSelf: 'flex-start', background: '#1a1a2e', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-    ctaSec: { background: '#FAFAF9', padding: '64px 24px' },
-    ctaCard: { maxWidth: 680, margin: '0 auto', background: '#EFF6FF', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 },
-    ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1a1a2e' },
-    ctaSub: { fontSize: 15, color: '#4B5563', margin: 0 },
-    ctaBtn: { background: '#1D4ED8', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer' },
+    statCard: { background: '#F5F3FF', borderRadius: 14, padding: '20px 18px', border: '1px solid #EDE9FE' },
+    statVal: { fontSize: 28, fontWeight: 900, color: '#7C3AED', margin: 0 },
+    statLabel: { fontSize: 13, color: '#6B5E55', margin: '4px 0 0' },
+    readCard: { background: 'linear-gradient(135deg, #EDE9FE 0%, #F5F3FF 100%)', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid #DDD6FE' },
+    readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1C1215' },
+    readSub: { fontSize: 14, color: '#6B5E55', margin: 0, lineHeight: 1.6 },
+    readBtn: { alignSelf: 'flex-start', background: '#1C1215', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
+    ctaSec: { background: '#FFFBF5', padding: '64px 24px' },
+    ctaCard: { maxWidth: 680, margin: '0 auto', background: 'linear-gradient(135deg, #F5F3FF 0%, #FFF7ED 100%)', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' },
+    ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1C1215' },
+    ctaSub: { fontSize: 15, color: '#6B5E55', margin: 0 },
+    ctaBtn: { background: '#7C3AED', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(124,58,237,0.32)' },
     contactSec: { background: '#fff', padding: '64px 24px', textAlign: 'center' },
     avatarsRow: { fontSize: 36, display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
-    contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1a1a2e' },
-    contactSub: { fontSize: 15, color: '#6B7280', margin: '0 0 28px' },
+    contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
+    contactSub: { fontSize: 15, color: '#6B5E55', margin: '0 0 28px' },
     contactBtns: { display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' },
     contactBtn: { borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    faqSec: { background: '#FAFAF9', padding: '64px 24px 80px' },
+    faqSec: { background: '#FFFBF5', padding: '64px 24px 80px' },
     faqInner: { maxWidth: 720, margin: '40px auto 0' },
-    faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden' },
-    faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1a1a2e', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
-    faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B7280', lineHeight: 1.7, margin: 0 },
+    faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden', border: '1px solid #F0E6D6' },
+    faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1C1215', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
+    faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B5E55', lineHeight: 1.7, margin: 0 },
   };
 
-  const gradeColors = ['#DBEAFE','#BFDBFE','#E0F2FE','#BAE6FD','#EEF2FF','#E0E7FF','#F0F9FF','#DBEAFE','#BFDBFE','#E0F2FE','#EEF2FF','#E0E7FF','#DBEAFE','#BAE6FD'];
+  const gradeColors = ['#FDE8BB','#FEF3C7','#D1FAE5','#CFFAFE','#EDE9FE','#FCE7F3','#FFE4E6','#FDE8BB','#FEF3C7','#D1FAE5','#EDE9FE','#FCE7F3','#FDE8BB','#CFFAFE'];
 
   const faqs = [
-    { q: 'What grades does Questly cover?', a: 'Questly covers Kindergarten through Grade 5 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
-    { q: 'Is Questly free to use?', a: 'Questly offers free practice access. Premium plans unlock full curriculum, detailed analytics, and personalized learning paths.' },
-    { q: 'How does adaptive learning work?', a: 'Questly tracks every answer and adjusts question difficulty in real time, so students are always challenged at the right level for maximum growth.' },
+    { q: 'What grades does Wijs cover?', a: 'Wijs covers Kindergarten through Grade 5 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
+    { q: 'Is Wijs free to use?', a: 'Wijs offers free practice access. Premium plans unlock full curriculum, detailed analytics, and personalized learning paths.' },
+    { q: 'How does adaptive learning work?', a: 'Wijs tracks every answer and adjusts question difficulty in real time, so students are always challenged at the right level for maximum growth.' },
   ];
 
   return (
@@ -1817,9 +1978,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       {/* ── Hero ── */}
       <section style={artS.hero} className="art-hero">
         <div style={artS.heroLeft} className="art-hero-left">
-          <div style={artS.welcomePill}>✳ Welcome to Questly Academy</div>
+          <div style={artS.welcomePill}>✳ Welcome to Wijs Academy</div>
           <h1 style={artS.h1}>
-            Learn<br /><em style={artS.h1em}>With Questly</em>
+            Learn<br /><em style={artS.h1em}>With Wijs</em>
           </h1>
           <p style={artS.heroPara}>
             A personalized K–12 learning platform with thousands of practice skills across Math, Language Arts, Science, and Social Studies.
@@ -1828,96 +1989,134 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             Start learning ↗
           </button>
           <div style={artS.tagsRow} className="art-tags-row">
-            {[['#Math','#DBEAFE'],['#Science','#E0F2FE'],['#ELA','#EEF2FF'],['#History','#F1F5F9']].map(([tag, bg]) => (
+            {[['#Math','#EDE9FE'],['#Science','#F5F3FF'],['#ELA','#F5F3FF'],['#History','#F1F5F9']].map(([tag, bg]) => (
               <span key={tag} style={{ ...artS.tag, background: bg }}>{tag}</span>
             ))}
           </div>
         </div>
-        <div style={{ position: 'relative', flexShrink: 0 }} className="art-hero-right">
-          {/* ── Subject Cards Stack ── */}
-          <div style={{ width: 300, position: 'relative', userSelect: 'none' }}>
+        {/* ── Hero visual: illustrated kids scene + subject cards ── */}
+        <div style={artS.heroVisual} className="art-hero-right">
 
-            {/* Math card */}
+          {/* ── Illustrated background: kids learning ── */}
+          <div className="art-illustrated-bg" style={{
+            position: 'absolute', left: 0, top: 6, bottom: 6, width: 430,
+            borderRadius: 28, overflow: 'hidden',
+            background: 'linear-gradient(145deg, #FFF7ED 0%, #EDE9FE 55%, #F0FDFA 100%)',
+          }} aria-hidden="true">
+
+            {/* Soft glow blobs */}
+            <div style={{ position:'absolute', top:-70, right:-70, width:220, height:220, borderRadius:'50%', background:'rgba(253,230,138,0.45)', filter:'blur(28px)' }} />
+            <div style={{ position:'absolute', bottom:-50, left:-50, width:180, height:180, borderRadius:'50%', background:'rgba(196,181,253,0.4)', filter:'blur(24px)' }} />
+            <div style={{ position:'absolute', top:'38%', left:'25%', width:130, height:130, borderRadius:'50%', background:'rgba(110,231,183,0.32)', filter:'blur(20px)' }} />
+
+            {/* ── Card 1: Reading 📚 ── */}
             <div style={{
-              background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
-              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
-              boxShadow: '0 8px 24px rgba(37,99,235,0.30)',
+              position:'absolute', left:18, top:26,
+              background:'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)',
+              borderRadius:22, padding:'16px 16px 14px', width:158,
+              transform:'rotate(-6deg)',
+              boxShadow:'0 12px 32px rgba(234,179,8,0.22)',
+              border:'2px solid rgba(255,255,255,0.9)',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 22 }}>🔢</span>
-                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>MATHEMATICS</span>
-              </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['3 + 7 = 10', '½ + ¼', '6 × 8 = 48', '√16 = 4'].map(f => (
-                  <span key={f} style={{
-                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
-                    padding: '4px 10px', fontSize: 13, fontWeight: 700, fontFamily: 'monospace',
-                  }}>{f}</span>
+              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>📚</div>
+              <div style={{ fontWeight:900, fontSize:16, color:'#92400E' }}>Reading</div>
+              <div style={{ fontSize:12, color:'#B45309', marginTop:3, fontWeight:600, lineHeight:1.5 }}>Stories &amp; books ✨<br/>Phonics &amp; fluency</div>
+              <div style={{ marginTop:10, display:'flex', gap:5 }}>
+                {['A','B','C'].map(l => (
+                  <span key={l} style={{ width:22, height:22, background:'#F59E0B', borderRadius:'50%', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:900, color:'white' }}>{l}</span>
                 ))}
               </div>
             </div>
 
-            {/* Science card */}
+            {/* ── Card 2: Math 🔢 ── */}
             <div style={{
-              background: 'linear-gradient(135deg, #0369A1, #0284C7)',
-              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
-              boxShadow: '0 8px 24px rgba(2,132,199,0.30)',
+              position:'absolute', left:200, top:14,
+              background:'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+              borderRadius:22, padding:'16px 16px 14px', width:166,
+              transform:'rotate(6deg)',
+              boxShadow:'0 12px 32px rgba(124,58,237,0.32)',
+              color:'white',
+              border:'2px solid rgba(255,255,255,0.18)',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 22 }}>🔬</span>
-                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>SCIENCE</span>
+              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>🔢</div>
+              <div style={{ fontWeight:900, fontSize:16 }}>Math Fun!</div>
+              <div style={{ fontFamily:'monospace', fontSize:13, opacity:0.9, marginTop:6, lineHeight:1.8 }}>
+                2 + 3 = 5 🎉<br/>4 × 6 = 24 ✅
               </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['🌱 Plants', '☀️ Solar', '🌊 Water', '⚡ Energy'].map(t => (
-                  <span key={t} style={{
-                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
-                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
-                  }}>{t}</span>
+              <div style={{ marginTop:8, fontSize:11, opacity:0.8, fontWeight:700 }}>Numbers · Shapes · Patterns</div>
+            </div>
+
+            {/* ── Card 3: Science 🔬 ── */}
+            <div style={{
+              position:'absolute', left:26, top:210,
+              background:'linear-gradient(135deg, #0D9488 0%, #10B981 100%)',
+              borderRadius:22, padding:'16px 16px 14px', width:155,
+              transform:'rotate(5deg)',
+              boxShadow:'0 12px 32px rgba(13,148,136,0.30)',
+              color:'white',
+              border:'2px solid rgba(255,255,255,0.18)',
+            }}>
+              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>🔬</div>
+              <div style={{ fontWeight:900, fontSize:16 }}>Science!</div>
+              <div style={{ display:'flex', flexWrap:'wrap', gap:5, marginTop:8 }}>
+                {['🌱 Plants','☀️ Solar','💧 Water','⚡ Energy'].map(t => (
+                  <span key={t} style={{ background:'rgba(255,255,255,0.18)', borderRadius:8, padding:'3px 8px', fontSize:11, fontWeight:700 }}>{t}</span>
                 ))}
               </div>
             </div>
 
-            {/* ELA card */}
+            {/* ── Card 4: Writing ✏️ ── */}
             <div style={{
-              background: 'linear-gradient(135deg, #7c2d92, #a855f7)',
-              borderRadius: 20, padding: '18px 20px', marginBottom: 10, color: 'white',
-              boxShadow: '0 8px 24px rgba(168,85,247,0.30)',
+              position:'absolute', left:204, top:212,
+              background:'linear-gradient(135deg, #FB923C 0%, #F97316 100%)',
+              borderRadius:22, padding:'16px 16px 14px', width:158,
+              transform:'rotate(-5deg)',
+              boxShadow:'0 12px 32px rgba(249,115,22,0.28)',
+              color:'white',
+              border:'2px solid rgba(255,255,255,0.18)',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 22 }}>📖</span>
-                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>ENGLISH / ELA</span>
+              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>✏️</div>
+              <div style={{ fontWeight:900, fontSize:16 }}>Writing</div>
+              <div style={{ fontSize:12, opacity:0.92, marginTop:5, lineHeight:1.6, fontWeight:600 }}>
+                Essays · Stories<br/>Grammar · Nouns
               </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['A → Z', 'Phonics', 'Nouns', 'Reading'].map(t => (
-                  <span key={t} style={{
-                    background: 'rgba(255,255,255,0.15)', borderRadius: 8,
-                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
-                  }}>{t}</span>
-                ))}
+              <div style={{ marginTop:8, fontSize:20 }}>🌟 🎨 📝</div>
+            </div>
+
+            {/* ── Card 5: Social Studies 🌍 (bottom center) ── */}
+            <div style={{
+              position:'absolute', left:'50%', bottom:22,
+              transform:'translateX(-50%) rotate(-2deg)',
+              background:'linear-gradient(135deg, #92400E 0%, #D97706 100%)',
+              borderRadius:22, padding:'12px 18px', width:200,
+              boxShadow:'0 10px 26px rgba(217,119,6,0.28)',
+              color:'white',
+              border:'2px solid rgba(255,255,255,0.18)',
+              display:'flex', alignItems:'center', gap:10,
+            }}>
+              <span style={{ fontSize:34 }}>🌍</span>
+              <div>
+                <div style={{ fontWeight:900, fontSize:14 }}>Social Studies</div>
+                <div style={{ fontSize:11, opacity:0.9, fontWeight:600, marginTop:2 }}>Maps · History · World</div>
               </div>
             </div>
 
-            {/* Social Studies card */}
-            <div style={{
-              background: 'linear-gradient(135deg, #92400e, #f59e0b)',
-              borderRadius: 20, padding: '18px 20px', color: 'white',
-              boxShadow: '0 8px 24px rgba(245,158,11,0.30)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 22 }}>🌍</span>
-                <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 0.5, opacity: 0.9 }}>SOCIAL STUDIES</span>
-              </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {['🗺️ Maps', '🏛️ History', '👨‍👩‍👧 Community', '🌐 World'].map(t => (
-                  <span key={t} style={{
-                    background: 'rgba(255,255,255,0.18)', borderRadius: 8,
-                    padding: '4px 10px', fontSize: 12, fontWeight: 700,
-                  }}>{t}</span>
-                ))}
-              </div>
-            </div>
-
+            {/* Floating sparkles */}
+            {[
+              { top:100, left:170, size:18, emoji:'⭐' },
+              { top:50,  left:380, size:16, emoji:'✨' },
+              { top:180, left:360, size:20, emoji:'🌟' },
+              { top:340, left:10,  size:16, emoji:'💫' },
+              { top:310, left:390, size:18, emoji:'⭐' },
+            ].map((s, i) => (
+              <div key={i} style={{
+                position:'absolute', top:s.top, left:s.left,
+                fontSize:s.size, lineHeight:1, pointerEvents:'none',
+                animation:`floatSpark ${2.5 + i * 0.4}s ease-in-out infinite alternate`,
+              }}>{s.emoji}</div>
+            ))}
           </div>
+
         </div>
       </section>
 
@@ -1929,9 +2128,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
           <div style={artS.cardsGrid} className="art-cards-grid">
             {[
-              { bg: '#DBEAFE', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
-              { bg: '#EEF2FF', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
-              { bg: '#E0F2FE', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
+              { bg: '#EDE9FE', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
+              { bg: '#F5F3FF', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
+              { bg: '#F5F3FF', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
             ].map((card) => (
               <button key={card.title} style={{ ...artS.card, background: card.bg }} onClick={() => onSelectGrade(GRADES[0])}>
                 <span style={artS.cardGradeTag}>{card.grade}</span>
@@ -1968,12 +2167,12 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       {/* ── Why Choose ── */}
       <section style={artS.whySec} className="art-section">
         <div style={artS.secWrap} className="art-section-wrap">
-          <div style={artS.secLabel}>Why Questly</div>
+          <div style={artS.secLabel}>Why Wijs</div>
           <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
           <div style={artS.whyGrid} className="art-why-grid">
             {[
-              { icon: '📚', bg: '#DBEAFE', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
-              { icon: '🎯', bg: '#EEF2FF', title: 'Adaptive Learning', text: 'Questly adjusts question difficulty in real time based on student responses for maximum growth.' },
+              { icon: '📚', bg: '#EDE9FE', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
+              { icon: '🎯', bg: '#F5F3FF', title: 'Adaptive Learning', text: 'Wijs adjusts question difficulty in real time based on student responses for maximum growth.' },
               { icon: '⭐', bg: '#F0F9FF', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
             ].map((item) => (
               <div key={item.title} style={artS.whyCard}>
@@ -2009,32 +2208,37 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
           <div style={artS.readCard}>
             <div style={{ fontSize: 40 }}>🎓</div>
-            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>explore</em> skills?</h3>
+            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>explore</em> skills?</h3>
             <p style={artS.readSub}>Pick a grade level to see all available practice skills and begin your learning journey.</p>
             <button onClick={() => onSelectGrade(GRADES[0])} style={artS.readBtn}>Browse all grades ↗</button>
           </div>
         </div>
       </section>
 
-      {/* ── Sign Up CTA ── */}
-      <section style={artS.ctaSec} className="art-section">
-        <div style={artS.ctaCard} className="art-cta-card">
-          <div style={{ fontSize: 52 }}>👧</div>
-          <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>Free Practice</em></h2>
-          <p style={artS.ctaSub}>Join thousands of students already learning with Questly.</p>
-          <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
-        </div>
-      </section>
+      {/* ── Sign Up CTA + Contact (same row) ── */}
+      <section style={{ background: '#FFFBF5', padding: '64px 24px' }} className="art-section">
+        <div className="art-cta-contact-row" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 24, alignItems: 'stretch' }}>
 
-      {/* ── Contact ── */}
-      <section style={artS.contactSec} className="art-section">
-        <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
-        <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#1D4ED8' }}>to talking</em></h2>
-        <p style={artS.contactSub}>Have questions about Questly? Reach out — we're here to help.</p>
-        <div style={artS.contactBtns}>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#1D4ED8', color: '#fff' }}>Contact us</button>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EEF2FF', color: '#1E40AF' }}>Call us</button>
-          <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EFF6FF', color: '#1D4ED8' }}>Video chat</button>
+          {/* CTA card */}
+          <div style={{ ...artS.ctaCard, flex: 1, margin: 0 }} className="art-cta-card">
+            <div style={{ fontSize: 52 }}>👧</div>
+            <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>Free Practice</em></h2>
+            <p style={artS.ctaSub}>Join thousands of students already learning with Wijs.</p>
+            <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
+          </div>
+
+          {/* Contact card */}
+          <div style={{ flex: 1, background: '#fff', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' }}>
+            <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
+            <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>to talking</em></h2>
+            <p style={artS.contactSub}>Have questions about Wijs? Reach out — we're here to help.</p>
+            <div style={artS.contactBtns}>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#7C3AED', color: '#fff' }}>Contact us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F5F3FF', color: '#5B21B6' }}>Call us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F5F3FF', color: '#7C3AED' }}>Video chat</button>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -2049,7 +2253,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#1D4ED8' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#7C3AED' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
                   {openFaq === i ? '−' : '+'}
                 </span>
               </button>
@@ -2090,13 +2294,13 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
   };
 
   const features = [
-    { icon: '🌐', color: '#0C5CA8', title: 'Comprehensive K-12 Curriculum',
+    { icon: '🌐', color: '#7C3AED', title: 'Comprehensive K-12 Curriculum',
       text: 'More than 17,000 adaptive skills designed to support and challenge every learner' },
-    { icon: '📊', color: '#0891B2', title: 'Real-Time Diagnostic',
+    { icon: '📊', color: '#A855F7', title: 'Real-Time Diagnostic',
       text: "Up-to-date, accurate assessment of students' knowledge levels in math and language arts" },
-    { icon: '🎯', color: '#4F46E5', title: 'Personalized Guidance',
+    { icon: '🎯', color: '#7C3AED', title: 'Personalized Guidance',
       text: 'Targeted skill recommendations help address learning gaps and accelerate growth' },
-    { icon: '📈', color: '#0284C7', title: 'Actionable Analytics',
+    { icon: '📈', color: '#8B5CF6', title: 'Actionable Analytics',
       text: 'Easy-to-use reports provide real-time insight into student progress' },
   ];
 
@@ -2125,7 +2329,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           <h2 style={styles.siCardTitle}>{mode === 'create' ? 'Create your account' : 'Sign in'}</h2>
           <p style={{ margin: '-8px 0 18px', color: '#64748B', fontSize: 14 }}>
             {mode === 'create'
-              ? 'Choose a username and password to save your Questly progress.'
+              ? 'Choose a username and password to save your Wijs progress.'
               : 'Log in to keep practicing where you left off.'}
           </p>
 
@@ -2153,9 +2357,9 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
                       style={{
                         padding: '10px 8px',
                         borderRadius: 10,
-                        border: role === option ? '2px solid #1D4ED8' : '1px solid #D1D5DB',
-                        background: role === option ? '#EFF8FF' : 'white',
-                        color: role === option ? '#0369A1' : '#334155',
+                        border: role === option ? '2px solid #7C3AED' : '1px solid #D1D5DB',
+                        background: role === option ? '#F5F3FF' : 'white',
+                        color: role === option ? '#7C3AED' : '#334155',
                         fontWeight: 800,
                         textTransform: 'capitalize',
                         cursor: 'pointer',
@@ -2217,7 +2421,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           </div>
 
           <div style={styles.siLaunchCard}>
-            {mode === 'create' ? 'Already have an account?' : 'New to Questly?'}{' '}
+            {mode === 'create' ? 'Already have an account?' : 'New to Wijs?'}{' '}
             <button
               type="button"
               onClick={() => { setMode(mode === 'create' ? 'signin' : 'create'); setError(''); }}
@@ -2235,7 +2439,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
       {/* ── Not a member yet? ── */}
       <div style={styles.siMemberSection}>
         <h2 style={styles.siNotMemberTitle}>Not a member yet?</h2>
-        <p style={styles.siNotMemberSub}>Experience personalized learning with Questly!</p>
+        <p style={styles.siNotMemberSub}>Experience personalized learning with Wijs!</p>
 
         <div style={styles.siFeatureList}>
           {features.map(f => (
@@ -2254,7 +2458,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
         <p style={styles.siCelebrate}>
           Plus, celebrate success with <strong>fun awards</strong>, and much more!
         </p>
-        <button onClick={onJoin} style={styles.siJoinBtn}>Join Questly today</button>
+        <button onClick={onJoin} style={styles.siJoinBtn}>Join Wijs today</button>
       </div>
 
       {/* ── Sign-in footer ── */}
@@ -2268,7 +2472,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
           ))}
         </div>
         <div style={styles.siFooterCopy}>
-          🎓 &nbsp;Questly &nbsp;·&nbsp; © {new Date().getFullYear()} Questly, LLC. All rights reserved.
+          🎓 &nbsp;Wijs &nbsp;·&nbsp; © {new Date().getFullYear()} Wijs, LLC. All rights reserved.
         </div>
       </div>
     </div>
@@ -2305,8 +2509,8 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
 
   const heroConfigs = {
     math: {
-      title: 'Questly Math',
-      desc: 'Gain fluency and confidence in math! Questly helps students master essential skills at their own pace through fun and interactive questions, built-in support, and motivating awards.',
+      title: 'Wijs Math',
+      desc: 'Gain fluency and confidence in math! Wijs helps students master essential skills at their own pace through fun and interactive questions, built-in support, and motivating awards.',
       bg: 'linear-gradient(160deg, #C8EEFF 0%, #E0F8FF 50%, #B8F0E0 100%)',
       accent: '#1A8FD1',
       decoLeft: '🏰',
@@ -2314,7 +2518,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#5CBF72',
     },
     ela: {
-      title: 'Questly Language Arts',
+      title: 'Wijs Language Arts',
       desc: 'Build strong reading, writing, and communication skills! Explore phonics, grammar, comprehension, and more through engaging interactive practice.',
       bg: 'linear-gradient(160deg, #FFE0EF 0%, #FFD0EC 50%, #FFE8F5 100%)',
       accent: '#C2147A',
@@ -2323,7 +2527,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#E84D9F',
     },
     science: {
-      title: 'Questly Science',
+      title: 'Wijs Science',
       desc: 'Explore the natural world! Discover living things, earth science, physics, and chemistry through hands-on practice questions.',
       bg: 'linear-gradient(160deg, #C8F0D0 0%, #D8F5DC 50%, #B8EBC8 100%)',
       accent: '#2A8C2E',
@@ -2332,7 +2536,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
       hillColor: '#4CAF50',
     },
     social: {
-      title: 'Questly Social Studies',
+      title: 'Wijs Social Studies',
       desc: 'Understand the world and its history! Geography, civics, economics, and history — all the knowledge you need to be an informed citizen.',
       bg: 'linear-gradient(160deg, #FFF0C0 0%, #FFF5CC 50%, #FFE8A0 100%)',
       accent: '#A06800',
@@ -2343,7 +2547,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   };
 
   const hero = heroConfigs[activeSubject] || heroConfigs.math;
-  const subjectColor = SUBJECTS[activeSubject]?.color || '#1D4ED8';
+  const subjectColor = SUBJECTS[activeSubject]?.color || '#7C3AED';
 
   const getGradeSkills = (gradeId) =>
     Object.values(SKILLS).filter(s => s.grade === gradeId && s.subject === activeSubject);
@@ -2351,7 +2555,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   return (
     <div>
       {/* Subject Tabs */}
-      <div style={styles.lcSubjectBar}>
+      <div style={styles.lcSubjectBar} className="lc-tab-bar">
         <div style={{ ...styles.lcBarInner, alignItems: 'stretch' }}>
           {subjectTabs.map(tab => {
             const Icon = tab.icon;
@@ -2557,7 +2761,7 @@ function DashboardPreview({ stats, progress, onClick }) {
         </div>
         <div style={styles.dashStatRow}>
           <span style={{ color: '#6B7280', fontSize: 13 }}>Best run</span>
-          <strong style={{ color: '#0C5CA8' }}>{stats.bestStreak} in a row</strong>
+          <strong style={{ color: '#7C3AED' }}>{stats.bestStreak} in a row</strong>
         </div>
       </div>
       <div style={styles.dashCTA}>View full dashboard <ChevronRight size={14} /></div>
@@ -2590,13 +2794,13 @@ function ProgressRing({ percentage, size = 80, stroke = 10, color = '#059669' })
 // ---------- GRADE SCREEN ----------
 function GradeScreen({ grade, onBack, onSelectSubject, progress }) {
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <BackBtn onClick={onBack} label="Back to grades" />
-      <div style={{ ...styles.gradeHeader, background: `linear-gradient(135deg, ${grade.color} 0%, ${grade.color}cc 100%)` }}>
+      <div style={{ ...styles.gradeHeader, background: `linear-gradient(135deg, ${grade.color} 0%, ${grade.color}cc 100%)` }} className="grade-header">
         <div style={styles.gradeHeaderEmoji}>{grade.emoji}</div>
         <div>
           <div style={{ fontSize: 13, fontWeight: 600, opacity: 0.9, letterSpacing: 1 }}>YOU'RE EXPLORING</div>
-          <h1 style={styles.gradeHeaderTitle}>{grade.label}</h1>
+          <h1 style={styles.gradeHeaderTitle} className="dash-hero-title">{grade.label}</h1>
           <p style={styles.gradeHeaderSub}>Choose a subject to dive into.</p>
         </div>
       </div>
@@ -2652,67 +2856,216 @@ function GradeScreen({ grade, onBack, onSelectSubject, progress }) {
 }
 
 // ---------- SUBJECT SCREEN ----------
-function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress }) {
+function GradeSidebarItem({ g, isActive, label, fullLabel, onNavigate }) {
+  const [hovered, setHovered] = useState(false);
+  const expanded = hovered;
+  return (
+    <button
+      onClick={onNavigate}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      title={fullLabel}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        height: 36,
+        border: 'none',
+        cursor: 'pointer',
+        background: 'none',
+        padding: 0,
+        zIndex: expanded ? 10 : 1,
+      }}
+    >
+      {/* Expanding pill behind circle */}
+      <div style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        height: 36,
+        borderRadius: 18,
+        background: isActive ? '#2D1B69' : hovered ? g.color : 'transparent',
+        width: expanded ? 'calc(100% + 0px)' : 36,
+        minWidth: expanded ? 130 : 36,
+        transition: 'min-width 0.18s ease, background 0.15s ease',
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        paddingRight: expanded ? 14 : 0,
+      }}>
+        {/* Circle dot */}
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+          background: g.color,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontWeight: 900, fontSize: 13, color: 'white',
+          boxShadow: isActive ? `0 2px 10px ${g.color}80` : 'none',
+          position: 'relative', zIndex: 1,
+        }}>
+          {label}
+        </div>
+        {/* Grade name text */}
+        <span style={{
+          fontSize: 13, fontWeight: 700, color: 'white',
+          paddingLeft: 8, opacity: expanded ? 1 : 0,
+          transition: 'opacity 0.12s ease 0.05s',
+          pointerEvents: 'none',
+        }}>
+          {fullLabel}
+        </span>
+      </div>
+      {/* Invisible spacer so button has correct width */}
+      <div style={{ width: 36, height: 36, flexShrink: 0 }} />
+    </button>
+  );
+}
+
+function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress, onSelectGrade }) {
   const sub = SUBJECTS[subject];
-  const skills = getSkillsFor(grade.id, subject);
-  const Icon = sub.icon;
+  const [viewBy, setViewBy] = useState('grades');
+  const catalog = SKILL_CATALOG[`${subject}-${grade.id}`] || [];
+  const totalSkills = catalog.reduce((n, sec) => n + sec.skills.length, 0);
+  const totalVideos = Math.max(1, Math.floor(totalSkills * 0.9));
+  const totalGames  = Math.max(1, Math.floor(totalSkills * 0.22));
+
+  const handleSkillClick = (skillId) => {
+    const skill = SKILLS[skillId];
+    if (skill) { onSelectSkill(skill); } else {
+      const fallback = getSkillsFor(grade.id, subject)[0];
+      if (fallback) onSelectSkill(fallback);
+    }
+  };
+
+  const gradeShort = { prek: 'P', k: 'K', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5' };
+  const gradeFull  = { prek: 'Pre-K', k: 'Kindergarten', '1':'First grade', '2':'Second grade', '3':'Third grade', '4':'Fourth grade', '5':'Fifth grade' };
 
   return (
-    <div style={styles.container}>
-      <BackBtn onClick={onBack} label={`Back to ${grade.label}`} />
-      <div style={{ ...styles.subjectBanner, background: sub.bg, borderColor: sub.color }}>
-        <div style={{ ...styles.subjectIcon, background: sub.color, width: 64, height: 64 }}>
-          <Icon size={32} color="white" strokeWidth={2.2} />
-        </div>
-        <div>
-          <div style={{ fontSize: 13, color: '#6B7280', fontWeight: 600 }}>{grade.label} · {sub.label}</div>
-          <h1 style={styles.subjectBannerTitle}>{sub.label} Skills</h1>
-          <p style={styles.subjectBannerSub}>{skills.length} skill{skills.length !== 1 ? 's' : ''} ready for you</p>
+    <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'inherit' }}>
+
+      {/* ── Top nav bar ── */}
+      <div style={{ borderBottom: '3px solid #E5E7EB', padding: '0 24px' }}>
+        <div className="subject-nav-tabs" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 24, paddingTop: 8 }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#8B5CF6', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+            ← {grade.label}
+          </button>
+          <span style={{ color: '#D1D5DB', fontSize: 18 }}>|</span>
+          <span style={{ fontSize: 13, color: '#374151', fontWeight: 600 }}>View by:</span>
+          {['Grades', 'Topics', 'Week by week', 'Skill plans'].map(v => (
+            <button key={v} onClick={() => setViewBy(v.toLowerCase())} style={{
+              background: 'none', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', padding: '8px 4px',
+              color: viewBy === v.toLowerCase() ? '#7C3AED' : '#8B5CF6',
+              borderBottom: viewBy === v.toLowerCase() ? '3px solid #7C3AED' : '3px solid transparent',
+              marginBottom: -3,
+            }}>{v}</button>
+          ))}
         </div>
       </div>
 
-      <div style={styles.skillList}>
-        {skills.map((skill, idx) => {
-          const sp = progress[skill.id];
-          const mastery = calcMastery(sp);
-          const ml = masteryLabel(mastery);
-          const MIcon = ml.icon;
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', gap: 0 }}>
 
-          return (
-            <button
-              key={skill.id}
-              onClick={() => onSelectSkill(skill)}
-              style={styles.skillCard}
-              className="skill-card"
-            >
-              <div style={{ ...styles.skillNumber, background: sub.color }}>{idx + 1}</div>
-              <div style={{ flex: 1, textAlign: 'left' }}>
-                <h3 style={styles.skillTitle}>{skill.title}</h3>
-                <p style={styles.skillDesc}>{skill.description}</p>
-                <div style={styles.skillMeta}>
-                  <span style={{ ...styles.masteryPill, color: ml.color, borderColor: ml.color }}>
-                    <MIcon size={12} /> {ml.label}
-                  </span>
-                  {sp && (
-                    <>
-                      <span style={styles.skillMetaDot}>·</span>
-                      <span style={styles.skillMetaText}>{sp.attempts} attempts</span>
-                      <span style={styles.skillMetaDot}>·</span>
-                      <span style={styles.skillMetaText}>{Math.round((sp.correct / sp.attempts) * 100)}% accuracy</span>
-                    </>
+        {/* ── Left grade sidebar ── */}
+        <div className="subject-sidebar" style={{ width: 44, flexShrink: 0, paddingTop: 28, display: 'flex', flexDirection: 'column', gap: 4, position: 'relative' }}>
+          {GRADES.map(g => {
+            const isActive = g.id === grade.id;
+            return (
+              <GradeSidebarItem
+                key={g.id}
+                g={g}
+                isActive={isActive}
+                label={gradeShort[g.id]}
+                fullLabel={gradeFull[g.id]}
+                onNavigate={() => onSelectGrade ? onSelectGrade(g) : onBack()}
+              />
+            );
+          })}
+        </div>
+
+        {/* ── Main content ── */}
+        <div style={{ flex: 1, paddingTop: 28, paddingLeft: 16 }}>
+
+          {/* Page header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
+            <div>
+              <h1 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 900, color: sub.color, margin: 0, lineHeight: 1.1 }}>
+                {grade.label} {sub.label.toLowerCase()}
+              </h1>
+              <p style={{ fontSize: 14, color: '#6B7280', margin: '8px 0 0', maxWidth: 680, lineHeight: 1.5 }}>
+                Wijs offers {grade.label} {sub.label.toLowerCase()} skills to explore and learn.
+                Pick a skill to start practicing — your SmartScore will grow with every correct answer!
+              </p>
+            </div>
+            {/* Stat bubbles */}
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { icon: '💎', label: `${totalSkills} skills` },
+                { icon: '🎬', label: `${totalVideos} videos` },
+                { icon: '🎮', label: `${totalGames} games` },
+                { icon: '⚡', label: 'Fluency Zone', badge: 'NEW!' },
+              ].map(item => (
+                <button key={item.label} style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                  border: `2px solid ${sub.color}`, borderRadius: 999, padding: '8px 16px',
+                  background: 'white', cursor: 'pointer', position: 'relative', minWidth: 80,
+                }}>
+                  {item.badge && (
+                    <span style={{ position: 'absolute', top: -8, right: -4, background: '#059669', color: 'white', fontSize: 9, fontWeight: 900, borderRadius: 4, padding: '1px 5px' }}>
+                      {item.badge}
+                    </span>
                   )}
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: sub.color, whiteSpace: 'nowrap' }}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Skill sections in 3-column grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: '24px 32px', paddingBottom: 48, minWidth: 0 }}>
+            {catalog.map((sec) => {
+              return (
+                <div key={sec.section}>
+                  <h2 style={{ fontSize: 16, fontWeight: 700, color: sub.color, margin: '0 0 6px', display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                    <span style={{ fontWeight: 900 }}>{sec.section}.</span> {sec.title}
+                  </h2>
+                  <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {sec.skills.map((sk, i) => {
+                      const sp = progress[sk.skillId];
+                      const mastery = calcMastery(sp);
+                      const practiced = mastery > 0;
+                      return (
+                        <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: 13, color: '#9CA3AF', width: 18, textAlign: 'right', flexShrink: 0 }}>{i + 1}</span>
+                          <button onClick={() => handleSkillClick(sk.skillId)} style={{
+                            background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '3px 0',
+                            fontSize: 14, color: sub.color, fontWeight: practiced ? 700 : 500,
+                            lineHeight: 1.35, flex: 1,
+                            textDecoration: 'underline', textDecorationColor: 'transparent',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.textDecorationColor = sub.color}
+                          onMouseLeave={e => e.currentTarget.style.textDecorationColor = 'transparent'}
+                          >
+                            {practiced && <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: mastery >= 85 ? '#059669' : sub.color, marginRight: 5, verticalAlign: 'middle' }} />}
+                            {sk.title}
+                          </button>
+                          {practiced && (
+                            <span style={{ fontSize: 11, color: mastery >= 85 ? '#059669' : sub.color, fontWeight: 700, flexShrink: 0 }}>{mastery}%</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ol>
                 </div>
+              );
+            })}
+            {catalog.length === 0 && (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: 48, color: '#9CA3AF' }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>📚</div>
+                <p style={{ fontSize: 16, fontWeight: 600 }}>Skills coming soon for {grade.label} {sub.label}</p>
               </div>
-              <div style={styles.skillRight}>
-                <div style={styles.skillMasteryRing}>
-                  <ProgressRing percentage={mastery} size={48} stroke={5} color={ml.color} />
-                  <div style={styles.skillRingLabel}>{mastery}</div>
-                </div>
-                <ChevronRight size={20} color="#9CA3AF" />
-              </div>
-            </button>
-          );
-        })}
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -2852,7 +3205,7 @@ function Mascot({ state, visible }) {
         display:'flex', alignItems:'center', justifyContent:'center',
         fontSize:30,
         boxShadow:'0 4px 18px rgba(0,0,0,0.13)',
-        border:'3px solid #1D4ED8',
+        border:'3px solid #7C3AED',
         animation: faceAnim,
       }}>
         {pip.face}
@@ -2890,20 +3243,44 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
   const [showHint, setShowHint] = useState(false);
   const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
   const [questionsToAnswer] = useState(5);
+  const [elapsed, setElapsed] = useState(0);
+  const [smartScore, setSmartScore] = useState(() => Math.round(progress?.mastery || 0));
+  const [scoreDelta, setScoreDelta] = useState(null);
 
   // Animation & sound state
   const [mascotState, setMascotState] = useState('idle');
   const [showConfetti, setShowConfetti] = useState(false);
   const [qKey, setQKey] = useState(0);
   const [starTrigger, setStarTrigger] = useState(0);
-  const [muted, setMuted] = useState(() => localStorage.getItem('questlyMuted') === 'true');
+  const [muted, setMuted] = useState(() => localStorage.getItem('wijsMuted') === 'true');
 
   const playSound = useSoundEffect(muted);
 
   const toggleMute = () => {
     const next = !muted;
     setMuted(next);
-    localStorage.setItem('questlyMuted', String(next));
+    localStorage.setItem('wijsMuted', String(next));
+  };
+
+  useEffect(() => {
+    if (phase !== 'practice') return;
+    const id = setInterval(() => setElapsed(s => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [phase]);
+
+  const fmtElapsed = (secs) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    return [h, m, s].map(v => String(v).padStart(2, '0'));
+  };
+
+  const getMedal = (score) => {
+    if (score >= 90) return { emoji: '🏆', label: 'Trophy' };
+    if (score >= 80) return { emoji: '🥇', label: 'Gold' };
+    if (score >= 60) return { emoji: '🥈', label: 'Silver' };
+    if (score >= 40) return { emoji: '🥉', label: 'Bronze' };
+    return null;
   };
 
   const startPractice = () => {
@@ -2943,6 +3320,13 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
     setAskedIds(newAsked);
     const newStats = { correct: sessionStats.correct + (correct ? 1 : 0), total: sessionStats.total + 1 };
     setSessionStats(newStats);
+
+    const gain = correct
+      ? Math.round(8 + currentQ.difficulty * 4)
+      : -Math.round(6 + currentQ.difficulty * 2);
+    setScoreDelta(gain);
+    setSmartScore(prev => Math.max(0, Math.min(100, prev + gain)));
+    setTimeout(() => setScoreDelta(null), 1200);
 
     if (correct) {
       playSound('correct');
@@ -2988,12 +3372,15 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
     setFeedback(null);
     setMascotState('idle');
     setShowConfetti(false);
+    setElapsed(0);
+    setSmartScore(Math.round(progress?.mastery || 0));
+    setScoreDelta(null);
   };
 
   const sub = SUBJECTS[skill.subject];
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <Confetti active={showConfetti} />
       <StarBurst trigger={starTrigger} />
       <Mascot state={mascotState} visible={phase === 'practice'} />
@@ -3021,15 +3408,15 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
           <div style={{ ...styles.explainBox, animation:'slideUp 0.4s ease 0.15s both' }}>
             <div style={styles.explainHead}>
-              <Lightbulb size={18} color="#0284C7" /> <strong>How it works</strong>
+              <Lightbulb size={18} color="#8B5CF6" /> <strong>How it works</strong>
             </div>
             <p style={styles.explainText}>{skill.explanation}</p>
           </div>
 
           <div style={{ ...styles.skillMetaRow, animation:'slideUp 0.4s ease 0.25s both' }}>
-            <div style={styles.skillMetaItem}><Target size={16} color="#0284C7" /> <span>{questionsToAnswer} questions</span></div>
-            <div style={styles.skillMetaItem}><Brain size={16} color="#0891B2" /> <span>Adaptive difficulty</span></div>
-            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#0284C7" /> <span>Hints available</span></div>
+            <div style={styles.skillMetaItem}><Target size={16} color="#8B5CF6" /> <span>{questionsToAnswer} questions</span></div>
+            <div style={styles.skillMetaItem}><Brain size={16} color="#A855F7" /> <span>Adaptive difficulty</span></div>
+            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#8B5CF6" /> <span>Hints available</span></div>
           </div>
 
           <button
@@ -3044,7 +3431,86 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
       {/* ── PRACTICE ── */}
       {phase === 'practice' && currentQ && (
-        <div style={styles.practiceWrap}>
+        <div className="skill-practice-layout" style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+
+          {/* Right sidebar */}
+          <div className="skill-practice-sidebar" style={{
+            width: 152, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8,
+            order: 2,
+          }}>
+            {/* Questions answered */}
+            <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <div style={{ background: '#059669', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3 }}>
+                Questions<br />answered
+              </div>
+              <div style={{ background: 'white', textAlign: 'center', padding: '10px 4px', fontSize: 34, fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+                {sessionStats.total}
+              </div>
+            </div>
+
+            {/* Time elapsed */}
+            <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <div style={{ background: '#8B5CF6', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3 }}>
+                Time<br />elapsed
+              </div>
+              <div style={{ background: 'white', padding: '10px 4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                  {(() => { const [h,m,s] = fmtElapsed(elapsed); return (
+                    <>
+                      {[['HR',h],['MIN',m],['SEC',s]].map(([unit, val]) => (
+                        <div key={unit} style={{ textAlign: 'center', minWidth: 32 }}>
+                          <div style={{ fontSize: 22, fontWeight: 900, lineHeight: 1, color: '#0F172A' }}>{val}</div>
+                          <div style={{ fontSize: 9, color: '#94A3B8', fontWeight: 700, letterSpacing: 0.5 }}>{unit}</div>
+                        </div>
+                      ))}
+                    </>
+                  ); })()}
+                </div>
+              </div>
+            </div>
+
+            {/* SmartScore */}
+            <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+              <div style={{ background: '#D97706', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                <span>SmartScore</span>
+                <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(0,0,0,0.2)', fontSize: 9, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'default' }} title="SmartScore increases when you answer correctly and decreases for wrong answers">?</span>
+              </div>
+              <div style={{ background: 'white', fontSize: 9, color: '#94A3B8', fontWeight: 700, textAlign: 'center', paddingTop: 4, letterSpacing: 0.3 }}>out of 100</div>
+              <div style={{ background: 'white', textAlign: 'center', padding: '4px 4px 8px', position: 'relative' }}>
+                <div style={{ fontSize: 42, fontWeight: 900, color: '#0F172A', lineHeight: 1, transition: 'all 0.3s ease' }}>
+                  {smartScore}
+                </div>
+                {scoreDelta !== null && (
+                  <div style={{
+                    position: 'absolute', top: 0, right: 8,
+                    fontSize: 13, fontWeight: 900,
+                    color: scoreDelta > 0 ? '#059669' : '#DC2626',
+                    animation: 'slideUp 0.4s ease forwards',
+                  }}>
+                    {scoreDelta > 0 ? `+${scoreDelta}` : scoreDelta}
+                  </div>
+                )}
+                {/* Medal */}
+                {getMedal(smartScore) && (
+                  <div style={{ fontSize: 28, lineHeight: 1, marginTop: 4 }} title={getMedal(smartScore).label}>
+                    {getMedal(smartScore).emoji}
+                  </div>
+                )}
+                {/* Score bar */}
+                <div style={{ margin: '6px 8px 0', height: 5, borderRadius: 999, background: '#E2E8F0', overflow: 'hidden' }}>
+                  <div style={{
+                    height: '100%', borderRadius: 999,
+                    background: smartScore >= 80 ? '#059669' : smartScore >= 60 ? '#8B5CF6' : '#D97706',
+                    width: `${smartScore}%`,
+                    transition: 'width 0.4s ease',
+                  }} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Main practice area ── */}
+          <div style={{ ...styles.practiceWrap, flex: 1, order: 1 }}>
           {/* Animated progress dots */}
           <div style={styles.practiceHeader}>
             <div style={styles.practiceProgressBar}>
@@ -3139,7 +3605,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
             {/* Hint */}
             {showHint && !feedback && (
               <div style={{ ...styles.hintBox, animation:'slideUp 0.3s ease' }}>
-                <Lightbulb size={16} color="#0284C7" /> <span>{currentQ.hint}</span>
+                <Lightbulb size={16} color="#8B5CF6" /> <span>{currentQ.hint}</span>
               </div>
             )}
 
@@ -3209,6 +3675,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
               )}
             </div>
           </div>
+          </div>
         </div>
       )}
 
@@ -3261,8 +3728,8 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
 
       {/* Pip speech bubble */}
       <div style={{
-        background:'linear-gradient(135deg,#EFF6FF,#F0F9FF)',
-        border:'2px solid #BFDBFE', borderRadius:16,
+        background:'linear-gradient(135deg,#F5F3FF,#F0F9FF)',
+        border:'2px solid #DDD6FE', borderRadius:16,
         padding:'12px 18px',
         display:'flex', alignItems:'center', gap:12,
         marginBottom:22, fontSize:14, color:'#374151',
@@ -3294,7 +3761,7 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
       <div style={{ margin:'12px 0 24px', background:'#F3F4F6', borderRadius:999, height:10, overflow:'hidden' }}>
         <div style={{
           height:'100%', borderRadius:999,
-          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#1D4ED8' : accuracy >= 60 ? '#0284C7' : '#DC2626',
+          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#7C3AED' : accuracy >= 60 ? '#8B5CF6' : '#DC2626',
           width:`${accuracy}%`,
           animation:'growBar 1s cubic-bezier(0.22,1,0.36,1) 0.35s both',
         }} />
@@ -3322,11 +3789,11 @@ function PracticeHub({ progress, onPickSkill }) {
     .reverse();
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>QUIZ PRACTICE</div>
-          <h1 style={styles.dashHeroTitle}>Practice skills by grade and subject</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Practice skills by grade and subject</h1>
           <p style={styles.dashHeroSub}>Start a short adaptive quiz, review hints, and earn points as you go.</p>
         </div>
         <div style={styles.heroMiniPanel}>
@@ -3387,19 +3854,19 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
   const accuracy = stats.totalAnswered ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : 0;
   const activeSkills = Object.keys(progress).length;
   const weeklyRows = [
-    ['Mon', 12, '#0C5CA8'],
-    ['Tue', 18, '#0891B2'],
-    ['Wed', 8, '#3B82F6'],
-    ['Thu', 24, '#0284C7'],
-    ['Fri', 15, '#4F46E5'],
+    ['Mon', 12, '#F97316'],
+    ['Tue', 18, '#7C3AED'],
+    ['Wed', 8,  '#0D9488'],
+    ['Thu', 24, '#D97706'],
+    ['Fri', 15, '#EC4899'],
   ];
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>PARENT DASHBOARD</div>
-          <h1 style={styles.dashHeroTitle}>Family progress overview</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Family progress overview</h1>
           <p style={styles.dashHeroSub}>See what your learner is practicing, where they are growing, and what to try next.</p>
         </div>
         <div style={styles.parentSummary}>
@@ -3412,17 +3879,17 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
       </div>
 
       <div style={styles.dashHeroStats}>
-        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#0C5CA8" />
+        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#7C3AED" />
         <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Accuracy" color="#059669" />
-        <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#0891B2" />
-        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#1D4ED8" />
+        <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#A855F7" />
+        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#7C3AED" />
       </div>
 
       <section style={{ marginTop: 36 }}>
         <SectionHeader title="Weekly activity" subtitle="Practice volume by day" />
         <div style={styles.reportPanel}>
           {weeklyRows.map(([day, value, color]) => (
-          <div key={day} style={styles.activityWeekRow} className="activity-row">
+          <div key={day} style={styles.activityRow} className="activity-row">
               <span>{day}</span>
               <div style={styles.activityTrack}>
                 <div style={{ ...styles.activityFill, width: `${value * 3}%`, background: color }} />
@@ -3452,11 +3919,11 @@ function ProgressReports({ stats, progress, onPractice }) {
   });
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>PROGRESS REPORTS</div>
-          <h1 style={styles.dashHeroTitle}>Progress reports</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Progress reports</h1>
           <p style={styles.dashHeroSub}>Printable-style summaries for mastery, activity, and subject coverage.</p>
         </div>
         <button onClick={onPractice} style={styles.primaryAction}>Practice recommended skills</button>
@@ -3468,10 +3935,10 @@ function ProgressReports({ stats, progress, onPractice }) {
           <span>{new Date().toLocaleDateString()}</span>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#0C5CA8" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#7C3AED" />
           <BigStat icon={<CheckCircle2 size={22}/>} value={stats.totalCorrect} label="Correct" color="#059669" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#0284C7" />
-          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#4F46E5" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#8B5CF6" />
+          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#7C3AED" />
         </div>
       </div>
 
@@ -3509,7 +3976,7 @@ const FALLBACK_PLANS = [
 
 const SUB_STATUS_COLORS = {
   ACTIVE:     { background: '#DCFCE7', color: '#166534' },
-  TRIALING:   { background: '#DBEAFE', color: '#1E40AF' },
+  TRIALING:   { background: '#EDE9FE', color: '#5B21B6' },
   PAST_DUE:   { background: '#FEF9C3', color: '#854D0E' },
   CANCELED:   { background: '#F3F4F6', color: '#6B7280' },
   INCOMPLETE: { background: '#FEE2E2', color: '#991B1B' },
@@ -3599,13 +4066,13 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
   const displayPlans = plans.length ? plans : FALLBACK_PLANS;
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <BackBtn onClick={onBack} label="Back home" />
 
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>BILLING & PLANS</div>
-          <h1 style={styles.dashHeroTitle}>Choose your Questly plan</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Choose your Wijs plan</h1>
           <p style={styles.dashHeroSub}>Unlock adaptive learning for your students. Cancel any time.</p>
         </div>
       </div>
@@ -3618,7 +4085,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
           {isSignedIn && activeSub && (
             <div style={{
               background: 'white',
-              border: '1.5px solid #D9E7FF',
+              border: '1.5px solid #F0E6D6',
               borderRadius: 18,
               padding: '20px 24px',
               marginBottom: 24,
@@ -3631,7 +4098,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#0C5CA8', fontWeight: 900 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#7C3AED', fontWeight: 900 }}>
                     {activeSub.plan?.name ?? 'Subscription'}
                   </span>
                   <span style={{
@@ -3669,7 +4136,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
 
           {/* ── Plans grid ── */}
           <SectionHeader title="Plans" subtitle="All plans include a 7-day free trial" />
-          <div style={styles.pricingGrid} className="responsive-grid">
+          <div style={styles.pricingGrid} className="responsive-grid pricing-grid">
             {displayPlans.map(plan => {
               const isCurrent  = activeSub?.planId === plan.id;
               const canSwitch  = isActive && !isCurrent;
@@ -3678,7 +4145,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                 <div key={plan.id} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}), position: 'relative' }}>
                   {plan.featured && <div style={styles.planBadge}>Best value</div>}
                   {isCurrent && !isCanceling && (
-                    <div style={{ ...styles.planBadge, background: '#1D4ED8', right: 'auto', left: 14 }}>Current</div>
+                    <div style={{ ...styles.planBadge, background: '#7C3AED', right: 'auto', left: 14 }}>Current</div>
                   )}
                   <h2 style={styles.planName}>{plan.name}</h2>
                   <div style={styles.planPrice}>
@@ -3733,7 +4200,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                     </span>
                     <span>
                       {inv.pdfUrl
-                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#0C5CA8', fontWeight: 700, fontSize: 13 }}>Download</a>
+                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#7C3AED', fontWeight: 700, fontSize: 13 }}>Download</a>
                         : '—'}
                     </span>
                   </div>
@@ -3764,11 +4231,11 @@ function AdminContentManagement({ onPractice, onReports }) {
   const sampleSkills = Object.values(SKILLS).slice(0, 6);
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <div style={styles.productHero}>
         <div>
           <div style={styles.eyebrow}>ADMIN CONTENT MANAGEMENT</div>
-          <h1 style={styles.dashHeroTitle}>Curriculum control center</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Curriculum control center</h1>
           <p style={styles.dashHeroSub}>Review content coverage, manage skill status, and prepare quizzes for learners.</p>
         </div>
         <div style={styles.quickActions}>
@@ -3784,7 +4251,7 @@ function AdminContentManagement({ onPractice, onReports }) {
             icon={[<GraduationCap size={22}/>, <BookOpen size={22}/>, <Target size={22}/>, <CheckCircle2 size={22}/>][idx]}
             value={value}
             label={label}
-            color={['#0C5CA8', '#0891B2', '#1D4ED8', '#0284C7'][idx]}
+            color={['#7C3AED', '#A855F7', '#7C3AED', '#8B5CF6'][idx]}
           />
         ))}
       </div>
@@ -3884,11 +4351,11 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
     .reverse();
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <div style={styles.dashHero}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#0C5CA8', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
-          <h1 style={styles.dashHeroTitle}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#7C3AED', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">
             {firstName ? `Welcome back, ${firstName}!` : title}
           </h1>
           <p style={styles.dashHeroSub}>
@@ -3898,10 +4365,10 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           </p>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#0284C7" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#8B5CF6" />
           <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#059669" />
-          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#1D4ED8" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#0284C7" />
+          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#7C3AED" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#8B5CF6" />
         </div>
       </div>
 
@@ -3943,7 +4410,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
         <SectionHeader
           title="Recommended for you"
           subtitle="Based on your weak areas and unexplored skills"
-          icon={<Brain size={20} color="#0891B2" />}
+          icon={<Brain size={20} color="#A855F7" />}
         />
         <div style={styles.recList}>
           {recommendations.length === 0 ? (
@@ -4045,7 +4512,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           <SectionHeader
             title={`Work In Progress (${inProgress.length})`}
             subtitle="Skills you've started — keep going to reach mastery"
-            icon={<Play size={20} color="#0284C7" />}
+            icon={<Play size={20} color="#8B5CF6" />}
           />
           <div style={styles.activityTable}>
             {inProgress.map(({ skill, p, mastery }) => {
@@ -4066,7 +4533,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
                     </div>
                   </div>
                   <div style={styles.activityStats}>
-                    <span style={{ ...styles.statusBadge, background: '#EFF6FF', color: '#0284C7' }}>{mastery}% mastery</span>
+                    <span style={{ ...styles.statusBadge, background: '#F5F3FF', color: '#8B5CF6' }}>{mastery}% mastery</span>
                     <span style={styles.activityStat}>{acc}% accuracy</span>
                     <span style={styles.activityStat}>{p.attempts} questions</span>
                     <span style={styles.activityDate}>{fmtDate(p.lastPracticed)}</span>
@@ -4139,12 +4606,12 @@ function BigStat({ icon, value, label, color }) {
 // ---------- BADGES ----------
 function BadgesScreen({ stats, onBack }) {
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="resp-container">
       <BackBtn onClick={onBack} label="Back home" />
-      <div style={styles.badgesHero}>
-        <Trophy size={48} color="#1D4ED8" />
+      <div style={styles.badgesHero} className="badges-hero">
+        <Trophy size={48} color="#7C3AED" />
         <div>
-          <h1 style={styles.dashHeroTitle}>Badges & Achievements</h1>
+          <h1 style={styles.dashHeroTitle} className="dash-hero-title">Badges & Achievements</h1>
           <p style={styles.dashHeroSub}>
             You've earned {stats.earnedBadges.length} of {BADGES.length} badges so far!
           </p>
@@ -4158,7 +4625,7 @@ function BadgesScreen({ stats, onBack }) {
             <div key={b.id} style={{
               ...styles.badgeCard,
               background: earned ? 'linear-gradient(135deg, #FFF8E1, #FFE082)' : '#F9FAFB',
-              borderColor: earned ? '#1D4ED8' : '#E5E7EB',
+              borderColor: earned ? '#7C3AED' : '#E5E7EB',
             }}>
               <div style={{
                 ...styles.badgeEmoji,
@@ -4207,7 +4674,7 @@ function Footer() {
   const cols = [
     {
       heading: 'What we offer',
-      links: ['For schools', 'For teachers', 'For students', 'For parents', 'For high schools', 'For homeschools', 'Questly Analytics', 'Questly ELA'],
+      links: ['For schools', 'For teachers', 'For students', 'For parents', 'For high schools', 'For homeschools', 'Wijs Analytics', 'Wijs ELA'],
     },
     {
       heading: 'Resources',
@@ -4229,7 +4696,7 @@ function Footer() {
           <div style={styles.footerBrand}>
             <span style={styles.footerLogo}>
               <span style={styles.logoCapSection}>🎓</span>
-              <span style={styles.logoWordmark}>Questly</span>
+              <span style={styles.logoWordmark}>Wijs</span>
             </span>
             <p style={styles.footerTagline}>
               Personalized learning for Kindergarten through Grade 5.
@@ -4248,7 +4715,7 @@ function Footer() {
           </div>
         </div>
         <div style={styles.footerBottom}>
-          <span>© {new Date().getFullYear()} Questly, LLC. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Wijs, LLC. All rights reserved.</span>
           <span style={{ color: '#9CA3AF', marginLeft: 16 }}>Privacy policy · Terms of service</span>
         </div>
       </div>
@@ -4258,7 +4725,7 @@ function Footer() {
 
 // ---------- HELPERS ----------
 function difficultyLabel(d) { return d === 1 ? 'Easy' : d === 2 ? 'Medium' : 'Hard'; }
-function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#0284C7' : '#DC2626'; }
+function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#8B5CF6' : '#DC2626'; }
 function randomCheer() {
   const cheers = ['Great job! 🎉', 'Awesome! ⭐', 'You got it! 🌟', 'Excellent! 💯', 'Nailed it! 🚀', 'Brilliant! ✨'];
   return cheers[Math.floor(Math.random() * cheers.length)];
@@ -4314,6 +4781,10 @@ function StyleInjector() {
         0%   { transform: translateY(0)    rotate(0deg);   opacity: 1; }
         85%  { opacity: 0.9; }
         100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+      }
+      @keyframes floatSpark {
+        0%   { transform: translateY(0px) scale(1) rotate(0deg);   opacity: 0.85; }
+        100% { transform: translateY(-10px) scale(1.15) rotate(18deg); opacity: 1; }
       }
       @keyframes mascotBounce {
         0%, 100% { transform: translateY(0)   scale(1);    }
@@ -4388,7 +4859,7 @@ function StyleInjector() {
       .mega-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; color: #374151; font-weight: 500; transition: background 0.15s, color 0.15s; }
       .mega-link:hover { background: #f0fdf4; color: #166534; }
       .mega-sub-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; color: #6B7280; font-weight: 500; transition: background 0.15s, color 0.15s; }
-      .mega-sub-link:hover { background: #EFF6FF; color: #1D4ED8; }
+      .mega-sub-link:hover { background: #F5F3FF; color: #7C3AED; }
       .nav-learning-wrap { position: relative; }
 
       .popup-close:hover { background: #fee2e2 !important; color: #dc2626 !important; transform: scale(1.12); }
@@ -4416,7 +4887,7 @@ function StyleInjector() {
       .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
       .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
 
-      input:focus, button:focus-visible { outline: 3px solid #0C5CA844; outline-offset: 2px; }
+      input:focus, button:focus-visible { outline: 3px solid #7C3AED44; outline-offset: 2px; }
       .h-search input:focus { outline: none; }
       button { font-family: inherit; }
       input, select, textarea { max-width: 100%; }
@@ -4440,24 +4911,24 @@ function StyleInjector() {
       button[style*="megaHeading"]:hover, .mega-heading:hover { color: #004F7A !important; }
       .mega-link-btn:hover { color: #0070A0 !important; text-decoration: underline; }
 
-      /* ── HOME SCREEN ── */
-      /* Hero stacks on tablet/mobile */
+      /* ── TABLET (≤900px) ── */
       @media (max-width: 900px) {
-        .art-hero {
-          gap: 40px !important;
-          padding: 52px 20px 60px !important;
-        }
-        .art-cards-grid,
-        .art-why-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        }
+        .art-hero { gap: 40px !important; padding: 52px 20px 60px !important; }
+        .art-hero-right { flex-basis: 620px !important; width: min(100%, 680px) !important; }
+        .art-cards-grid, .art-why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
         .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
         .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
+        .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
       }
 
+      /* ── MOBILE (≤768px) — iPad portrait + large phones ── */
       @media (max-width: 768px) {
+        /* containers */
+        .resp-container { padding: 20px 16px !important; }
+
+        /* home hero */
         .art-hero {
           flex-direction: column !important;
           padding: 40px 16px 48px !important;
@@ -4465,17 +4936,71 @@ function StyleInjector() {
           text-align: center !important;
         }
         .art-hero-left { max-width: 100% !important; }
-        .art-hero-right { display: none !important; }
+        .art-hero-right {
+          display: flex !important;
+          width: min(100%, 430px) !important;
+          min-height: 328px !important;
+          justify-content: center !important;
+          flex-basis: 430px !important;
+        }
+        .art-hero-photo-stage {
+          position: relative !important;
+          left: auto !important; top: auto !important; bottom: auto !important;
+          width: min(100%, 390px) !important;
+          height: 320px !important;
+        }
+        .art-subject-stack { display: none !important; }
+        .art-hero-photo-card:nth-child(1) { left: 8px !important; top: 38px !important; width: 220px !important; height: 248px !important; }
+        .art-hero-photo-card:nth-child(2) { left: 205px !important; top: 0 !important; width: 150px !important; height: 150px !important; }
+        .art-hero-photo-card:nth-child(3) { left: 156px !important; bottom: 0 !important; width: 168px !important; height: 142px !important; }
+        .art-hero-photo-card:nth-child(4) { left: 292px !important; top: 142px !important; width: 92px !important; height: 142px !important; }
         .art-tags-row { justify-content: center !important; }
 
+        /* home sections */
         .art-section { padding: 40px 16px !important; }
         .art-section-wrap { padding-left: 16px !important; padding-right: 16px !important; }
-
         .art-cards-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
         .art-why-grid   { grid-template-columns: 1fr 1fr !important; gap: 14px !important; }
         .art-start-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
         .art-cta-card { padding: 36px 20px !important; }
+        .art-cta-contact-row { flex-direction: column !important; }
 
+        /* grade screen header */
+        .grade-header {
+          flex-direction: column !important;
+          text-align: center !important;
+          padding: 24px 16px !important;
+          gap: 10px !important;
+        }
+
+        /* typography */
+        .dash-hero-title { font-size: clamp(24px, 6vw, 36px) !important; }
+
+        /* subject screen */
+        .subject-sidebar { display: none !important; }
+        .subject-nav-tabs {
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+          gap: 12px !important;
+          padding-bottom: 4px !important;
+          scrollbar-width: none !important;
+        }
+        .subject-nav-tabs::-webkit-scrollbar { display: none; }
+
+        /* pricing plans */
+        .pricing-grid { grid-template-columns: 1fr !important; }
+
+        /* badges */
+        .badges-hero {
+          flex-direction: column !important;
+          text-align: center !important;
+          align-items: center !important;
+        }
+
+        /* login role picker */
+        .role-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+        /* footer */
         .footer-top { display: flex !important; flex-direction: column !important; gap: 28px !important; }
         .footer-cols { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
 
@@ -4483,10 +5008,10 @@ function StyleInjector() {
         input { min-width: 0; }
       }
 
+      /* ── SMALL TABLET / LARGE PHONE (≤640px) ── */
       @media (max-width: 640px) {
         .art-why-grid { grid-template-columns: 1fr !important; }
         .art-stats-row { grid-template-columns: 1fr 1fr !important; }
-
         .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
         .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid,
         .art-cards-grid, .art-why-grid, .art-start-inner {
@@ -4497,18 +5022,67 @@ function StyleInjector() {
         .activity-row { grid-template-columns: 40px 1fr !important; }
       }
 
+      /* ── PHONE (≤480px) — iPhone SE, small Androids ── */
       @media (max-width: 480px) {
+        .resp-container { padding: 16px 12px !important; }
         .art-cta-card { padding: 28px 14px !important; }
+        .art-cta-contact-row { gap: 16px !important; }
         .footer-cols { grid-template-columns: 1fr !important; }
         .art-grades-row button,
         .art-grades-row span { padding: 6px 10px !important; font-size: 12px !important; }
+        .art-hero-right { min-height: 284px !important; flex-basis: 330px !important; }
+        .art-hero-photo-stage { height: 280px !important; width: min(100%, 330px) !important; }
+        .art-hero-photo-card { border-width: 5px !important; }
+        .art-hero-photo-card:nth-child(1) { width: 190px !important; height: 218px !important; left: 0 !important; top: 34px !important; }
+        .art-hero-photo-card:nth-child(2) { width: 126px !important; height: 126px !important; left: 184px !important; }
+        .art-hero-photo-card:nth-child(3) { width: 150px !important; height: 118px !important; left: 138px !important; }
+        .art-hero-photo-card:nth-child(4) { width: 78px !important; height: 118px !important; left: 254px !important; top: 136px !important; }
+
+        /* typography */
+        .dash-hero-title { font-size: clamp(20px, 7vw, 28px) !important; }
+
+        /* login card */
+        .login-card { padding: 28px 18px !important; border-radius: 16px !important; }
+
+        /* grade header */
+        .grade-header { padding: 18px 14px !important; }
+        .subject-nav-tabs { gap: 8px !important; }
       }
 
-      /* ── MISC COMPONENTS ── */
+      /* -- ILLUSTRATED HERO BG -- */
+      .art-illustrated-bg { width: 430px; }
+      @media (max-width: 768px) {
+        .art-illustrated-bg { width: min(100%, 430px) !important; left: 50% !important; transform: translateX(-50%); }
+      }
+      @media (max-width: 480px) {
+        .art-illustrated-bg { width: min(100%, 340px) !important; }
+      }
+
+      /* -- SKILL PRACTICE LAYOUT -- */
+      @media (max-width: 640px) {
+        .skill-practice-layout { flex-direction: column !important; }
+        .skill-practice-sidebar {
+          width: 100% !important;
+          flex-direction: row !important;
+          flex-wrap: wrap !important;
+          order: 0 !important;
+          gap: 8px !important;
+        }
+        .skill-practice-sidebar > div { flex: 1 1 120px; min-width: 100px; }
+      }
+
+      /* -- TAB BAR SCROLLING -- */
+      .lc-tab-bar { scrollbar-width: none !important; }
+      .lc-tab-bar::-webkit-scrollbar { display: none; }
+      @media (max-width: 768px) {
+        .lc-tab-bar { -webkit-overflow-scrolling: touch !important; }
+      }
+
+      /* -- MISC COMPONENTS -- */
       .test-stack span {
         position: absolute; top: 8px; width: 58px; height: 76px;
         border-radius: 6px;
-        background: linear-gradient(160deg, #58c9e8, #2563eb);
+        background: linear-gradient(160deg, #A78BFA, #7C3AED);
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 900; box-shadow: 0 8px 14px rgba(0,0,0,0.15); border: 3px solid white;
       }
@@ -4530,7 +5104,7 @@ function StyleInjector() {
         font-size: 13px; font-weight: 800; color: #334155;
       }
       label input, label select, label textarea {
-        width: 100%; border: 2px solid #D9E7FF; border-radius: 10px;
+        width: 100%; border: 2px solid #F0E6D6; border-radius: 10px;
         padding: 11px 12px; font-family: ${FONT_BODY}; font-size: 14px; background: #F8FBFF;
       }
       label textarea { min-height: 92px; resize: vertical; }
@@ -4546,8 +5120,8 @@ const styles = {
   app: {
     minHeight: '100vh',
     fontFamily: FONT_BODY,
-    background: '#F0F6FF',
-    color: '#0D2040',
+    background: '#FFFBF5',
+    color: '#1C1215',
     display: 'flex',
     flexDirection: 'column',
     overflowX: 'hidden',
@@ -4560,17 +5134,17 @@ const styles = {
     alignItems: 'center',
     gap: 24,
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 24,
-    boxShadow: '0 12px 30px rgba(12,92,168,0.08)',
+    boxShadow: '0 12px 30px rgba(124,58,237,0.07)',
     flexWrap: 'wrap',
   },
   eyebrow: {
     fontSize: 12,
     fontWeight: 900,
     letterSpacing: 1.2,
-    color: '#0C5CA8',
+    color: '#7C3AED',
     textTransform: 'uppercase',
   },
   heroMiniPanel: {
@@ -4579,11 +5153,11 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    background: '#EFF6FF',
-    border: '1px solid #BFDBFE',
+    background: '#F5F3FF',
+    border: '1px solid #DDD6FE',
     borderRadius: 14,
     padding: 16,
-    color: '#1E3A8A',
+    color: '#4C1D95',
   },
   responsiveGrid: {
     display: 'grid',
@@ -4592,7 +5166,7 @@ const styles = {
   },
   actionCard: {
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 14,
     padding: 16,
     display: 'flex',
@@ -4600,7 +5174,7 @@ const styles = {
     gap: 14,
     cursor: 'pointer',
     textAlign: 'left',
-    boxShadow: '0 8px 18px rgba(12,92,168,0.06)',
+    boxShadow: '0 8px 18px rgba(124,58,237,0.06)',
   },
   actionIcon: {
     width: 44,
@@ -4615,17 +5189,17 @@ const styles = {
     margin: 0,
     fontSize: 17,
     fontWeight: 900,
-    color: '#0D2040',
+    color: '#1C1215',
   },
   actionText: {
     margin: '6px 0',
     fontSize: 13,
     lineHeight: 1.45,
-    color: '#64748B',
+    color: '#6B5E55',
   },
   actionMeta: {
     fontSize: 12,
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontWeight: 800,
   },
   actionCta: {
@@ -4633,7 +5207,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontSize: 12,
     fontWeight: 900,
     whiteSpace: 'nowrap',
@@ -4642,7 +5216,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    background: '#EFF6FF',
+    background: '#F5F3FF',
     borderRadius: 14,
     padding: 14,
     minWidth: 240,
@@ -4651,7 +5225,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: '50%',
-    background: '#0C5CA8',
+    background: '#7C3AED',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -4660,10 +5234,10 @@ const styles = {
   },
   reportPanel: {
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 20,
-    boxShadow: '0 8px 22px rgba(12,92,168,0.06)',
+    boxShadow: '0 8px 22px rgba(124,58,237,0.06)',
   },
   reportHeader: {
     display: 'flex',
@@ -4698,7 +5272,7 @@ const styles = {
     marginTop: 24,
   },
   primaryAction: {
-    background: '#0C5CA8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 10,
@@ -4710,11 +5284,12 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+    boxShadow: '0 4px 12px rgba(124,58,237,0.28)',
   },
   secondaryAction: {
     background: 'white',
-    color: '#0C5CA8',
-    border: '2px solid #BFDBFE',
+    color: '#7C3AED',
+    border: '2px solid #DDD6FE',
     borderRadius: 10,
     padding: '10px 16px',
     fontSize: 14,
@@ -4727,10 +5302,10 @@ const styles = {
   },
   reportTable: {
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 16,
     overflow: 'hidden',
-    boxShadow: '0 8px 22px rgba(12,92,168,0.06)',
+    boxShadow: '0 8px 22px rgba(124,58,237,0.06)',
   },
   reportRow: {
     display: 'grid',
@@ -4743,8 +5318,8 @@ const styles = {
   },
   reportRowHead: {
     borderTop: 'none',
-    background: '#EFF6FF',
-    color: '#0C5CA8',
+    background: '#F5F3FF',
+    color: '#7C3AED',
     fontWeight: 900,
   },
   pricingGrid: {
@@ -4756,23 +5331,23 @@ const styles = {
   planCard: {
     position: 'relative',
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 18,
     padding: 24,
-    boxShadow: '0 8px 24px rgba(12,92,168,0.08)',
+    boxShadow: '0 8px 24px rgba(124,58,237,0.07)',
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
   },
   planFeatured: {
-    border: '2px solid #0C5CA8',
+    border: '2px solid #7C3AED',
     transform: 'translateY(-4px)',
   },
   planBadge: {
     position: 'absolute',
     top: 14,
     right: 14,
-    background: '#1D4ED8',
+    background: '#D97706',
     color: 'white',
     borderRadius: 999,
     padding: '4px 10px',
@@ -4783,12 +5358,12 @@ const styles = {
     margin: 0,
     fontFamily: FONT_DISPLAY,
     fontSize: 28,
-    color: '#0C5CA8',
+    color: '#7C3AED',
   },
   planPrice: {
     fontSize: 42,
     fontWeight: 900,
-    color: '#0D2040',
+    color: '#1C1215',
   },
   planFeature: {
     display: 'flex',
@@ -4802,7 +5377,7 @@ const styles = {
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 14,
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 20,
   },
@@ -4811,7 +5386,7 @@ const styles = {
     gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: 14,
     background: 'white',
-    border: '1px solid #D9E7FF',
+    border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 20,
   },
@@ -4828,12 +5403,12 @@ const styles = {
 
   // Header
   header: {
-    background: '#0C5CA8',
+    background: '#2D1B69',
     borderBottom: 'none',
     position: 'sticky',
     top: 0,
     zIndex: 50,
-    boxShadow: '0 2px 12px rgba(12,92,168,0.35)',
+    boxShadow: '0 2px 16px rgba(45,27,105,0.45)',
   },
   headerInner: {
     maxWidth: 1120, margin: '0 auto', padding: '10px 20px 0',
@@ -4859,7 +5434,7 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.28)',
   },
   logoCapSection: {
-    background: '#06397A',
+    background: '#1E0F4A',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: '0 9px',
     fontSize: 18,
@@ -4867,10 +5442,10 @@ const styles = {
     flexShrink: 0,
   },
   logoWordmark: {
-    background: 'linear-gradient(135deg, #0A4F8A 0%, #1668C7 100%)',
+    background: 'linear-gradient(135deg, #3B1F5E 0%, #7C3AED 100%)',
     display: 'flex', alignItems: 'center',
     padding: '0 14px 0 9px',
-    color: '#DBEAFE',
+    color: '#EDE9FE',
     fontWeight: 900, fontSize: 17,
     fontFamily: FONT_DISPLAY,
     letterSpacing: '-0.01em',
@@ -4878,10 +5453,10 @@ const styles = {
   },
   logoIcon: {
     width: 40, height: 40, borderRadius: 12,
-    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
+    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 4px 12px rgba(12,92,168,0.3)',
+    boxShadow: '0 4px 12px rgba(124,58,237,0.4)',
   },
   logoText: { fontFamily: FONT_BODY, fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1 },
   logoTag: { fontSize: 11, color: '#6B7280', marginTop: 2, fontWeight: 500 },
@@ -4934,7 +5509,7 @@ const styles = {
   searchIcon: {
     width: 38,
     height: 36,
-    background: '#1D4ED8',
+    background: '#7C3AED',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -4988,12 +5563,12 @@ const styles = {
   },
   topRoleBtnActive: {
     background: 'white',
-    color: '#0284C7',
+    color: '#7C3AED',
     borderColor: 'white',
   },
   iconBtn: {
     width: 34, height: 34, borderRadius: 5,
-    background: '#0284C7', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
+    background: '#7C3AED', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white', transition: 'all 0.15s',
   },
@@ -5016,7 +5591,7 @@ const styles = {
   },
   mobileMenu: {
     display: 'flex', flexDirection: 'column',
-    background: '#0A4F8A',
+    background: '#1E0F4A',
     borderTop: '1px solid rgba(255,255,255,0.15)',
     paddingBottom: 8,
   },
@@ -5040,7 +5615,7 @@ const styles = {
     padding: '0 18px',
     border: 'none',
     borderRadius: 6,
-    background: '#1D4ED8',
+    background: '#D97706',
     color: 'white',
     display: 'inline-flex',
     alignItems: 'center',
@@ -5049,14 +5624,15 @@ const styles = {
     fontWeight: 700,
     cursor: 'pointer',
     letterSpacing: 0.1,
+    boxShadow: '0 2px 8px rgba(217,119,6,0.35)',
   },
   membershipBtn: {
     height: 36,
     padding: '0 18px',
-    border: '1.5px solid #BFDBFE',
+    border: '1.5px solid #DDD6FE',
     borderRadius: 6,
-    background: '#EFF6FF',
-    color: '#1D4ED8',
+    background: 'rgba(255,255,255,0.15)',
+    color: 'white',
     fontSize: 14,
     fontWeight: 700,
     cursor: 'pointer',
@@ -5064,12 +5640,12 @@ const styles = {
   },
   userBadge: {
     display: 'flex', alignItems: 'center', gap: 8,
-    padding: '4px 8px', borderRadius: 4, background: '#E6F7FF',
-    border: '1px solid rgba(255,255,255,0.75)', color: '#0B7CB8',
+    padding: '4px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.15)',
+    border: '1px solid rgba(255,255,255,0.35)', color: 'white',
   },
   avatar: {
     width: 20, height: 20, borderRadius: '50%',
-    background: '#1D4ED8',
+    background: '#D97706',
     color: 'white', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
@@ -5079,7 +5655,7 @@ const styles = {
     minHeight: '100vh',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 24, position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #E0F2FE 100%)',
+    background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 45%, #FFF7ED 100%)',
   },
   loginBg: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 },
   loginCard: {
@@ -5091,10 +5667,10 @@ const styles = {
   loginHero: { textAlign: 'center' },
   loginLogo: {
     width: 72, height: 72, margin: '0 auto', borderRadius: 20,
-    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
+    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 8px 24px rgba(12,92,168,0.35)',
+    boxShadow: '0 8px 24px rgba(124,58,237,0.4)',
   },
   loginTitle: {
     fontFamily: FONT_DISPLAY, fontSize: 42, fontWeight: 900,
@@ -5115,11 +5691,11 @@ const styles = {
   },
   primaryBtn: {
     width: '100%', marginTop: 24, padding: '14px 20px',
-    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
+    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
     color: 'white', border: 'none', borderRadius: 14,
     fontSize: 16, fontWeight: 700, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    boxShadow: '0 8px 20px rgba(12,92,168,0.35)',
+    boxShadow: '0 8px 20px rgba(124,58,237,0.38)',
     transition: 'transform 0.1s',
   },
   loginNote: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 16 },
@@ -5133,8 +5709,8 @@ const styles = {
   heroBadge: {
     display: 'inline-flex', alignItems: 'center', gap: 6,
     padding: '6px 12px', borderRadius: 999,
-    background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
-    fontSize: 12, fontWeight: 700, color: '#1E40AF',
+    background: 'linear-gradient(135deg, #EDE9FE 0%, #FDE8BB 100%)',
+    fontSize: 12, fontWeight: 700, color: '#5B21B6',
     marginBottom: 16,
   },
   heroTitle: {
@@ -5143,13 +5719,13 @@ const styles = {
     margin: 0, color: '#1F2937',
   },
   heroName: {
-    background: 'linear-gradient(135deg, #0C5CA8 0%, #0891B2 100%)',
+    background: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
   },
   heroEmphasis: {
     fontStyle: 'italic',
-    color: '#1D4ED8',
+    color: '#7C3AED',
   },
   heroDesc: { fontSize: 17, color: '#4B5563', marginTop: 16, lineHeight: 1.6, maxWidth: 540 },
   heroStats: { display: 'flex', gap: 12, marginTop: 28, flexWrap: 'wrap' },
@@ -5165,7 +5741,7 @@ const styles = {
   redesignHero: {
     position: 'relative',
     minHeight: 398,
-    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 55%, #BAE6FD 70%, #7DD3FC 80%, #0C5CA8 83%, #094987 100%)',
+    background: 'linear-gradient(180deg, #FFF7ED 0%, #FECBA1 48%, #FCA572 68%, #F97316 80%, #7C3AED 85%, #4C1D95 100%)',
     overflow: 'hidden',
     borderBottom: 'none',
   },
@@ -5176,8 +5752,8 @@ const styles = {
     width: '38%',
     height: 120,
     opacity: 1,
-    background: 'linear-gradient(120deg, transparent 0 22%, #BAE6FD 22% 30%, transparent 30%), linear-gradient(90deg, #DBEAFE 0 22%, transparent 22% 28%, #DBEAFE 28% 50%, transparent 50% 56%, #DBEAFE 56% 78%, transparent 78%)',
-    borderBottom: '12px solid #0C5CA8',
+    background: 'linear-gradient(120deg, transparent 0 22%, #FECBA1 22% 30%, transparent 30%), linear-gradient(90deg, #FDE8BB 0 22%, transparent 22% 28%, #FDE8BB 28% 50%, transparent 50% 56%, #FDE8BB 56% 78%, transparent 78%)',
+    borderBottom: '12px solid #7C3AED',
   },
   heroHills: {
     position: 'absolute',
@@ -5185,7 +5761,7 @@ const styles = {
     right: -90,
     bottom: -54,
     height: 150,
-    background: 'radial-gradient(ellipse at 20% 68%, #094987 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #0C5CA8 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #1A73C8 0 28%, transparent 29%)',
+    background: 'radial-gradient(ellipse at 20% 68%, #4C1D95 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #5B21B6 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #7C3AED 0 28%, transparent 29%)',
   },
   heroBalloon: {
     position: 'absolute',
@@ -5194,9 +5770,9 @@ const styles = {
     width: 88,
     height: 136,
     borderRadius: '50% 50% 45% 45%',
-    background: 'radial-gradient(circle at 30% 30%, #BFDBFE 0 10%, transparent 11%), repeating-linear-gradient(90deg, #93C5FD 0 15px, #60A5FA 15px 18px)',
-    border: '2px solid #3B82F6',
-    boxShadow: '0 100px 0 -36px #1E40AF',
+    background: 'radial-gradient(circle at 30% 30%, #FEF3C7 0 10%, transparent 11%), repeating-linear-gradient(90deg, #FCA5A5 0 15px, #F97316 15px 18px)',
+    border: '2px solid #F97316',
+    boxShadow: '0 100px 0 -36px #7C3AED',
   },
   heroSun: {
     position: 'absolute',
@@ -5205,8 +5781,8 @@ const styles = {
     width: 70,
     height: 70,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, #EFF6FF 0 30%, #BFDBFE 31% 62%, rgba(191,219,254,0.25) 63%)',
-    boxShadow: '0 0 0 12px rgba(147,197,253,0.25)',
+    background: 'radial-gradient(circle, #FFFDE7 0 30%, #FDE68A 31% 62%, rgba(253,230,138,0.25) 63%)',
+    boxShadow: '0 0 0 12px rgba(251,191,36,0.22)',
   },
   heroRocket: {
     position: 'absolute',
@@ -5214,7 +5790,7 @@ const styles = {
     top: 46,
     width: 82,
     height: 82,
-    background: 'linear-gradient(135deg, transparent 0 46%, #93C5FD 47% 54%, transparent 55%), linear-gradient(35deg, transparent 0 45%, #60A5FA 46% 54%, transparent 55%)',
+    background: 'linear-gradient(135deg, transparent 0 46%, #FCA5A5 47% 54%, transparent 55%), linear-gradient(35deg, transparent 0 45%, #FB923C 46% 54%, transparent 55%)',
     transform: 'rotate(-12deg)',
   },
   heroKid: {
@@ -5241,7 +5817,7 @@ const styles = {
   },
   heroKicker: {
     margin: '0 0 26px',
-    color: '#0C5CA8',
+    color: '#5B21B6',
     fontSize: 42,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -5272,11 +5848,11 @@ const styles = {
   heroGreeting: {
     margin: '10px 0 12px',
     fontSize: 13,
-    color: '#0C5CA8',
+    color: '#5B21B6',
     fontWeight: 700,
   },
   heroCta: {
-    background: '#0C5CA8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -5284,11 +5860,11 @@ const styles = {
     fontSize: 16,
     fontWeight: 800,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #094987',
+    boxShadow: '0 3px 0 #4C1D95',
   },
   ixlHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 35%, #BAE6FD 70%, #7DD3FC 100%)',
+    background: 'linear-gradient(180deg, #FFFBF5 0%, #FEF3C7 35%, #FDE8BB 70%, #FCD34D 100%)',
     overflow: 'hidden',
     padding: '48px 220px 110px',
     minHeight: 360,
@@ -5316,7 +5892,7 @@ const styles = {
     fontFamily: FONT_DISPLAY,
     fontSize: 46,
     fontWeight: 400,
-    color: '#0C5CA8',
+    color: '#4C1D95',
     textAlign: 'center',
     margin: '0 0 28px',
     letterSpacing: '-0.01em',
@@ -5324,7 +5900,7 @@ const styles = {
   ixlHeroIs: {
     fontWeight: 900,
     fontStyle: 'italic',
-    color: '#0C5CA8',
+    color: '#7C3AED',
   },
   ixlCloudsRow: {
     display: 'flex',
@@ -5358,7 +5934,7 @@ const styles = {
     lineHeight: 1.6,
   },
   ixlMemberBtn: {
-    background: '#1D4ED8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -5366,7 +5942,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 3px 0 #1E40AF',
+    boxShadow: '0 3px 0 #4C1D95',
     position: 'relative',
     zIndex: 4,
   },
@@ -5376,7 +5952,7 @@ const styles = {
     left: '35%',
     right: '35%',
     height: 28,
-    background: '#38BDF8',
+    background: '#6EE7B7',
     borderRadius: '50%',
     opacity: 0.7,
     zIndex: 2,
@@ -5387,7 +5963,7 @@ const styles = {
     left: '-15%',
     right: '-15%',
     height: 85,
-    background: '#0C5CA8',
+    background: '#F59E0B',
     borderRadius: '55% 55% 0 0',
     zIndex: 2,
   },
@@ -5397,12 +5973,12 @@ const styles = {
     left: '-25%',
     right: '-25%',
     height: 58,
-    background: '#1A73C8',
+    background: '#D97706',
     borderRadius: '45% 45% 0 0',
     zIndex: 3,
   },
   homePromoBand: {
-    background: '#EFF6FF',
+    background: '#FFF7ED',
     borderBottom: 'none',
     padding: '30px 16px',
   },
@@ -5431,7 +6007,7 @@ const styles = {
     width: 52,
     height: 52,
     borderRadius: '50%',
-    background: '#84D63D',
+    background: '#D97706',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -5445,7 +6021,7 @@ const styles = {
     flexShrink: 0,
   },
   gradeCatalogSection: {
-    background: '#F4F4F4',
+    background: '#FFFBF5',
     padding: '0 16px 38px',
   },
   gradeCatalogGrid: {
@@ -5486,7 +6062,7 @@ const styles = {
     marginLeft: -24,
   },
   catalogTitle: {
-    color: '#0881C4',
+    color: '#7C3AED',
     fontSize: 30,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -5494,7 +6070,7 @@ const styles = {
   catalogDesc: {
     minHeight: 64,
     margin: '0 0 14px',
-    color: '#273746',
+    color: '#374151',
     fontSize: 14,
     lineHeight: 1.48,
     borderBottom: '1px solid #DADADA',
@@ -5505,7 +6081,7 @@ const styles = {
     gridTemplateColumns: '1fr',
     gap: 8,
     fontSize: 14,
-    color: '#2D4B57',
+    color: '#374151',
   },
   catalogRow: {
     display: 'flex',
@@ -5520,18 +6096,18 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: '#0C8EC7',
+    color: '#7C3AED',
     fontSize: 12,
     fontWeight: 800,
   },
   skillsBand: {
-    background: '#DDF6FA',
+    background: '#FFF7ED',
     padding: '36px 16px',
     textAlign: 'center',
   },
   bandTitle: {
     margin: 0,
-    color: '#118BCB',
+    color: '#D97706',
     fontFamily: FONT_DISPLAY,
     fontSize: 28,
     fontWeight: 800,
@@ -5539,7 +6115,7 @@ const styles = {
   bandSub: {
     margin: '6px auto 20px',
     maxWidth: 620,
-    color: '#4B7A86',
+    color: '#92400E',
     fontSize: 13,
   },
   skillCarousel: {
@@ -5555,17 +6131,17 @@ const styles = {
     width: 82,
     minHeight: 112,
     background: 'white',
-    border: '1px solid #A4DCEA',
+    border: '1px solid #E8C5A0',
     borderRadius: 4,
     padding: 8,
-    boxShadow: '0 5px 10px rgba(0,98,128,0.12)',
+    boxShadow: '0 5px 10px rgba(217,119,6,0.10)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
     fontSize: 10,
-    color: '#37515A',
+    color: '#6B5E55',
   },
   skillTileIcon: {
     width: 46,
@@ -5576,7 +6152,7 @@ const styles = {
     justifyContent: 'center',
   },
   greenCta: {
-    background: '#0C5CA8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -5586,7 +6162,7 @@ const styles = {
     cursor: 'pointer',
   },
   supportBand: {
-    background: 'linear-gradient(180deg, #0C5CA8 0%, #094987 100%)',
+    background: 'linear-gradient(180deg, #2D1B69 0%, #1E0F4A 100%)',
     padding: '32px 16px 38px',
     textAlign: 'center',
     color: 'white',
@@ -5612,10 +6188,10 @@ const styles = {
   },
   supportCard: {
     background: 'white',
-    color: '#2D4B57',
+    color: '#374151',
     minHeight: 190,
     padding: '20px 16px',
-    border: '1px solid #0B8FB9',
+    border: '1px solid #DDD6FE',
   },
   supportIcon: {
     width: 42,
@@ -5629,7 +6205,7 @@ const styles = {
   },
   supportCta: {
     marginTop: 18,
-    background: '#1D4ED8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -5639,11 +6215,11 @@ const styles = {
     cursor: 'pointer',
   },
   impactBand: {
-    background: 'linear-gradient(180deg, #00A6D6 0%, #0095C6 100%)',
+    background: 'linear-gradient(180deg, #7C3AED 0%, #5B21B6 100%)',
     padding: '28px 16px 42px',
     textAlign: 'center',
     color: 'white',
-    borderTop: '1px solid rgba(255,255,255,0.7)',
+    borderTop: '1px solid rgba(255,255,255,0.15)',
   },
   impactTitle: {
     margin: '0 auto 22px',
@@ -5671,15 +6247,15 @@ const styles = {
     borderRadius: '50%',
     background: 'linear-gradient(135deg, #FDE68A, #FCA5A5)',
     border: '3px solid white',
-    color: '#0B7CB8',
+    color: '#7C3AED',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   impactButton: {
-    background: '#007FB7',
+    background: '#D97706',
     color: 'white',
-    border: '1px solid white',
+    border: '1px solid rgba(255,255,255,0.5)',
     borderRadius: 2,
     padding: '5px 12px',
     fontSize: 11,
@@ -5719,8 +6295,8 @@ const styles = {
   },
   dashCTA: {
     marginTop: 12, padding: '10px 14px', borderRadius: 10,
-    background: 'linear-gradient(135deg, #DBEAFE, #E0F2FE)',
-    color: '#0C5CA8', fontWeight: 700, fontSize: 13,
+    background: 'linear-gradient(135deg, #EDE9FE, #F5F3FF)',
+    color: '#7C3AED', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
 
@@ -5740,7 +6316,7 @@ const styles = {
   gradeCard: {
     position: 'relative', overflow: 'hidden',
     background: 'white', borderRadius: 18, padding: 20,
-    border: '1px solid #E5E7EB', cursor: 'pointer', textAlign: 'left',
+    border: '1px solid #F0E6D6', cursor: 'pointer', textAlign: 'left',
     transition: 'transform 0.2s, box-shadow 0.2s',
     minHeight: 140,
   },
@@ -5841,14 +6417,14 @@ const styles = {
   },
   grade8Tab: {
     padding: '11px 18px',
-    color: '#0088D2',
+    color: '#7C3AED',
     fontSize: 14,
     whiteSpace: 'nowrap',
   },
   grade8TabActive: {
     padding: '11px 24px',
     color: 'white',
-    background: '#1D4ED8',
+    background: '#7C3AED',
     fontSize: 14,
     fontWeight: 800,
     clipPath: 'polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)',
@@ -5918,7 +6494,7 @@ const styles = {
     fontFamily: FONT_BODY,
     fontSize: 20,
     lineHeight: 1.2,
-    color: '#169000',
+    color: '#0D9488',
   },
   grade8SkillList: {
     listStyle: 'none',
@@ -5941,18 +6517,18 @@ const styles = {
     border: 'none',
     padding: 0,
     textAlign: 'left',
-    color: '#315800',
+    color: '#374151',
     fontSize: 14,
     lineHeight: 1.25,
     cursor: 'pointer',
   },
   grade8Icons: {
-    color: '#668A50',
+    color: '#6B7280',
     whiteSpace: 'nowrap',
     fontSize: 12,
   },
   grade8Mastery: {
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontSize: 11,
     whiteSpace: 'nowrap',
   },
@@ -5960,7 +6536,7 @@ const styles = {
   skillList: { display: 'flex', flexDirection: 'column', gap: 12 },
   skillCard: {
     background: 'white', borderRadius: 16, padding: 20,
-    border: '1px solid #E5E7EB', cursor: 'pointer',
+    border: '1px solid #F0E6D6', cursor: 'pointer',
     display: 'flex', alignItems: 'center', gap: 20,
     transition: 'transform 0.15s, box-shadow 0.15s',
   },
@@ -5992,8 +6568,8 @@ const styles = {
   skillIntro: {
     background: 'white', borderRadius: 24, padding: '48px 32px',
     textAlign: 'center', maxWidth: 720, margin: '24px auto 0',
-    boxShadow: '0 12px 32px rgba(0,0,0,0.04)',
-    border: '1px solid #E5E7EB',
+    boxShadow: '0 12px 32px rgba(124,58,237,0.06)',
+    border: '1px solid #F0E6D6',
   },
   skillIntroIcon: {
     width: 72, height: 72, borderRadius: 20, margin: '0 auto',
@@ -6034,8 +6610,8 @@ const styles = {
 
   questionCard: {
     background: 'white', borderRadius: 20, padding: 32,
-    border: '1px solid #E5E7EB',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+    border: '1px solid #F0E6D6',
+    boxShadow: '0 8px 24px rgba(124,58,237,0.05)',
     animation: 'slideUp 0.3s ease',
   },
   questionMeta: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 },
@@ -6096,8 +6672,8 @@ const styles = {
   resultWrap: {
     maxWidth: 600, margin: '40px auto 0',
     background: 'white', borderRadius: 24, padding: 48,
-    textAlign: 'center', border: '1px solid #E5E7EB',
-    boxShadow: '0 12px 32px rgba(0,0,0,0.06)',
+    textAlign: 'center', border: '1px solid #F0E6D6',
+    boxShadow: '0 12px 32px rgba(124,58,237,0.08)',
     animation: 'pop 0.5s ease',
   },
   resultEmoji: { fontSize: 80 },
@@ -6131,7 +6707,7 @@ const styles = {
   bigStat: {
     display: 'flex', alignItems: 'center', gap: 14,
     background: 'white', padding: 18, borderRadius: 16,
-    border: '1px solid #E5E7EB',
+    border: '1px solid #F0E6D6',
   },
   bigStatIcon: {
     width: 48, height: 48, borderRadius: 12,
@@ -6145,7 +6721,7 @@ const styles = {
   },
   subjectAnalyticCard: {
     background: 'white', padding: 20, borderRadius: 16,
-    border: '1px solid #E5E7EB',
+    border: '1px solid #F0E6D6',
   },
   analyticHead: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 },
   analyticIcon: {
@@ -6161,7 +6737,7 @@ const styles = {
   recList: { display: 'flex', flexDirection: 'column', gap: 10 },
   recCard: {
     background: 'white', padding: 18, borderRadius: 14,
-    border: '1px solid #E5E7EB', cursor: 'pointer',
+    border: '1px solid #F0E6D6', cursor: 'pointer',
     display: 'flex', alignItems: 'center', gap: 16,
     transition: 'all 0.15s',
   },
@@ -6170,7 +6746,7 @@ const styles = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
-  recReason: { fontSize: 11, fontWeight: 700, color: '#0891B2', textTransform: 'uppercase', letterSpacing: 0.5 },
+  recReason: { fontSize: 11, fontWeight: 700, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: 0.5 },
   recTitle: { fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 800, color: '#1F2937', marginTop: 2 },
   recMeta: { fontSize: 12, color: '#6B7280', marginTop: 4 },
 
@@ -6179,7 +6755,7 @@ const styles = {
   },
   recentCard: {
     background: 'white', padding: 18, borderRadius: 14,
-    border: '1px solid #E5E7EB', cursor: 'pointer', textAlign: 'left',
+    border: '1px solid #F0E6D6', cursor: 'pointer', textAlign: 'left',
     transition: 'all 0.15s',
   },
   recentIcon: {
@@ -6195,9 +6771,9 @@ const styles = {
   // Badges
   badgesHero: {
     display: 'flex', alignItems: 'center', gap: 20,
-    background: 'linear-gradient(135deg, #FFF8E1 0%, #FCE4EC 100%)',
+    background: 'linear-gradient(135deg, #FFF7ED 0%, #EDE9FE 100%)',
     padding: 32, borderRadius: 24, marginTop: 16, marginBottom: 32,
-    border: '2px solid #FFE082',
+    border: '2px solid #FDE8BB',
   },
   badgeGrid: {
     display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16,
@@ -6212,7 +6788,7 @@ const styles = {
   badgeEarned: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
     padding: '4px 10px', borderRadius: 999,
-    background: '#1D4ED8', color: 'white', fontSize: 11, fontWeight: 700,
+    background: '#7C3AED', color: 'white', fontSize: 11, fontWeight: 700,
   },
   badgeLocked: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -6263,7 +6839,7 @@ const styles = {
   // Sign In page
   siHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 55%, #0C5CA8 100%)',
+    background: 'linear-gradient(180deg, #F5F3FF 0%, #EDE9FE 55%, #7C3AED 100%)',
     minHeight: 320,
     display: 'flex',
     alignItems: 'center',
@@ -6290,7 +6866,7 @@ const styles = {
   },
   siCardTitle: {
     textAlign: 'center',
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontFamily: FONT_DISPLAY,
     fontSize: 26,
     fontWeight: 700,
@@ -6310,7 +6886,7 @@ const styles = {
   },
   siForgot: {
     fontSize: 12,
-    color: '#0284C7',
+    color: '#8B5CF6',
     cursor: 'pointer',
     fontWeight: 500,
   },
@@ -6333,7 +6909,7 @@ const styles = {
     margin: '18px 0 0',
   },
   siBtn: {
-    background: '#0C5CA8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6341,7 +6917,7 @@ const styles = {
     fontSize: 15,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #094987',
+    boxShadow: '0 2px 0 #4C1D95',
   },
   siRemember: {
     display: 'flex',
@@ -6368,7 +6944,7 @@ const styles = {
     left: '-10%',
     right: '-10%',
     height: 56,
-    background: '#094987',
+    background: '#4C1D95',
     borderRadius: '60% 60% 0 0',
   },
   siMemberSection: {
@@ -6377,7 +6953,7 @@ const styles = {
     textAlign: 'center',
   },
   siNotMemberTitle: {
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontFamily: FONT_DISPLAY,
     fontSize: 30,
     fontWeight: 700,
@@ -6427,7 +7003,7 @@ const styles = {
     margin: '0 0 22px',
   },
   siJoinBtn: {
-    background: '#1D4ED8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6435,7 +7011,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #1E40AF',
+    boxShadow: '0 2px 0 #5B21B6',
   },
   siFooter: {
     background: '#F9FAFB',
@@ -6521,7 +7097,7 @@ const styles = {
   },
   testimonialStars: {
     fontSize: 22,
-    color: '#0284C7',
+    color: '#8B5CF6',
     letterSpacing: 3,
     marginBottom: 16,
   },
@@ -6542,9 +7118,9 @@ const styles = {
   },
   testimonialLink: {
     background: 'transparent',
-    border: '1.5px solid #0C5CA8',
+    border: '1.5px solid #7C3AED',
     borderRadius: 4,
-    color: '#0C5CA8',
+    color: '#7C3AED',
     fontSize: 13,
     fontWeight: 700,
     padding: '7px 18px',
@@ -6587,7 +7163,7 @@ const styles = {
     maxWidth: 180,
   },
   footerJoinBtn: {
-    background: '#1D4ED8',
+    background: '#7C3AED',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6690,7 +7266,7 @@ const styles = {
     fontFamily: FONT_BODY,
   },
   lcViewTabActive: {
-    background: '#3B82F6',
+    background: '#A78BFA',
     color: '#ffffff',
     fontWeight: 700,
   },
@@ -6701,7 +7277,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '40px 180px 80px',
+    padding: 'clamp(32px, 6vw, 40px) clamp(16px, 14vw, 180px) 80px',
   },
   lcHeroDecoLeft: {
     position: 'absolute',
@@ -6905,7 +7481,7 @@ const hStyles = {
   },
   logoText: {
     fontFamily: FONT_BODY, fontWeight: 800, fontSize: 18,
-    color: '#0D2040', letterSpacing: '-0.02em',
+    color: '#1C1215', letterSpacing: '-0.02em',
   },
 
   // Search bar
@@ -6980,7 +7556,7 @@ const hStyles = {
     transition: 'color 0.15s',
   },
   loginBtn: {
-    background: '#0D2040', border: 'none', cursor: 'pointer',
+    background: '#1C1215', border: 'none', cursor: 'pointer',
     fontSize: 14, fontWeight: 600, color: 'white',
     fontFamily: FONT_BODY, padding: '9px 20px',
     borderRadius: 999, transition: 'opacity 0.15s',
@@ -7005,7 +7581,7 @@ const hStyles = {
     fontFamily: FONT_BODY, padding: '13px 8px',
     borderRadius: 8, textAlign: 'left',
   },
-  mobileLinkActive: { color: '#0D2040', fontWeight: 700 },
+  mobileLinkActive: { color: '#1C1215', fontWeight: 700 },
   mobileDivider: { height: 1, background: '#F3F4F6', margin: '6px 0' },
 
   // Two-row layout containers
@@ -7047,7 +7623,7 @@ const hStyles = {
     transition: 'background 0.15s, color 0.15s',
   },
   roleBtnActive: {
-    background: 'white', color: '#0D2040', fontWeight: 700,
+    background: 'white', color: '#1C1215', fontWeight: 700,
     boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
   },
 
@@ -7139,7 +7715,7 @@ const hStyles = {
     color: '#0070A0', display: 'flex', alignItems: 'center',
   },
   megaBadge: {
-    background: '#0284C7', color: 'white',
+    background: '#8B5CF6', color: 'white',
     fontSize: 10, fontWeight: 800, borderRadius: 4,
     padding: '1px 6px', marginLeft: 4, letterSpacing: '0.02em',
   },

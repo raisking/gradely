@@ -1,7 +1,7 @@
 {
-  "name": "questly",
+  "name": "wijs",
   "version": "1.0.0",
-  "description": "Questly - A comprehensive educational platform for Pre-K to Grade 12 students",
+  "description": "Wijs - A comprehensive educational platform for Pre-K to Grade 12 students",
   "private": true,
   "dependencies": {
     "dotenv": "^17.4.2",
