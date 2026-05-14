@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(mkdir \"c:\\\\Users\\\\raipr\\\\Documents\\\\prai\\\\.vscode\" 2>&1)",
+      "Bash(node -e ' *)",
+      "Bash(gh pr *)",
+      "Bash(dir \"c:\\\\Users\\\\raipr\\\\Documents\\\\prai\\\\learnquest\\\\public\\\\assets\\\\kids\\\\\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\raipr\\Documents\\prai"
+    ]
+  }
+}

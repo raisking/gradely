@@ -1,0 +1,670 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // session pooler — used at runtime
+  directUrl = env("DIRECT_URL")     // direct connection — used for migrations
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ENUMS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+enum Role {
+  STUDENT
+  PARENT
+  TEACHER
+  ADMIN
+}
+
+enum QuestionType {
+  MCQ           // Multiple choice
+  FILL          // Fill in the blank
+  TRUE_FALSE    // True / False
+}
+
+enum QuestionDifficulty {
+  EASY          // 1
+  MEDIUM        // 2
+  HARD          // 3
+}
+
+enum BillingInterval {
+  MONTHLY
+  ANNUAL
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+  PAUSED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  DISPUTED
+}
+
+enum ContactMethod {
+  EMAIL
+  SMS
+  PUSH
+  ALL
+}
+
+enum AchievementType {
+  FIRST_QUIZ            // Completed first quiz
+  PERFECT_SCORE         // 100% accuracy in a session
+  SPEED_RUN             // Completed a 10-question quiz in under 2 minutes
+  COMEBACK              // Improved mastery after a failed attempt
+  SUBJECT_COMPLETE      // Reached proficient in all topics for a subject
+  GRADE_COMPLETE        // Mastered all topics in a grade level
+  DAILY_GOAL_MET        // Hit weekly goal minutes in one day
+  STREAK_MILESTONE      // Hit a streak milestone (3, 7, 30 days)
+  LEADERBOARD_TOP_10    // Ranked in top 10 leaderboard
+}
+
+enum BadgeRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  USERS  —  Core identity & auth
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Core auth + identity record.  Role-specific details live in StudentProfile
+/// or ParentProfile.  Teachers and Admins use base fields only.
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  passwordHash      String    @map("password_hash")
+  role              Role      @default(STUDENT)
+
+  // Name
+  firstName         String    @map("first_name")
+  lastName          String    @map("last_name")
+
+  // Contact
+  phoneNumber       String?   @map("phone_number")
+
+  // Localisation
+  timezone          String    @default("America/New_York")
+  locale            String    @default("en-US")
+
+  // Avatar / profile image
+  profileImageUrl   String?   @map("profile_image_url")
+  avatarColor       String?   @map("avatar_color")   // hex fallback when no image
+
+  // Account state
+  accountStatus     AccountStatus @default(ACTIVE) @map("account_status")
+  isActive          Boolean       @default(true)   @map("is_active")
+  emailVerified     Boolean       @default(false)  @map("email_verified")
+
+  // Security tokens (never returned to client)
+  verificationToken String?   @map("verification_token")
+  resetToken        String?   @map("reset_token")
+  resetTokenExpiry  DateTime? @map("reset_token_expiry")
+
+  // Stripe
+  stripeCustomerId  String?   @unique @map("stripe_customer_id")
+
+  // Timestamps
+  lastLoginAt       DateTime? @map("last_login_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt      @map("updated_at")
+
+  // ── Relations ─────────────────────────────────────────────────────────────
+  studentProfile    StudentProfile?
+  parentProfile     ParentProfile?
+  quizSessions      QuizSession[]
+  progress          Progress[]
+  userBadges        UserBadge[]
+  achievements      Achievement[]
+  subscription      Subscription?
+  refreshTokens     RefreshToken[]
+
+  // Curriculum shortcut — students are assigned a grade
+  gradeId           String? @map("grade_id")
+  grade             Grade?  @relation(fields: [gradeId], references: [id])
+
+  // Parent ↔ child linking
+  childRelations    ParentChild[]   @relation("ParentRelations")
+  parentRelations   ParentChild[]   @relation("ChildRelations")
+
+  @@index([role])
+  @@index([email])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// ─── Refresh tokens (opaque, rotated on every use) ────────────────────────────
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// ─── Parent ↔ child link table ────────────────────────────────────────────────
+model ParentChild {
+  id        String   @id @default(cuid())
+  parentId  String   @map("parent_id")
+  childId   String   @map("child_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  parent    User @relation("ParentRelations", fields: [parentId], references: [id], onDelete: Cascade)
+  child     User @relation("ChildRelations",  fields: [childId],  references: [id], onDelete: Cascade)
+
+  @@unique([parentId, childId])
+  @@index([parentId])
+  @@index([childId])
+  @@map("parent_children")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  STUDENT PROFILE  —  Extended data for students
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One-to-one with User where role = STUDENT.
+/// Stores learning preferences, goals, and aggregate lifetime stats.
+model StudentProfile {
+  id                    String    @id @default(cuid())
+  userId                String    @unique @map("user_id")
+
+  // School info
+  schoolName            String?   @map("school_name")
+  teacherName           String?   @map("teacher_name")
+  dateOfBirth           DateTime? @map("date_of_birth")
+
+  // Learning preferences
+  learningGoalText      String?   @map("learning_goal_text")
+  weeklyGoalMinutes     Int       @default(30)  @map("weekly_goal_minutes")
+  preferredSubjects     Json      @default("[]") @map("preferred_subjects") // String[]
+  difficultyPreference  Int       @default(1)   @map("difficulty_preference") // 1 easy → 3 hard
+
+  // Aggregate lifetime stats (denormalised for fast dashboard reads)
+  totalPointsEarned     Int       @default(0) @map("total_points_earned")
+  totalTimeSeconds      BigInt    @default(0) @map("total_time_seconds")
+  currentStreakDays     Int       @default(0) @map("current_streak_days")
+  bestStreakDays        Int       @default(0) @map("best_streak_days")
+  lastStreakDate        DateTime? @map("last_streak_date")   // used to compute streak continuity
+  totalQuizzesCompleted Int       @default(0) @map("total_quizzes_completed")
+  totalCorrectAnswers   Int       @default(0) @map("total_correct_answers")
+  totalAnswersAttempted Int       @default(0) @map("total_answers_attempted")
+  topicsMastered        Int       @default(0) @map("topics_mastered")
+
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt      @map("updated_at")
+
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  PARENT PROFILE  —  Extended data for parents
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One-to-one with User where role = PARENT.
+/// Stores contact preferences, notification settings, and account limits.
+model ParentProfile {
+  id                       String        @id @default(cuid())
+  userId                   String        @unique @map("user_id")
+
+  // Relationship to student
+  relationshipToStudent    String?       @map("relationship_to_student")  // e.g. "mother", "father", "guardian"
+
+  // Billing address  { line1, line2, city, state, postalCode, country }
+  billingAddress           Json?         @map("billing_address")
+
+  // Notifications
+  notifyOnQuizComplete     Boolean       @default(true)  @map("notify_on_quiz_complete")
+  notifyOnBadgeEarned      Boolean       @default(true)  @map("notify_on_badge_earned")
+  notifyWeeklySummary      Boolean       @default(true)  @map("notify_weekly_summary")
+  notifyDailyReminder      Boolean       @default(false) @map("notify_daily_reminder")
+  preferredContactMethod   ContactMethod @default(EMAIL) @map("preferred_contact_method")
+
+  // Account
+  childrenLimit            Int           @default(5) @map("children_limit")
+
+  createdAt                DateTime      @default(now()) @map("created_at")
+  updatedAt                DateTime      @updatedAt      @map("updated_at")
+
+  user                     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("parent_profiles")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CURRICULUM  —  Grades → Subjects → Topics → Questions
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// School year / grade level (Pre-K through Grade 12)
+model Grade {
+  id          String  @id @default(cuid())
+  key         String  @unique   // "prek" | "k" | "1" … "12"
+  label       String
+  color       String
+  emoji       String
+  order       Int               // sort order 0–13
+  description String?
+
+  users       User[]
+  topics      Topic[]
+
+  @@index([order])
+  @@map("grades")
+}
+
+/// Academic subject (Math, ELA, Science, Social Studies …)
+model Subject {
+  id          String  @id @default(cuid())
+  key         String  @unique   // "math" | "ela" | "science" | "social"
+  label       String
+  iconName    String  @map("icon_name")   // Lucide icon name
+  color       String
+  bgColor     String  @map("bg_color")
+  tagline     String
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  topics      Topic[]
+
+  @@map("subjects")
+}
+
+/// A curriculum unit — the join of one Subject + one Grade.
+/// Students practice at the topic level.
+model Topic {
+  id             String   @id @default(cuid())
+  subjectId      String   @map("subject_id")
+  gradeId        String   @map("grade_id")
+  title          String
+  description    String?
+  learningGoals  String?  @map("learning_goals")   // comma-separated bullet points
+  estimatedMins  Int      @default(15) @map("estimated_mins")
+  orderInGrade   Int      @default(0)  @map("order_in_grade")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt     @map("updated_at")
+
+  subject        Subject       @relation(fields: [subjectId], references: [id])
+  grade          Grade         @relation(fields: [gradeId],   references: [id])
+  questions      Question[]
+  quizSessions   QuizSession[]
+  progress       Progress[]
+
+  @@index([subjectId])
+  @@index([gradeId])
+  @@map("topics")
+}
+
+/// A single quiz question belonging to a topic.
+model Question {
+  id            String            @id @default(cuid())
+  topicId       String            @map("topic_id")
+  type          QuestionType      @default(MCQ)
+  difficulty    QuestionDifficulty @default(EASY)
+
+  // Content
+  prompt        String
+  imageUrl      String?           @map("image_url")    // optional supporting image
+  options       Json?             // String[] — only for MCQ
+  answer        String            // correct answer text (or "true"/"false")
+  hint          String?
+  explanation   String?           // shown after answering
+
+  // Metadata
+  standardCode  String?           @map("standard_code")  // e.g. "CCSS.MATH.3.OA.A.1"
+  tags          Json              @default("[]")          // String[]
+  isActive      Boolean           @default(true) @map("is_active")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt     @map("updated_at")
+
+  topic         Topic             @relation(fields: [topicId], references: [id])
+  quizAnswers   QuizAnswer[]
+
+  @@index([topicId])
+  @@index([difficulty])
+  @@map("questions")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  QUIZ ATTEMPTS  —  Session + individual answer records
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One quiz attempt = one sitting where a student answers N questions on a topic.
+/// Equivalent to "quiz_attempts" in many LMS schemas.
+model QuizSession {
+  id               String    @id @default(cuid())
+  userId           String    @map("user_id")
+  topicId          String    @map("topic_id")
+
+  // Counters — updated per answer, finalised on complete
+  totalQuestions   Int       @default(0) @map("total_questions")
+  correctAnswers   Int       @default(0) @map("correct_answers")
+  wrongAnswers     Int       @default(0) @map("wrong_answers")
+  hintsUsed        Int       @default(0) @map("hints_used")
+  skippedAnswers   Int       @default(0) @map("skipped_answers")
+
+  // Scores
+  score            Int       @default(0)             // points awarded this session
+  accuracyPct      Float     @default(0) @map("accuracy_pct")
+  timeSpentSeconds Int       @default(0) @map("time_spent_seconds")
+
+  // Mastery snapshot — enables delta charts over time
+  masteryBefore    Float?    @map("mastery_before")
+  masteryAfter     Float?    @map("mastery_after")
+
+  // State
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  abandonedAt      DateTime? @map("abandoned_at")   // null unless user quit mid-session
+
+  user    User         @relation(fields: [userId],  references: [id])
+  topic   Topic        @relation(fields: [topicId], references: [id])
+  answers QuizAnswer[]
+
+  @@index([userId])
+  @@index([topicId])
+  @@index([userId, completedAt])
+  @@map("quiz_sessions")
+}
+
+/// One row per question answered inside a QuizSession.
+model QuizAnswer {
+  id          String   @id @default(cuid())
+  sessionId   String   @map("session_id")
+  questionId  String   @map("question_id")
+  questionNum Int      @default(0) @map("question_num")  // 1-based position in session
+
+  userAnswer  String   @map("user_answer")
+  isCorrect   Boolean  @map("is_correct")
+  usedHint    Boolean  @default(false) @map("used_hint")
+  timeSpentMs Int      @default(0)     @map("time_spent_ms")
+  answeredAt  DateTime @default(now()) @map("answered_at")
+
+  session  QuizSession @relation(fields: [sessionId],  references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id])
+
+  @@index([sessionId])
+  @@map("quiz_answers")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  PROGRESS TRACKING  —  Per-student, per-topic rolling stats
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One row per (student × topic) — the authoritative mastery record.
+/// Updated after every completed QuizSession.
+model Progress {
+  id                     String    @id @default(cuid())
+  userId                 String    @map("user_id")
+  topicId                String    @map("topic_id")
+
+  // Mastery
+  masteryPct             Float     @default(0) @map("mastery_pct")         // 0–100
+  highestMasteryPct      Float     @default(0) @map("highest_mastery_pct") // best ever
+
+  // Session counters
+  totalSessions          Int       @default(0) @map("total_sessions")
+  totalCorrect           Int       @default(0) @map("total_correct")
+  totalAttempted         Int       @default(0) @map("total_attempted")
+  totalTimeSeconds       Int       @default(0) @map("total_time_seconds")
+  totalPointsEarned      Int       @default(0) @map("total_points_earned")
+  hintsUsed              Int       @default(0) @map("hints_used")
+
+  // Best-session stats
+  highestAccuracyPct     Float     @default(0) @map("highest_accuracy_pct")
+  fastestSessionSeconds  Int?      @map("fastest_session_seconds")
+
+  // Streak tracking (per topic)
+  streakDays             Int       @default(0) @map("streak_days")
+  lastPracticed          DateTime? @map("last_practiced")
+
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+
+  user  User  @relation(fields: [userId],  references: [id])
+  topic Topic @relation(fields: [topicId], references: [id])
+
+  @@unique([userId, topicId])
+  @@index([userId])
+  @@index([masteryPct])
+  @@map("progress")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  BADGES & ACHIEVEMENTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// A badge definition — requirement-based milestones (e.g. "complete 10 quizzes").
+model Badge {
+  id               String      @id @default(cuid())
+  key              String      @unique
+  name             String
+  description      String
+  emoji            String
+  category         String      @default("General")   // "Progress"|"Streak"|"Performance"|"Explorer"
+  rarity           BadgeRarity @default(COMMON)
+  pointsValue      Int         @default(0)  @map("points_value") // bonus points on earn
+  requirementType  String      @map("requirement_type")           // "sessions"|"streak"|"mastery"|"accuracy"|"score"
+  requirementValue Int         @map("requirement_value")
+  isActive         Boolean     @default(true) @map("is_active")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  userBadges       UserBadge[]
+
+  @@map("badges")
+}
+
+/// A record of which user earned which badge, and when.
+model UserBadge {
+  id       String   @id @default(cuid())
+  userId   String   @map("user_id")
+  badgeId  String   @map("badge_id")
+  earnedAt DateTime @default(now()) @map("earned_at")
+
+  user  User  @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("user_badges")
+}
+
+/// One-off special accomplishments — event-driven, contextual, and non-repeatable.
+/// Distinct from Badge (which is requirement-threshold-based).
+model Achievement {
+  id          String          @id @default(cuid())
+  userId      String          @map("user_id")
+  type        AchievementType
+  title       String
+  description String
+  iconEmoji   String          @map("icon_emoji")
+  metadata    Json?           // e.g. { topicId, score, sessionId, streakLength }
+  earnedAt    DateTime        @default(now()) @map("earned_at")
+
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@map("achievements")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  SUBSCRIPTIONS  —  Plan definitions & per-user subscriptions
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// A purchasable plan (synced from Stripe Products/Prices).
+model SubscriptionPlan {
+  id               String          @id @default(cuid())
+  stripePriceId    String          @unique @map("stripe_price_id")
+  stripeProductId  String          @map("stripe_product_id")
+  name             String
+  interval         BillingInterval
+  priceCents       Int             @map("price_cents")
+  currency         String          @default("usd")
+  trialDays        Int             @default(0) @map("trial_days")
+  features         Json                                   // String[]
+  isActive         Boolean         @default(true) @map("is_active")
+  displayOrder     Int             @default(0) @map("display_order")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt      @map("updated_at")
+
+  subscriptions    Subscription[]
+
+  @@map("subscription_plans")
+}
+
+/// One active subscription per user — mirrors the Stripe Subscription object.
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique @map("user_id")
+  planId               String             @map("plan_id")
+
+  // Stripe IDs
+  stripeSubscriptionId String             @unique @map("stripe_subscription_id")
+  stripeCustomerId     String             @map("stripe_customer_id")
+
+  // State
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime           @map("current_period_start")
+  currentPeriodEnd     DateTime           @map("current_period_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+  canceledAt           DateTime?          @map("canceled_at")
+  trialStart           DateTime?          @map("trial_start")
+  trialEnd             DateTime?          @map("trial_end")
+  metadata             Json?
+
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt      @map("updated_at")
+
+  user     User             @relation(fields: [userId],  references: [id])
+  plan     SubscriptionPlan @relation(fields: [planId],  references: [id])
+  invoices Invoice[]
+  payments Payment[]
+
+  @@index([status])
+  @@map("subscriptions")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  PAYMENTS  —  Individual charge / payment intent records
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One row per Stripe PaymentIntent / charge.
+/// Linked to both a Subscription and (optionally) the Invoice it settles.
+model Payment {
+  id                    String        @id @default(cuid())
+  subscriptionId        String?       @map("subscription_id")
+  invoiceId             String?       @map("invoice_id")
+
+  // Stripe identifiers
+  stripePaymentIntentId String        @unique @map("stripe_payment_intent_id")
+  stripeChargeId        String?       @unique @map("stripe_charge_id")
+
+  // Amount
+  amountCents           Int           @map("amount_cents")
+  amountRefundedCents   Int           @default(0) @map("amount_refunded_cents")
+  currency              String        @default("usd")
+
+  // Status
+  status                PaymentStatus @default(PENDING)
+
+  // Payment method snapshot (never store full card numbers)
+  paymentMethodType     String?       @map("payment_method_type")  // "card" | "us_bank_account"
+  cardBrand             String?       @map("card_brand")            // "visa" | "mastercard" …
+  cardLast4             String?       @map("card_last4")
+  cardExpMonth          Int?          @map("card_exp_month")
+  cardExpYear           Int?          @map("card_exp_year")
+
+  // Failure info
+  failureCode           String?       @map("failure_code")
+  failureMessage        String?       @map("failure_message")
+
+  // URLs
+  receiptUrl            String?       @map("receipt_url")
+
+  // Timestamps
+  refundedAt            DateTime?     @map("refunded_at")
+  createdAt             DateTime      @default(now()) @map("created_at")
+  updatedAt             DateTime      @updatedAt      @map("updated_at")
+
+  subscription          Subscription? @relation(fields: [subscriptionId], references: [id])
+  invoice               Invoice?      @relation(fields: [invoiceId],      references: [id])
+
+  @@index([subscriptionId])
+  @@index([status])
+  @@map("payments")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  INVOICES  —  Billing period statements
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// One invoice per billing cycle, mirroring the Stripe Invoice object.
+model Invoice {
+  id               String    @id @default(cuid())
+  subscriptionId   String    @map("subscription_id")
+
+  // Stripe IDs
+  stripeInvoiceId  String    @unique @map("stripe_invoice_id")
+
+  // Amount
+  amountCents      Int       @map("amount_cents")
+  amountPaidCents  Int       @default(0) @map("amount_paid_cents")
+  amountDueCents   Int       @default(0) @map("amount_due_cents")
+  currency         String    @default("usd")
+
+  // Status
+  status           String    // "draft" | "open" | "paid" | "uncollectible" | "void"
+  attemptCount     Int       @default(0) @map("attempt_count")
+
+  // Billing period this invoice covers
+  periodStart      DateTime? @map("period_start")
+  periodEnd        DateTime? @map("period_end")
+  dueDate          DateTime? @map("due_date")
+
+  // URLs
+  pdfUrl           String?   @map("pdf_url")
+  hostedUrl        String?   @map("hosted_url")
+
+  // Timestamps
+  paidAt           DateTime? @map("paid_at")
+  voidedAt         DateTime? @map("voided_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  payments         Payment[]
+
+  @@index([subscriptionId])
+  @@index([status])
+  @@map("invoices")
+}

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(node -e \"require\\('./server.js'\\)\")",
+      "Bash(node -e ' *)",
+      "PowerShell(cd \"c:\\\\Users\\\\raipr\\\\Documents\\\\prai\\\\learnquest\"; $env:CI = \"true\"; npm run build 2>&1; $env:CI = \"\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "PowerShell(& \"C:\\\\Users\\\\raipr\\\\AppData\\\\Local\\\\Python\\\\bin\\\\python3.exe\" -m pip install pdfplumber --quiet 2>&1)",
+      "Bash(npx react-scripts *)",
+      "Bash(grep -v \"^\\(node\\\\|Use \\\\`node\\\\|Creating\\\\|File sizes\\\\|build\\\\\\\\\\\\\\\\static\\\\|The project\\\\|You can\\\\|serve -s\\\\|Find more\\\\|https://cra\")"
+    ]
+  }
+}
