@@ -40,22 +40,22 @@ const GRADES = [
   { id: 'k',    label: 'Kindergarten',  color: '#EAB308', emoji: '🎨' },
   { id: '1',    label: 'Grade 1',       color: '#22C55E', emoji: '⭐' },
   { id: '2',    label: 'Grade 2',       color: '#06B6D4', emoji: '🌱' },
-  { id: '3',    label: 'Grade 3',       color: '#8B5CF6', emoji: '🚀' },
+  { id: '3',    label: 'Grade 3',       color: '#6D8BC0', emoji: '🚀' },
   { id: '4',    label: 'Grade 4',       color: '#EC4899', emoji: '🔬' },
   { id: '5',    label: 'Grade 5',       color: '#F43F5E', emoji: '📚' },
   { id: '6',    label: 'Grade 6',       color: '#0EA5E9', emoji: '🔭' },
   { id: '7',    label: 'Grade 7',       color: '#10B981', emoji: '⚗️' },
-  { id: '8',    label: 'Grade 8',       color: '#6366F1', emoji: '📐' },
+  { id: '8',    label: 'Grade 8',       color: '#525AFF', emoji: '📐' },
   { id: '9',    label: 'Grade 9',       color: '#F59E0B', emoji: '🧬' },
   { id: '10',   label: 'Grade 10',      color: '#EF4444', emoji: '📊' },
-  { id: '11',   label: 'Grade 11',      color: '#8B5CF6', emoji: '🏛️' },
-  { id: '12',   label: 'Grade 12',      color: '#0D9488', emoji: '🎓' },
+  { id: '11',   label: 'Grade 11',      color: '#6D8BC0', emoji: '🏛️' },
+  { id: '12',   label: 'Grade 12',      color: '#4AB5B5', emoji: '🎓' },
 ];
 
 const SUBJECTS = {
-  math:    { label: 'Math',           icon: Calculator,   color: '#7C3AED', bg: '#F5F3FF', tagline: 'Numbers, shapes & patterns' },
+  math:    { label: 'Math',           icon: Calculator,   color: '#525AFF', bg: '#F0FAFF', tagline: 'Numbers, shapes & patterns' },
   ela:     { label: 'ELA',            icon: BookOpen,     color: '#DB2777', bg: '#FDF2F8', tagline: 'Reading, writing & grammar' },
-  science: { label: 'Science',        icon: FlaskConical, color: '#0D9488', bg: '#F0FDFA', tagline: 'Discover how the world works' },
+  science: { label: 'Science',        icon: FlaskConical, color: '#4AB5B5', bg: '#F0FDFA', tagline: 'Discover how the world works' },
   social:  { label: 'Social Studies', icon: Globe2,       color: '#B45309', bg: '#FFFBEB', tagline: 'History, geography & civics' },
 };
 
@@ -824,8 +824,8 @@ const calcMastery = (skillProgress) => {
 
 const masteryLabel = (m) => {
   if (m >= 85) return { label: 'Mastery', color: '#059669', icon: Crown };
-  if (m >= 60) return { label: 'Proficient', color: '#8B5CF6', icon: Star };
-  if (m >= 30) return { label: 'Developing', color: '#8B5CF6', icon: TrendingUp };
+  if (m >= 60) return { label: 'Proficient', color: '#6D8BC0', icon: Star };
+  if (m >= 30) return { label: 'Developing', color: '#6D8BC0', icon: TrendingUp };
   if (m > 0)   return { label: 'Beginner', color: '#64748B', icon: Circle };
   return { label: 'Not Started', color: '#9CA3AF', icon: Circle };
 };
@@ -1171,7 +1171,7 @@ export default function WijsApp() {
         {toasts.map(t => (
           <div key={t.id} style={{
             ...styles.toast,
-            background: t.kind === 'success' ? '#059669' : t.kind === 'error' ? '#DC2626' : '#A855F7',
+            background: t.kind === 'success' ? '#059669' : t.kind === 'error' ? '#DC2626' : '#8FD9FB',
           }}>
             {t.msg}
           </div>
@@ -1510,7 +1510,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
           ))}
           <div style={hStyles.mobileDivider} />
           <button onClick={() => closeMenu(onSignIn)}    style={hStyles.mobileLink}>{isSignedIn ? firstName : 'Sign In'}</button>
-          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#7C3AED' }}>Membership</button>
+          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#525AFF' }}>Membership</button>
         </nav>
       )}
     </header>
@@ -1558,9 +1558,9 @@ function LoginScreen({ onLogin }) {
           <label style={{ ...styles.fieldLabel, marginTop: 16 }}>I'm a...</label>
           <div style={styles.roleGrid} className="role-grid">
             {[
-              { id: 'student', label: 'Student', icon: GraduationCap, color: '#7C3AED' },
-              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#7C3AED' },
-              { id: 'teacher', label: 'Teacher', icon: Users, color: '#8B5CF6' },
+              { id: 'student', label: 'Student', icon: GraduationCap, color: '#525AFF' },
+              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#525AFF' },
+              { id: 'teacher', label: 'Teacher', icon: Users, color: '#6D8BC0' },
               { id: 'admin',   label: 'Admin',   icon: Settings, color: '#475569' },
             ].map(r => {
               const Icon = r.icon;
@@ -1594,10 +1594,10 @@ function LoginScreen({ onLogin }) {
       </div>
 
       <div style={styles.loginBg}>
-        <FloatingShape style={{ top: '10%', left: '8%', background: '#7C3AED', size: 80 }} delay={0} />
-        <FloatingShape style={{ top: '20%', right: '12%', background: '#A855F7', size: 110 }} delay={1.5} />
+        <FloatingShape style={{ top: '10%', left: '8%', background: '#525AFF', size: 80 }} delay={0} />
+        <FloatingShape style={{ top: '20%', right: '12%', background: '#8FD9FB', size: 110 }} delay={1.5} />
         <FloatingShape style={{ bottom: '15%', left: '15%', background: '#A78BFA', size: 70 }} delay={0.8} />
-        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#8B5CF6', size: 95 }} delay={2.2} />
+        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#6D8BC0', size: 95 }} delay={2.2} />
       </div>
     </div>
   );
@@ -1656,9 +1656,9 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
             and track your mastery on every skill.
           </p>
           <div style={styles.heroStats}>
-            <HeroStat value={stats.points} label="Total Points" color="#7C3AED" />
+            <HeroStat value={stats.points} label="Total Points" color="#525AFF" />
             <HeroStat value={`${accuracy}%`} label="Accuracy" color="#059669" />
-            <HeroStat value={stats.streak} label="Day Streak" color="#8B5CF6" />
+            <HeroStat value={stats.streak} label="Day Streak" color="#6D8BC0" />
           </div>
         </div>
         <div style={styles.heroRight}>
@@ -1716,28 +1716,28 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
       {/* Motivational strip */}
       <section style={styles.motivStrip}>
         <div style={styles.motivItem}>
-          <Trophy size={28} color="#7C3AED" />
+          <Trophy size={28} color="#525AFF" />
           <div>
             <div style={styles.motivLabel}>{BADGES.length} Badges to Earn</div>
             <div style={styles.motivSub}>Unlock by hitting milestones</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Flame size={28} color="#8B5CF6" />
+          <Flame size={28} color="#6D8BC0" />
           <div>
             <div style={styles.motivLabel}>Daily Streaks</div>
             <div style={styles.motivSub}>Practice every day to keep it growing</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Crown size={28} color="#7C3AED" />
+          <Crown size={28} color="#525AFF" />
           <div>
             <div style={styles.motivLabel}>Skill Mastery</div>
             <div style={styles.motivSub}>Reach 85%+ to fully master a skill</div>
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Brain size={28} color="#A855F7" />
+          <Brain size={28} color="#8FD9FB" />
           <div>
             <div style={styles.motivLabel}>Adaptive Practice</div>
             <div style={styles.motivSub}>Questions adjust to your skill level</div>
@@ -1800,7 +1800,7 @@ function WelcomePopup({ onSignIn, onClose }) {
         animation: 'popupSlideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         {/* decorative top bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #7C3AED, #8B5CF6, #A78BFA)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #525AFF, #6D8BC0, #A78BFA)' }} />
 
         {/* close button */}
         <button
@@ -1834,7 +1834,7 @@ function WelcomePopup({ onSignIn, onClose }) {
             color: '#1a1a2e', lineHeight: 1.15,
           }}>
             Learn at Your Own Pace.<br />
-            <span style={{ color: '#7C3AED', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+            <span style={{ color: '#525AFF', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
               Practice Until You Master It.
             </span>
           </h2>
@@ -1871,7 +1871,7 @@ function WelcomePopup({ onSignIn, onClose }) {
           onClick={onSignIn}
           className="popup-trial-btn"
           style={{
-            width: '100%', background: 'linear-gradient(135deg, #7C3AED, #8B5CF6)',
+            width: '100%', background: 'linear-gradient(135deg, #525AFF, #6D8BC0)',
             color: 'white', border: 'none', borderRadius: 999,
             padding: '16px 24px', fontSize: 17, fontWeight: 900, cursor: 'pointer',
             animation: 'pulseGlow 2.4s ease-in-out infinite, trailBounce 3s ease-in-out infinite',
@@ -1908,26 +1908,26 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
   const handleTrial = () => { closePopup(); if (onSignIn) onSignIn(); };
 
   const artS = {
-    page: { background: '#FFFBF5', color: '#1C1215', width: '100%', overflowX: 'hidden' },
-    hero: { background: '#F5E6C8', padding: '72px 0 80px', width: '100%', display: 'flex', justifyContent: 'center' },
+    page: { background: '#F5FBFF', color: '#1C1215', width: '100%', overflowX: 'hidden' },
+    hero: { background: '#E0F6FE', padding: '72px 0 80px', width: '100%', display: 'flex', justifyContent: 'center' },
     heroInner: { maxWidth: 1200, width: '100%', margin: '0 auto', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, flexWrap: 'wrap', boxSizing: 'border-box' },
     heroLeft: { maxWidth: 560, flex: '0 1 480px', minWidth: 280 },
-    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EDE9FE', color: '#5B21B6', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
+    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E0F4FF', color: '#3A41CC', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
     h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1C1215' },
-    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#7C3AED' },
+    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#525AFF' },
     heroPara: { fontSize: 17, color: '#6B5E55', margin: '16px 0 28px', lineHeight: 1.6 },
-    heroBtn: { background: '#7C3AED', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(124,58,237,0.32)' },
+    heroBtn: { background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' },
     tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
     tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
     heroVisual: { position: 'relative', flex: '0 1 580px', maxWidth: 620, minWidth: 280, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' },
     subjectStack: { width: 300, position: 'relative', userSelect: 'none', zIndex: 2 },
-    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#EDE9FE', border: '5px solid #7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(124,58,237,0.18)', flexShrink: 0 },
-    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#F5F3FF', color: '#5B21B6', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
-    programSec: { background: '#FFFBF5', padding: '64px 24px' },
+    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#E0F4FF', border: '5px solid #525AFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(82,90,255,0.18)', flexShrink: 0 },
+    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#F0FAFF', color: '#3A41CC', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
+    programSec: { background: '#F5FBFF', padding: '64px 24px' },
     secWrap: { maxWidth: 1100, margin: '0 auto' },
-    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#7C3AED', marginBottom: 8 },
+    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#525AFF', marginBottom: 8 },
     secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
-    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#7C3AED' },
+    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#525AFF' },
     secDesc: { fontSize: 16, color: '#6B5E55', margin: '0 0 40px', maxWidth: 560 },
     cardsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 },
     card: { borderRadius: 20, padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer', border: 'none', textAlign: 'left', minHeight: 240 },
@@ -1939,7 +1939,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     gradesSec: { background: '#fff', padding: '56px 24px' },
     gradesRow: { display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 28 },
     gradeChip: { borderRadius: 999, padding: '8px 20px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    whySec: { background: '#FFFBF5', padding: '64px 24px' },
+    whySec: { background: '#F5FBFF', padding: '64px 24px' },
     whyGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 40 },
     whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12, border: '1px solid #F0E6D6' },
     whyIcon: { width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 },
@@ -1948,25 +1948,25 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     startSec: { background: '#fff', padding: '64px 24px' },
     startInner: { maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' },
     statsGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 28 },
-    statCard: { background: '#F5F3FF', borderRadius: 14, padding: '20px 18px', border: '1px solid #EDE9FE' },
-    statVal: { fontSize: 28, fontWeight: 900, color: '#7C3AED', margin: 0 },
+    statCard: { background: '#F0FAFF', borderRadius: 14, padding: '20px 18px', border: '1px solid #E0F4FF' },
+    statVal: { fontSize: 28, fontWeight: 900, color: '#525AFF', margin: 0 },
     statLabel: { fontSize: 13, color: '#6B5E55', margin: '4px 0 0' },
-    readCard: { background: 'linear-gradient(135deg, #EDE9FE 0%, #F5F3FF 100%)', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid #DDD6FE' },
+    readCard: { background: 'linear-gradient(135deg, #E0F4FF 0%, #F0FAFF 100%)', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid #B8E4FB' },
     readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1C1215' },
     readSub: { fontSize: 14, color: '#6B5E55', margin: 0, lineHeight: 1.6 },
     readBtn: { alignSelf: 'flex-start', background: '#1C1215', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-    ctaSec: { background: '#FFFBF5', padding: '64px 24px' },
-    ctaCard: { maxWidth: 680, margin: '0 auto', background: 'linear-gradient(135deg, #F5F3FF 0%, #FFF7ED 100%)', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' },
+    ctaSec: { background: '#F5FBFF', padding: '64px 24px' },
+    ctaCard: { maxWidth: 680, margin: '0 auto', background: 'linear-gradient(135deg, #F0FAFF 0%, #FFF7ED 100%)', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' },
     ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1C1215' },
     ctaSub: { fontSize: 15, color: '#6B5E55', margin: 0 },
-    ctaBtn: { background: '#7C3AED', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(124,58,237,0.32)' },
+    ctaBtn: { background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' },
     contactSec: { background: '#fff', padding: '64px 24px', textAlign: 'center' },
     avatarsRow: { fontSize: 36, display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
     contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
     contactSub: { fontSize: 15, color: '#6B5E55', margin: '0 0 28px' },
     contactBtns: { display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' },
     contactBtn: { borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    faqSec: { background: '#FFFBF5', padding: '64px 24px 80px' },
+    faqSec: { background: '#F5FBFF', padding: '64px 24px 80px' },
     faqInner: { maxWidth: 720, margin: '40px auto 0' },
     faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden', border: '1px solid #F0E6D6' },
     faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1C1215', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
@@ -1977,10 +1977,10 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     photoImg: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' },
     photoOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 20px 16px', background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)' },
     photoCaption: { color: '#fff', fontWeight: 800, fontSize: 16, margin: 0, lineHeight: 1.3 },
-    photoTag: { display: 'inline-block', background: '#7C3AED', color: '#fff', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 800, letterSpacing: 0.5, marginBottom: 6 },
+    photoTag: { display: 'inline-block', background: '#525AFF', color: '#fff', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 800, letterSpacing: 0.5, marginBottom: 6 },
   };
 
-  const gradeColors = ['#FDE8BB','#FEF3C7','#D1FAE5','#CFFAFE','#EDE9FE','#FCE7F3','#FFE4E6','#FDE8BB','#FEF3C7','#D1FAE5','#EDE9FE','#FCE7F3','#FDE8BB','#CFFAFE'];
+  const gradeColors = ['#FDE8BB','#FEF3C7','#D1FAE5','#CFFAFE','#E0F4FF','#FCE7F3','#FFE4E6','#FDE8BB','#FEF3C7','#D1FAE5','#E0F4FF','#FCE7F3','#FDE8BB','#CFFAFE'];
 
   const faqs = [
     { q: 'What grades does WIJS cover?', a: 'WIJS covers Kindergarten through Grade 12 across all major subjects including Math, Language Arts, Science, and Social Studies.' },
@@ -2035,7 +2035,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
 
           <div style={artS.tagsRow} className="art-tags-row">
-            {[['#Math','#EDE9FE'],['#Science','#F5F3FF'],['#ELA','#F5F3FF'],['#History','#F1F5F9']].map(([tag, bg]) => (
+            {[['#Math','#E0F4FF'],['#Science','#F0FAFF'],['#ELA','#F0FAFF'],['#History','#F1F5F9']].map(([tag, bg]) => (
               <span key={tag} style={{ ...artS.tag, background: bg }}>{tag}</span>
             ))}
           </div>
@@ -2047,7 +2047,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <div className="art-illustrated-bg" style={{
             position: 'absolute', left: 0, top: 6, bottom: 6, width: 430,
             borderRadius: 28, overflow: 'hidden',
-            background: 'linear-gradient(145deg, #FFF7ED 0%, #EDE9FE 55%, #F0FDFA 100%)',
+            background: 'linear-gradient(145deg, #FFF7ED 0%, #E0F4FF 55%, #F0FDFA 100%)',
           }} aria-hidden="true">
 
             {/* Soft glow blobs */}
@@ -2077,10 +2077,10 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             {/* ── Card 2: Math 🔢 ── */}
             <div style={{
               position:'absolute', left:200, top:14,
-              background:'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+              background:'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
               borderRadius:22, padding:'16px 16px 14px', width:166,
               transform:'rotate(6deg)',
-              boxShadow:'0 12px 32px rgba(124,58,237,0.32)',
+              boxShadow:'0 12px 32px rgba(82,90,255,0.32)',
               color:'white',
               border:'2px solid rgba(255,255,255,0.18)',
             }}>
@@ -2095,7 +2095,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             {/* ── Card 3: Science 🔬 ── */}
             <div style={{
               position:'absolute', left:26, top:210,
-              background:'linear-gradient(135deg, #0D9488 0%, #10B981 100%)',
+              background:'linear-gradient(135deg, #4AB5B5 0%, #10B981 100%)',
               borderRadius:22, padding:'16px 16px 14px', width:155,
               transform:'rotate(5deg)',
               boxShadow:'0 12px 32px rgba(13,148,136,0.30)',
@@ -2175,9 +2175,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <p style={artS.secDesc}>Every skill is aligned to standards and built to help students master core concepts at their own pace.</p>
           <div style={artS.cardsGrid} className="art-cards-grid">
             {[
-              { bg: '#EDE9FE', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
-              { bg: '#F5F3FF', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
-              { bg: '#F5F3FF', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
+              { bg: '#E0F4FF', grade: 'Grades K – 3', title: 'Math', sub: 'Numbers, geometry & problem solving', emoji: '🔢' },
+              { bg: '#F0FAFF', grade: 'Grades 4 – 8', title: 'Language Arts', sub: 'Reading, writing & comprehension', emoji: '📖' },
+              { bg: '#F0FAFF', grade: 'Grades K – 5', title: 'Science', sub: 'Life, earth, chemistry & physics', emoji: '🔬' },
             ].map((card) => (
               <button key={card.title} style={{ ...artS.card, background: card.bg }} onClick={() => onSelectGrade(GRADES[0])}>
                 <span style={artS.cardGradeTag}>{card.grade}</span>
@@ -2221,8 +2221,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <h2 style={artS.secTitle}>Built for every <em style={artS.secEm}>learner</em></h2>
           <div style={artS.whyGrid} className="art-why-grid">
             {[
-              { icon: '📚', bg: '#EDE9FE', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
-              { icon: '🎯', bg: '#F5F3FF', title: 'Adaptive Learning', text: 'WIJS adjusts question difficulty in real time based on student responses for maximum growth.' },
+              { icon: '📚', bg: '#E0F4FF', title: 'Full K–12 Curriculum', text: 'Every subject, every grade. Math, Language Arts, Science, and Social Studies with thousands of practice questions.' },
+              { icon: '🎯', bg: '#F0FAFF', title: 'Adaptive Learning', text: 'WIJS adjusts question difficulty in real time based on student responses for maximum growth.' },
               { icon: '⭐', bg: '#F0F9FF', title: 'Expert Content', text: 'All questions are built and reviewed by certified educators and aligned to Common Core and state standards.' },
             ].map((item) => (
               <div key={item.title} style={artS.whyCard}>
@@ -2289,7 +2289,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
           <div style={artS.readCard}>
             <div style={{ fontSize: 40 }}>🎓</div>
-            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>explore</em> skills?</h3>
+            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>explore</em> skills?</h3>
             <p style={artS.readSub}>Pick a grade level to see all available practice skills and begin your learning journey.</p>
             <button onClick={() => onSelectGrade(GRADES[0])} style={artS.readBtn}>Browse all grades ↗</button>
           </div>
@@ -2297,13 +2297,13 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Sign Up CTA + Contact (same row) ── */}
-      <section style={{ background: '#FFFBF5', padding: '64px 24px' }} className="art-section">
+      <section style={{ background: '#F5FBFF', padding: '64px 24px' }} className="art-section">
         <div className="art-cta-contact-row" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 24, alignItems: 'stretch' }}>
 
           {/* CTA card */}
           <div style={{ ...artS.ctaCard, flex: 1, margin: 0 }} className="art-cta-card">
             <div style={{ fontSize: 52 }}>👧</div>
-            <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>Free Practice</em></h2>
+            <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>Free Practice</em></h2>
             <p style={artS.ctaSub}>Join thousands of students already learning with WIJS.</p>
             <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
           </div>
@@ -2311,12 +2311,12 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           {/* Contact card */}
           <div style={{ flex: 1, background: '#fff', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' }}>
             <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
-            <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#7C3AED' }}>to talking</em></h2>
+            <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>to talking</em></h2>
             <p style={artS.contactSub}>Have questions about WIJS? Reach out — we're here to help.</p>
             <div style={artS.contactBtns}>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#7C3AED', color: '#fff' }}>Contact us</button>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F5F3FF', color: '#5B21B6' }}>Call us</button>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F5F3FF', color: '#7C3AED' }}>Video chat</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#525AFF', color: '#fff' }}>Contact us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F0FAFF', color: '#3A41CC' }}>Call us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F0FAFF', color: '#525AFF' }}>Video chat</button>
             </div>
           </div>
 
@@ -2334,7 +2334,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#7C3AED' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#525AFF' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
                   {openFaq === i ? '−' : '+'}
                 </span>
               </button>
@@ -2375,13 +2375,13 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
   };
 
   const features = [
-    { icon: '🌐', color: '#7C3AED', title: 'Comprehensive K-12 Curriculum',
+    { icon: '🌐', color: '#525AFF', title: 'Comprehensive K-12 Curriculum',
       text: 'More than 17,000 adaptive skills designed to support and challenge every learner' },
-    { icon: '📊', color: '#A855F7', title: 'Real-Time Diagnostic',
+    { icon: '📊', color: '#8FD9FB', title: 'Real-Time Diagnostic',
       text: "Up-to-date, accurate assessment of students' knowledge levels in math and language arts" },
-    { icon: '🎯', color: '#7C3AED', title: 'Personalized Guidance',
+    { icon: '🎯', color: '#525AFF', title: 'Personalized Guidance',
       text: 'Targeted skill recommendations help address learning gaps and accelerate growth' },
-    { icon: '📈', color: '#8B5CF6', title: 'Actionable Analytics',
+    { icon: '📈', color: '#6D8BC0', title: 'Actionable Analytics',
       text: 'Easy-to-use reports provide real-time insight into student progress' },
   ];
 
@@ -2438,9 +2438,9 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
                       style={{
                         padding: '10px 8px',
                         borderRadius: 10,
-                        border: role === option ? '2px solid #7C3AED' : '1px solid #D1D5DB',
-                        background: role === option ? '#F5F3FF' : 'white',
-                        color: role === option ? '#7C3AED' : '#334155',
+                        border: role === option ? '2px solid #525AFF' : '1px solid #D1D5DB',
+                        background: role === option ? '#F0FAFF' : 'white',
+                        color: role === option ? '#525AFF' : '#334155',
                         fontWeight: 800,
                         textTransform: 'capitalize',
                         cursor: 'pointer',
@@ -2628,7 +2628,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   };
 
   const hero = heroConfigs[activeSubject] || heroConfigs.math;
-  const subjectColor = SUBJECTS[activeSubject]?.color || '#7C3AED';
+  const subjectColor = SUBJECTS[activeSubject]?.color || '#525AFF';
 
   const getGradeSkills = (gradeId) =>
     Object.values(SKILLS).filter(s => s.grade === gradeId && s.subject === activeSubject);
@@ -2845,7 +2845,7 @@ function DashboardPreview({ stats, progress, onClick }) {
         </div>
         <div style={styles.dashStatRow}>
           <span style={{ color: '#6B7280', fontSize: 13 }}>Best run</span>
-          <strong style={{ color: '#7C3AED' }}>{stats.bestStreak} in a row</strong>
+          <strong style={{ color: '#525AFF' }}>{stats.bestStreak} in a row</strong>
         </div>
       </div>
       <div style={styles.dashCTA}>View full dashboard <ChevronRight size={14} /></div>
@@ -3030,7 +3030,7 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress, onSele
       {/* ── Top nav bar ── */}
       <div style={{ borderBottom: '3px solid #E5E7EB', padding: '0 24px' }}>
         <div className="subject-nav-tabs" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 24, paddingTop: 8 }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#8B5CF6', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#6D8BC0', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
             ← {grade.label}
           </button>
           <span style={{ color: '#D1D5DB', fontSize: 18 }}>|</span>
@@ -3038,8 +3038,8 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress, onSele
           {['Grades', 'Topics', 'Week by week', 'Skill plans'].map(v => (
             <button key={v} onClick={() => setViewBy(v.toLowerCase())} style={{
               background: 'none', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', padding: '8px 4px',
-              color: viewBy === v.toLowerCase() ? '#7C3AED' : '#8B5CF6',
-              borderBottom: viewBy === v.toLowerCase() ? '3px solid #7C3AED' : '3px solid transparent',
+              color: viewBy === v.toLowerCase() ? '#525AFF' : '#6D8BC0',
+              borderBottom: viewBy === v.toLowerCase() ? '3px solid #525AFF' : '3px solid transparent',
               marginBottom: -3,
             }}>{v}</button>
           ))}
@@ -3289,7 +3289,7 @@ function Mascot({ state, visible }) {
         display:'flex', alignItems:'center', justifyContent:'center',
         fontSize:30,
         boxShadow:'0 4px 18px rgba(0,0,0,0.13)',
-        border:'3px solid #7C3AED',
+        border:'3px solid #525AFF',
         animation: faceAnim,
       }}>
         {pip.face}
@@ -3492,15 +3492,15 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
           <div style={{ ...styles.explainBox, animation:'slideUp 0.4s ease 0.15s both' }}>
             <div style={styles.explainHead}>
-              <Lightbulb size={18} color="#8B5CF6" /> <strong>How it works</strong>
+              <Lightbulb size={18} color="#6D8BC0" /> <strong>How it works</strong>
             </div>
             <p style={styles.explainText}>{skill.explanation}</p>
           </div>
 
           <div style={{ ...styles.skillMetaRow, animation:'slideUp 0.4s ease 0.25s both' }}>
-            <div style={styles.skillMetaItem}><Target size={16} color="#8B5CF6" /> <span>{questionsToAnswer} questions</span></div>
-            <div style={styles.skillMetaItem}><Brain size={16} color="#A855F7" /> <span>Adaptive difficulty</span></div>
-            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#8B5CF6" /> <span>Hints available</span></div>
+            <div style={styles.skillMetaItem}><Target size={16} color="#6D8BC0" /> <span>{questionsToAnswer} questions</span></div>
+            <div style={styles.skillMetaItem}><Brain size={16} color="#8FD9FB" /> <span>Adaptive difficulty</span></div>
+            <div style={styles.skillMetaItem}><Lightbulb size={16} color="#6D8BC0" /> <span>Hints available</span></div>
           </div>
 
           <button
@@ -3534,7 +3534,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
             {/* Time elapsed */}
             <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div style={{ background: '#8B5CF6', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3 }}>
+              <div style={{ background: '#6D8BC0', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3 }}>
                 Time<br />elapsed
               </div>
               <div style={{ background: 'white', padding: '10px 4px' }}>
@@ -3584,7 +3584,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                 <div style={{ margin: '6px 8px 0', height: 5, borderRadius: 999, background: '#E2E8F0', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 999,
-                    background: smartScore >= 80 ? '#059669' : smartScore >= 60 ? '#8B5CF6' : '#D97706',
+                    background: smartScore >= 80 ? '#059669' : smartScore >= 60 ? '#6D8BC0' : '#D97706',
                     width: `${smartScore}%`,
                     transition: 'width 0.4s ease',
                   }} />
@@ -3689,7 +3689,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
             {/* Hint */}
             {showHint && !feedback && (
               <div style={{ ...styles.hintBox, animation:'slideUp 0.3s ease' }}>
-                <Lightbulb size={16} color="#8B5CF6" /> <span>{currentQ.hint}</span>
+                <Lightbulb size={16} color="#6D8BC0" /> <span>{currentQ.hint}</span>
               </div>
             )}
 
@@ -3812,8 +3812,8 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
 
       {/* Pip speech bubble */}
       <div style={{
-        background:'linear-gradient(135deg,#F5F3FF,#F0F9FF)',
-        border:'2px solid #DDD6FE', borderRadius:16,
+        background:'linear-gradient(135deg,#F0FAFF,#F0F9FF)',
+        border:'2px solid #B8E4FB', borderRadius:16,
         padding:'12px 18px',
         display:'flex', alignItems:'center', gap:12,
         marginBottom:22, fontSize:14, color:'#374151',
@@ -3845,7 +3845,7 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
       <div style={{ margin:'12px 0 24px', background:'#F3F4F6', borderRadius:999, height:10, overflow:'hidden' }}>
         <div style={{
           height:'100%', borderRadius:999,
-          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#7C3AED' : accuracy >= 60 ? '#8B5CF6' : '#DC2626',
+          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#525AFF' : accuracy >= 60 ? '#6D8BC0' : '#DC2626',
           width:`${accuracy}%`,
           animation:'growBar 1s cubic-bezier(0.22,1,0.36,1) 0.35s both',
         }} />
@@ -3939,8 +3939,8 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
   const activeSkills = Object.keys(progress).length;
   const weeklyRows = [
     ['Mon', 12, '#F97316'],
-    ['Tue', 18, '#7C3AED'],
-    ['Wed', 8,  '#0D9488'],
+    ['Tue', 18, '#525AFF'],
+    ['Wed', 8,  '#4AB5B5'],
     ['Thu', 24, '#D97706'],
     ['Fri', 15, '#EC4899'],
   ];
@@ -3963,10 +3963,10 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
       </div>
 
       <div style={styles.dashHeroStats}>
-        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#7C3AED" />
+        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#525AFF" />
         <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Accuracy" color="#059669" />
-        <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#A855F7" />
-        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#7C3AED" />
+        <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#8FD9FB" />
+        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#525AFF" />
       </div>
 
       <section style={{ marginTop: 36 }}>
@@ -4019,10 +4019,10 @@ function ProgressReports({ stats, progress, onPractice }) {
           <span>{new Date().toLocaleDateString()}</span>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#7C3AED" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#525AFF" />
           <BigStat icon={<CheckCircle2 size={22}/>} value={stats.totalCorrect} label="Correct" color="#059669" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#8B5CF6" />
-          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#7C3AED" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#6D8BC0" />
+          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#525AFF" />
         </div>
       </div>
 
@@ -4060,7 +4060,7 @@ const FALLBACK_PLANS = [
 
 const SUB_STATUS_COLORS = {
   ACTIVE:     { background: '#DCFCE7', color: '#166534' },
-  TRIALING:   { background: '#EDE9FE', color: '#5B21B6' },
+  TRIALING:   { background: '#E0F4FF', color: '#3A41CC' },
   PAST_DUE:   { background: '#FEF9C3', color: '#854D0E' },
   CANCELED:   { background: '#F3F4F6', color: '#6B7280' },
   INCOMPLETE: { background: '#FEE2E2', color: '#991B1B' },
@@ -4182,7 +4182,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#7C3AED', fontWeight: 900 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#525AFF', fontWeight: 900 }}>
                     {activeSub.plan?.name ?? 'Subscription'}
                   </span>
                   <span style={{
@@ -4229,7 +4229,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                 <div key={plan.id} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}), position: 'relative' }}>
                   {plan.featured && <div style={styles.planBadge}>Best value</div>}
                   {isCurrent && !isCanceling && (
-                    <div style={{ ...styles.planBadge, background: '#7C3AED', right: 'auto', left: 14 }}>Current</div>
+                    <div style={{ ...styles.planBadge, background: '#525AFF', right: 'auto', left: 14 }}>Current</div>
                   )}
                   <h2 style={styles.planName}>{plan.name}</h2>
                   <div style={styles.planPrice}>
@@ -4284,7 +4284,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                     </span>
                     <span>
                       {inv.pdfUrl
-                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#7C3AED', fontWeight: 700, fontSize: 13 }}>Download</a>
+                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#525AFF', fontWeight: 700, fontSize: 13 }}>Download</a>
                         : '—'}
                     </span>
                   </div>
@@ -4335,7 +4335,7 @@ function AdminContentManagement({ onPractice, onReports }) {
             icon={[<GraduationCap size={22}/>, <BookOpen size={22}/>, <Target size={22}/>, <CheckCircle2 size={22}/>][idx]}
             value={value}
             label={label}
-            color={['#7C3AED', '#A855F7', '#7C3AED', '#8B5CF6'][idx]}
+            color={['#525AFF', '#8FD9FB', '#525AFF', '#6D8BC0'][idx]}
           />
         ))}
       </div>
@@ -4438,7 +4438,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
     <div style={styles.container} className="resp-container">
       <div style={styles.dashHero}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#7C3AED', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#525AFF', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
           <h1 style={styles.dashHeroTitle} className="dash-hero-title">
             {firstName ? `Welcome back, ${firstName}!` : title}
           </h1>
@@ -4449,10 +4449,10 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           </p>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#8B5CF6" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#6D8BC0" />
           <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#059669" />
-          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#7C3AED" />
-          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#8B5CF6" />
+          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#525AFF" />
+          <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#6D8BC0" />
         </div>
       </div>
 
@@ -4494,7 +4494,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
         <SectionHeader
           title="Recommended for you"
           subtitle="Based on your weak areas and unexplored skills"
-          icon={<Brain size={20} color="#A855F7" />}
+          icon={<Brain size={20} color="#8FD9FB" />}
         />
         <div style={styles.recList}>
           {recommendations.length === 0 ? (
@@ -4596,7 +4596,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           <SectionHeader
             title={`Work In Progress (${inProgress.length})`}
             subtitle="Skills you've started — keep going to reach mastery"
-            icon={<Play size={20} color="#8B5CF6" />}
+            icon={<Play size={20} color="#6D8BC0" />}
           />
           <div style={styles.activityTable}>
             {inProgress.map(({ skill, p, mastery }) => {
@@ -4617,7 +4617,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
                     </div>
                   </div>
                   <div style={styles.activityStats}>
-                    <span style={{ ...styles.statusBadge, background: '#F5F3FF', color: '#8B5CF6' }}>{mastery}% mastery</span>
+                    <span style={{ ...styles.statusBadge, background: '#F0FAFF', color: '#6D8BC0' }}>{mastery}% mastery</span>
                     <span style={styles.activityStat}>{acc}% accuracy</span>
                     <span style={styles.activityStat}>{p.attempts} questions</span>
                     <span style={styles.activityDate}>{fmtDate(p.lastPracticed)}</span>
@@ -4635,7 +4635,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           <SectionHeader
             title={`All Quiz Records (${allActivity.length})`}
             subtitle="Every skill you've ever practiced, sorted by most recent"
-            icon={<BarChart3 size={20} color="#7C3AED" />}
+            icon={<BarChart3 size={20} color="#525AFF" />}
           />
           <div style={styles.activityTable}>
             {allActivity.map(({ skill, p, mastery }) => {
@@ -4693,7 +4693,7 @@ function BadgesScreen({ stats, onBack }) {
     <div style={styles.container} className="resp-container">
       <BackBtn onClick={onBack} label="Back home" />
       <div style={styles.badgesHero} className="badges-hero">
-        <Trophy size={48} color="#7C3AED" />
+        <Trophy size={48} color="#525AFF" />
         <div>
           <h1 style={styles.dashHeroTitle} className="dash-hero-title">Badges & Achievements</h1>
           <p style={styles.dashHeroSub}>
@@ -4709,7 +4709,7 @@ function BadgesScreen({ stats, onBack }) {
             <div key={b.id} style={{
               ...styles.badgeCard,
               background: earned ? 'linear-gradient(135deg, #FFF8E1, #FFE082)' : '#F9FAFB',
-              borderColor: earned ? '#7C3AED' : '#E5E7EB',
+              borderColor: earned ? '#525AFF' : '#E5E7EB',
             }}>
               <div style={{
                 ...styles.badgeEmoji,
@@ -4809,7 +4809,7 @@ function Footer() {
 
 // ---------- HELPERS ----------
 function difficultyLabel(d) { return d === 1 ? 'Easy' : d === 2 ? 'Medium' : 'Hard'; }
-function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#8B5CF6' : '#DC2626'; }
+function difficultyColor(d) { return d === 1 ? '#059669' : d === 2 ? '#6D8BC0' : '#DC2626'; }
 function randomCheer() {
   const cheers = ['Great job! 🎉', 'Awesome! ⭐', 'You got it! 🌟', 'Excellent! 💯', 'Nailed it! 🚀', 'Brilliant! ✨'];
   return cheers[Math.floor(Math.random() * cheers.length)];
@@ -4931,7 +4931,7 @@ function StyleInjector() {
 
       @keyframes searchFocusRing {
         0%   { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
-        25%  { border-color: #7C3AED; box-shadow: 0 0 0 3px rgba(124,58,237,0.18); }
+        25%  { border-color: #525AFF; box-shadow: 0 0 0 3px rgba(82,90,255,0.18); }
         50%  { border-color: #0EA5E9; box-shadow: 0 0 0 3px rgba(14,165,233,0.18); }
         75%  { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.18); }
         100% { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
@@ -4944,7 +4944,7 @@ function StyleInjector() {
       .mega-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; color: #374151; font-weight: 500; transition: background 0.15s, color 0.15s; }
       .mega-link:hover { background: #f0fdf4; color: #166534; }
       .mega-sub-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; color: #6B7280; font-weight: 500; transition: background 0.15s, color 0.15s; }
-      .mega-sub-link:hover { background: #F5F3FF; color: #7C3AED; }
+      .mega-sub-link:hover { background: #F0FAFF; color: #525AFF; }
       .nav-learning-wrap { position: relative; }
 
       .popup-close:hover { background: #fee2e2 !important; color: #dc2626 !important; transform: scale(1.12); }
@@ -4975,7 +4975,7 @@ function StyleInjector() {
       .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
       .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
 
-      input:focus, button:focus-visible { outline: 3px solid #7C3AED44; outline-offset: 2px; }
+      input:focus, button:focus-visible { outline: 3px solid #525AFF44; outline-offset: 2px; }
       .h-search input:focus { outline: none; }
       button { font-family: inherit; }
       input, select, textarea { max-width: 100%; }
@@ -5188,7 +5188,7 @@ function StyleInjector() {
       .test-stack span {
         position: absolute; top: 8px; width: 58px; height: 76px;
         border-radius: 6px;
-        background: linear-gradient(160deg, #A78BFA, #7C3AED);
+        background: linear-gradient(160deg, #A78BFA, #525AFF);
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 900; box-shadow: 0 8px 14px rgba(0,0,0,0.15); border: 3px solid white;
       }
@@ -5227,7 +5227,7 @@ const styles = {
     minHeight: '100vh',
     width: '100%',
     fontFamily: FONT_BODY,
-    background: '#FFFBF5',
+    background: '#F5FBFF',
     color: '#1C1215',
     display: 'flex',
     flexDirection: 'column',
@@ -5244,14 +5244,14 @@ const styles = {
     border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 24,
-    boxShadow: '0 12px 30px rgba(124,58,237,0.07)',
+    boxShadow: '0 12px 30px rgba(82,90,255,0.07)',
     flexWrap: 'wrap',
   },
   eyebrow: {
     fontSize: 12,
     fontWeight: 900,
     letterSpacing: 1.2,
-    color: '#7C3AED',
+    color: '#525AFF',
     textTransform: 'uppercase',
   },
   heroMiniPanel: {
@@ -5260,8 +5260,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    background: '#F5F3FF',
-    border: '1px solid #DDD6FE',
+    background: '#F0FAFF',
+    border: '1px solid #B8E4FB',
     borderRadius: 14,
     padding: 16,
     color: '#4C1D95',
@@ -5281,7 +5281,7 @@ const styles = {
     gap: 14,
     cursor: 'pointer',
     textAlign: 'left',
-    boxShadow: '0 8px 18px rgba(124,58,237,0.06)',
+    boxShadow: '0 8px 18px rgba(82,90,255,0.06)',
   },
   actionIcon: {
     width: 44,
@@ -5306,7 +5306,7 @@ const styles = {
   },
   actionMeta: {
     fontSize: 12,
-    color: '#7C3AED',
+    color: '#525AFF',
     fontWeight: 800,
   },
   actionCta: {
@@ -5314,7 +5314,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 12,
     fontWeight: 900,
     whiteSpace: 'nowrap',
@@ -5323,7 +5323,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    background: '#F5F3FF',
+    background: '#F0FAFF',
     borderRadius: 14,
     padding: 14,
     minWidth: 240,
@@ -5332,7 +5332,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: '50%',
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -5344,7 +5344,7 @@ const styles = {
     border: '1px solid #F0E6D6',
     borderRadius: 16,
     padding: 20,
-    boxShadow: '0 8px 22px rgba(124,58,237,0.06)',
+    boxShadow: '0 8px 22px rgba(82,90,255,0.06)',
   },
   reportHeader: {
     display: 'flex',
@@ -5379,7 +5379,7 @@ const styles = {
     marginTop: 24,
   },
   primaryAction: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 10,
@@ -5391,12 +5391,12 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    boxShadow: '0 4px 12px rgba(124,58,237,0.28)',
+    boxShadow: '0 4px 12px rgba(82,90,255,0.28)',
   },
   secondaryAction: {
     background: 'white',
-    color: '#7C3AED',
-    border: '2px solid #DDD6FE',
+    color: '#525AFF',
+    border: '2px solid #B8E4FB',
     borderRadius: 10,
     padding: '10px 16px',
     fontSize: 14,
@@ -5412,7 +5412,7 @@ const styles = {
     border: '1px solid #F0E6D6',
     borderRadius: 16,
     overflow: 'hidden',
-    boxShadow: '0 8px 22px rgba(124,58,237,0.06)',
+    boxShadow: '0 8px 22px rgba(82,90,255,0.06)',
   },
   reportRow: {
     display: 'grid',
@@ -5425,8 +5425,8 @@ const styles = {
   },
   reportRowHead: {
     borderTop: 'none',
-    background: '#F5F3FF',
-    color: '#7C3AED',
+    background: '#F0FAFF',
+    color: '#525AFF',
     fontWeight: 900,
   },
   pricingGrid: {
@@ -5441,13 +5441,13 @@ const styles = {
     border: '1px solid #F0E6D6',
     borderRadius: 18,
     padding: 24,
-    boxShadow: '0 8px 24px rgba(124,58,237,0.07)',
+    boxShadow: '0 8px 24px rgba(82,90,255,0.07)',
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
   },
   planFeatured: {
-    border: '2px solid #7C3AED',
+    border: '2px solid #525AFF',
     transform: 'translateY(-4px)',
   },
   planBadge: {
@@ -5465,7 +5465,7 @@ const styles = {
     margin: 0,
     fontFamily: FONT_DISPLAY,
     fontSize: 28,
-    color: '#7C3AED',
+    color: '#525AFF',
   },
   planPrice: {
     fontSize: 42,
@@ -5549,10 +5549,10 @@ const styles = {
     flexShrink: 0,
   },
   logoWordmark: {
-    background: 'linear-gradient(135deg, #3B1F5E 0%, #7C3AED 100%)',
+    background: 'linear-gradient(135deg, #3B1F5E 0%, #525AFF 100%)',
     display: 'flex', alignItems: 'center',
     padding: '0 14px 0 9px',
-    color: '#EDE9FE',
+    color: '#E0F4FF',
     fontWeight: 900, fontSize: 17,
     fontFamily: FONT_DISPLAY,
     letterSpacing: '-0.01em',
@@ -5560,10 +5560,10 @@ const styles = {
   },
   logoIcon: {
     width: 40, height: 40, borderRadius: 12,
-    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 4px 12px rgba(124,58,237,0.4)',
+    boxShadow: '0 4px 12px rgba(82,90,255,0.4)',
   },
   logoText: { fontFamily: FONT_BODY, fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1 },
   logoTag: { fontSize: 11, color: '#6B7280', marginTop: 2, fontWeight: 500 },
@@ -5616,7 +5616,7 @@ const styles = {
   searchIcon: {
     width: 38,
     height: 36,
-    background: '#7C3AED',
+    background: '#525AFF',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -5670,12 +5670,12 @@ const styles = {
   },
   topRoleBtnActive: {
     background: 'white',
-    color: '#7C3AED',
+    color: '#525AFF',
     borderColor: 'white',
   },
   iconBtn: {
     width: 34, height: 34, borderRadius: 5,
-    background: '#7C3AED', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
+    background: '#525AFF', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white', transition: 'all 0.15s',
   },
@@ -5736,7 +5736,7 @@ const styles = {
   membershipBtn: {
     height: 36,
     padding: '0 18px',
-    border: '1.5px solid #DDD6FE',
+    border: '1.5px solid #B8E4FB',
     borderRadius: 6,
     background: 'rgba(255,255,255,0.15)',
     color: 'white',
@@ -5762,7 +5762,7 @@ const styles = {
     minHeight: '100vh',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 24, position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 45%, #FFF7ED 100%)',
+    background: 'linear-gradient(135deg, #F0FAFF 0%, #E0F4FF 45%, #FFF7ED 100%)',
   },
   loginBg: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 },
   loginCard: {
@@ -5774,10 +5774,10 @@ const styles = {
   loginHero: { textAlign: 'center' },
   loginLogo: {
     width: 72, height: 72, margin: '0 auto', borderRadius: 20,
-    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 8px 24px rgba(124,58,237,0.4)',
+    boxShadow: '0 8px 24px rgba(82,90,255,0.4)',
   },
   loginTitle: {
     fontFamily: FONT_DISPLAY, fontSize: 42, fontWeight: 900,
@@ -5798,11 +5798,11 @@ const styles = {
   },
   primaryBtn: {
     width: '100%', marginTop: 24, padding: '14px 20px',
-    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
     color: 'white', border: 'none', borderRadius: 14,
     fontSize: 16, fontWeight: 700, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    boxShadow: '0 8px 20px rgba(124,58,237,0.38)',
+    boxShadow: '0 8px 20px rgba(82,90,255,0.38)',
     transition: 'transform 0.1s',
   },
   loginNote: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 16 },
@@ -5816,8 +5816,8 @@ const styles = {
   heroBadge: {
     display: 'inline-flex', alignItems: 'center', gap: 6,
     padding: '6px 12px', borderRadius: 999,
-    background: 'linear-gradient(135deg, #EDE9FE 0%, #FDE8BB 100%)',
-    fontSize: 12, fontWeight: 700, color: '#5B21B6',
+    background: 'linear-gradient(135deg, #E0F4FF 0%, #FDE8BB 100%)',
+    fontSize: 12, fontWeight: 700, color: '#3A41CC',
     marginBottom: 16,
   },
   heroTitle: {
@@ -5826,13 +5826,13 @@ const styles = {
     margin: 0, color: '#1F2937',
   },
   heroName: {
-    background: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
+    background: 'linear-gradient(135deg, #525AFF 0%, #EC4899 100%)',
     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
   },
   heroEmphasis: {
     fontStyle: 'italic',
-    color: '#7C3AED',
+    color: '#525AFF',
   },
   heroDesc: { fontSize: 17, color: '#4B5563', marginTop: 16, lineHeight: 1.6, maxWidth: 540 },
   heroStats: { display: 'flex', gap: 12, marginTop: 28, flexWrap: 'wrap' },
@@ -5848,7 +5848,7 @@ const styles = {
   redesignHero: {
     position: 'relative',
     minHeight: 398,
-    background: 'linear-gradient(180deg, #FFF7ED 0%, #FECBA1 48%, #FCA572 68%, #F97316 80%, #7C3AED 85%, #4C1D95 100%)',
+    background: 'linear-gradient(180deg, #FFF7ED 0%, #FECBA1 48%, #FCA572 68%, #F97316 80%, #525AFF 85%, #4C1D95 100%)',
     overflow: 'hidden',
     borderBottom: 'none',
   },
@@ -5860,7 +5860,7 @@ const styles = {
     height: 120,
     opacity: 1,
     background: 'linear-gradient(120deg, transparent 0 22%, #FECBA1 22% 30%, transparent 30%), linear-gradient(90deg, #FDE8BB 0 22%, transparent 22% 28%, #FDE8BB 28% 50%, transparent 50% 56%, #FDE8BB 56% 78%, transparent 78%)',
-    borderBottom: '12px solid #7C3AED',
+    borderBottom: '12px solid #525AFF',
   },
   heroHills: {
     position: 'absolute',
@@ -5868,7 +5868,7 @@ const styles = {
     right: -90,
     bottom: -54,
     height: 150,
-    background: 'radial-gradient(ellipse at 20% 68%, #4C1D95 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #5B21B6 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #7C3AED 0 28%, transparent 29%)',
+    background: 'radial-gradient(ellipse at 20% 68%, #4C1D95 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #3A41CC 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #525AFF 0 28%, transparent 29%)',
   },
   heroBalloon: {
     position: 'absolute',
@@ -5879,7 +5879,7 @@ const styles = {
     borderRadius: '50% 50% 45% 45%',
     background: 'radial-gradient(circle at 30% 30%, #FEF3C7 0 10%, transparent 11%), repeating-linear-gradient(90deg, #FCA5A5 0 15px, #F97316 15px 18px)',
     border: '2px solid #F97316',
-    boxShadow: '0 100px 0 -36px #7C3AED',
+    boxShadow: '0 100px 0 -36px #525AFF',
   },
   heroSun: {
     position: 'absolute',
@@ -5924,7 +5924,7 @@ const styles = {
   },
   heroKicker: {
     margin: '0 0 26px',
-    color: '#5B21B6',
+    color: '#3A41CC',
     fontSize: 42,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -5955,11 +5955,11 @@ const styles = {
   heroGreeting: {
     margin: '10px 0 12px',
     fontSize: 13,
-    color: '#5B21B6',
+    color: '#3A41CC',
     fontWeight: 700,
   },
   heroCta: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -5971,7 +5971,7 @@ const styles = {
   },
   ixlHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #FFFBF5 0%, #FEF3C7 35%, #FDE8BB 70%, #FCD34D 100%)',
+    background: 'linear-gradient(180deg, #F5FBFF 0%, #FEF3C7 35%, #FDE8BB 70%, #FCD34D 100%)',
     overflow: 'hidden',
     padding: '48px 220px 110px',
     minHeight: 360,
@@ -6007,7 +6007,7 @@ const styles = {
   ixlHeroIs: {
     fontWeight: 900,
     fontStyle: 'italic',
-    color: '#7C3AED',
+    color: '#525AFF',
   },
   ixlCloudsRow: {
     display: 'flex',
@@ -6041,7 +6041,7 @@ const styles = {
     lineHeight: 1.6,
   },
   ixlMemberBtn: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6128,7 +6128,7 @@ const styles = {
     flexShrink: 0,
   },
   gradeCatalogSection: {
-    background: '#FFFBF5',
+    background: '#F5FBFF',
     padding: '0 16px 38px',
   },
   gradeCatalogGrid: {
@@ -6169,7 +6169,7 @@ const styles = {
     marginLeft: -24,
   },
   catalogTitle: {
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 30,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -6203,7 +6203,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 12,
     fontWeight: 800,
   },
@@ -6259,7 +6259,7 @@ const styles = {
     justifyContent: 'center',
   },
   greenCta: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -6298,7 +6298,7 @@ const styles = {
     color: '#374151',
     minHeight: 190,
     padding: '20px 16px',
-    border: '1px solid #DDD6FE',
+    border: '1px solid #B8E4FB',
   },
   supportIcon: {
     width: 42,
@@ -6312,7 +6312,7 @@ const styles = {
   },
   supportCta: {
     marginTop: 18,
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -6322,7 +6322,7 @@ const styles = {
     cursor: 'pointer',
   },
   impactBand: {
-    background: 'linear-gradient(180deg, #7C3AED 0%, #5B21B6 100%)',
+    background: 'linear-gradient(180deg, #525AFF 0%, #3A41CC 100%)',
     padding: '28px 16px 42px',
     textAlign: 'center',
     color: 'white',
@@ -6354,7 +6354,7 @@ const styles = {
     borderRadius: '50%',
     background: 'linear-gradient(135deg, #FDE68A, #FCA5A5)',
     border: '3px solid white',
-    color: '#7C3AED',
+    color: '#525AFF',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -6402,8 +6402,8 @@ const styles = {
   },
   dashCTA: {
     marginTop: 12, padding: '10px 14px', borderRadius: 10,
-    background: 'linear-gradient(135deg, #EDE9FE, #F5F3FF)',
-    color: '#7C3AED', fontWeight: 700, fontSize: 13,
+    background: 'linear-gradient(135deg, #E0F4FF, #F0FAFF)',
+    color: '#525AFF', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
 
@@ -6524,14 +6524,14 @@ const styles = {
   },
   grade8Tab: {
     padding: '11px 18px',
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 14,
     whiteSpace: 'nowrap',
   },
   grade8TabActive: {
     padding: '11px 24px',
     color: 'white',
-    background: '#7C3AED',
+    background: '#525AFF',
     fontSize: 14,
     fontWeight: 800,
     clipPath: 'polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)',
@@ -6601,7 +6601,7 @@ const styles = {
     fontFamily: FONT_BODY,
     fontSize: 20,
     lineHeight: 1.2,
-    color: '#0D9488',
+    color: '#4AB5B5',
   },
   grade8SkillList: {
     listStyle: 'none',
@@ -6635,7 +6635,7 @@ const styles = {
     fontSize: 12,
   },
   grade8Mastery: {
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 11,
     whiteSpace: 'nowrap',
   },
@@ -6675,7 +6675,7 @@ const styles = {
   skillIntro: {
     background: 'white', borderRadius: 24, padding: '48px 32px',
     textAlign: 'center', maxWidth: 720, margin: '24px auto 0',
-    boxShadow: '0 12px 32px rgba(124,58,237,0.06)',
+    boxShadow: '0 12px 32px rgba(82,90,255,0.06)',
     border: '1px solid #F0E6D6',
   },
   skillIntroIcon: {
@@ -6718,7 +6718,7 @@ const styles = {
   questionCard: {
     background: 'white', borderRadius: 20, padding: 32,
     border: '1px solid #F0E6D6',
-    boxShadow: '0 8px 24px rgba(124,58,237,0.05)',
+    boxShadow: '0 8px 24px rgba(82,90,255,0.05)',
     animation: 'slideUp 0.3s ease',
   },
   questionMeta: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 },
@@ -6780,7 +6780,7 @@ const styles = {
     maxWidth: 600, margin: '40px auto 0',
     background: 'white', borderRadius: 24, padding: 48,
     textAlign: 'center', border: '1px solid #F0E6D6',
-    boxShadow: '0 12px 32px rgba(124,58,237,0.08)',
+    boxShadow: '0 12px 32px rgba(82,90,255,0.08)',
     animation: 'pop 0.5s ease',
   },
   resultEmoji: { fontSize: 80 },
@@ -6853,7 +6853,7 @@ const styles = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
-  recReason: { fontSize: 11, fontWeight: 700, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: 0.5 },
+  recReason: { fontSize: 11, fontWeight: 700, color: '#525AFF', textTransform: 'uppercase', letterSpacing: 0.5 },
   recTitle: { fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 800, color: '#1F2937', marginTop: 2 },
   recMeta: { fontSize: 12, color: '#6B7280', marginTop: 4 },
 
@@ -6878,7 +6878,7 @@ const styles = {
   // Badges
   badgesHero: {
     display: 'flex', alignItems: 'center', gap: 20,
-    background: 'linear-gradient(135deg, #FFF7ED 0%, #EDE9FE 100%)',
+    background: 'linear-gradient(135deg, #FFF7ED 0%, #E0F4FF 100%)',
     padding: 32, borderRadius: 24, marginTop: 16, marginBottom: 32,
     border: '2px solid #FDE8BB',
   },
@@ -6895,7 +6895,7 @@ const styles = {
   badgeEarned: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
     padding: '4px 10px', borderRadius: 999,
-    background: '#7C3AED', color: 'white', fontSize: 11, fontWeight: 700,
+    background: '#525AFF', color: 'white', fontSize: 11, fontWeight: 700,
   },
   badgeLocked: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -6946,7 +6946,7 @@ const styles = {
   // Sign In page
   siHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #F5F3FF 0%, #EDE9FE 55%, #7C3AED 100%)',
+    background: 'linear-gradient(180deg, #F0FAFF 0%, #E0F4FF 55%, #525AFF 100%)',
     minHeight: 320,
     display: 'flex',
     alignItems: 'center',
@@ -6973,7 +6973,7 @@ const styles = {
   },
   siCardTitle: {
     textAlign: 'center',
-    color: '#7C3AED',
+    color: '#525AFF',
     fontFamily: FONT_DISPLAY,
     fontSize: 26,
     fontWeight: 700,
@@ -6993,7 +6993,7 @@ const styles = {
   },
   siForgot: {
     fontSize: 12,
-    color: '#8B5CF6',
+    color: '#6D8BC0',
     cursor: 'pointer',
     fontWeight: 500,
   },
@@ -7016,7 +7016,7 @@ const styles = {
     margin: '18px 0 0',
   },
   siBtn: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7060,7 +7060,7 @@ const styles = {
     textAlign: 'center',
   },
   siNotMemberTitle: {
-    color: '#7C3AED',
+    color: '#525AFF',
     fontFamily: FONT_DISPLAY,
     fontSize: 30,
     fontWeight: 700,
@@ -7110,7 +7110,7 @@ const styles = {
     margin: '0 0 22px',
   },
   siJoinBtn: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7118,7 +7118,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #5B21B6',
+    boxShadow: '0 2px 0 #3A41CC',
   },
   siFooter: {
     background: '#F9FAFB',
@@ -7204,7 +7204,7 @@ const styles = {
   },
   testimonialStars: {
     fontSize: 22,
-    color: '#8B5CF6',
+    color: '#6D8BC0',
     letterSpacing: 3,
     marginBottom: 16,
   },
@@ -7225,9 +7225,9 @@ const styles = {
   },
   testimonialLink: {
     background: 'transparent',
-    border: '1.5px solid #7C3AED',
+    border: '1.5px solid #525AFF',
     borderRadius: 4,
-    color: '#7C3AED',
+    color: '#525AFF',
     fontSize: 13,
     fontWeight: 700,
     padding: '7px 18px',
@@ -7270,7 +7270,7 @@ const styles = {
     maxWidth: 180,
   },
   footerJoinBtn: {
-    background: '#7C3AED',
+    background: '#525AFF',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7744,7 +7744,7 @@ const hStyles = {
     flexShrink: 0,
   },
   membershipBtn: {
-    background: '#38BDF8', border: 'none', cursor: 'pointer',
+    background: '#4AB5B5', border: 'none', cursor: 'pointer',
     fontSize: 15, fontWeight: 700, color: 'white',
     fontFamily: FONT_BODY, padding: '7px 16px', borderRadius: 999,
     transition: 'opacity 0.15s', flexShrink: 0,
@@ -7859,7 +7859,7 @@ const hStyles = {
   // Active nav indicator underline
   navCaret: {
     display: 'block', width: '15%', height: 3, borderRadius: 99,
-    background: '#38BDF8',
+    background: '#4AB5B5',
     position: 'absolute', bottom: 2, left: '50%', transform: 'translateX(-50%)',
   },
 };
