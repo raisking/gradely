@@ -1193,6 +1193,64 @@ export default function WijsApp() {
   );
 }
 
+// ---------- WIJS LOGO SVG ----------
+function WijsLogo({ height = 44 }) {
+  const w = height * (200 / 230);
+  return (
+    <svg width={w} height={height} viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Wijs">
+      {/* Shield outline */}
+      <path d="M100 4 L192 38 L192 148 Q192 208 100 226 Q8 208 8 148 L8 38 Z" fill="#3B5C7D" />
+      <path d="M100 11 L185 43 L185 148 Q185 202 100 219 Q15 202 15 148 L15 43 Z" fill="white" />
+
+      {/* Top section background */}
+      <path d="M100 11 L185 43 L185 88 L15 88 L15 43 Z" fill="white" />
+
+      {/* Left laurel */}
+      <path d="M38 82 Q22 68 28 52 Q35 64 42 74 Z" fill="#7A9E6E" />
+      <path d="M44 79 Q24 62 33 44 Q42 58 48 71 Z" fill="#7A9E6E" />
+      <path d="M50 75 Q34 55 46 38 Q52 53 54 67 Z" fill="#8AAE7E" />
+
+      {/* Right laurel */}
+      <path d="M162 82 Q178 68 172 52 Q165 64 158 74 Z" fill="#7A9E6E" />
+      <path d="M156 79 Q176 62 167 44 Q158 58 152 71 Z" fill="#7A9E6E" />
+      <path d="M150 75 Q166 55 154 38 Q148 53 146 67 Z" fill="#8AAE7E" />
+
+      {/* Graduation cap board */}
+      <rect x="68" y="54" width="64" height="10" rx="2" fill="#3B5C7D" />
+      {/* Cap top */}
+      <path d="M88 54 L100 44 L112 54 L100 62 Z" fill="#3B5C7D" />
+      {/* Tassel string */}
+      <line x1="128" y1="58" x2="133" y2="72" stroke="#3B5C7D" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="133" cy="75" r="3" fill="#3B5C7D" />
+
+      {/* Middle banner */}
+      <rect x="15" y="88" width="170" height="52" fill="#3B5C7D" />
+      {/* WIJS text */}
+      <text x="100" y="127" textAnchor="middle" fill="white" fontFamily="Arial Black, Impact, sans-serif" fontSize="34" fontWeight="900" letterSpacing="6">WIJS</text>
+
+      {/* Bottom section */}
+      <path d="M15 140 L185 140 L185 148 Q185 202 100 219 Q15 202 15 148 Z" fill="white" />
+
+      {/* Open book / leaves bottom-left */}
+      <path d="M100 218 Q58 208 34 185 Q42 175 58 170 Q72 168 85 178 Q94 185 100 195 Z" fill="#7A9E6E" />
+      <path d="M100 218 Q58 208 38 190 Q46 178 62 174 Q76 172 89 183 Q97 190 100 200 Z" fill="#8AAE7E" opacity="0.7" />
+
+      {/* Open book / leaves bottom-right */}
+      <path d="M100 218 Q142 208 166 185 Q158 175 142 170 Q128 168 115 178 Q106 185 100 195 Z" fill="#7A9E6E" />
+      <path d="M100 218 Q142 208 162 190 Q154 178 138 174 Q124 172 111 183 Q103 190 100 200 Z" fill="#8AAE7E" opacity="0.7" />
+
+      {/* Pencil */}
+      <rect x="96" y="152" width="8" height="58" rx="2" fill="#E8A838" />
+      {/* Pencil tip triangle */}
+      <path d="M96 152 L100 143 L104 152 Z" fill="#F5C842" />
+      {/* Pencil eraser/base */}
+      <rect x="96" y="207" width="8" height="5" rx="1" fill="#C47F20" />
+      {/* Pencil tip point */}
+      <path d="M97.5 212 L100 219 L102.5 212 Z" fill="#8B5E20" />
+    </svg>
+  );
+}
+
 // ---------- HEADER ----------
 function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset, onSelectGrade, onPickSkill }) {
   const [menuOpen, setMenuOpen]           = useState(false);
@@ -1235,34 +1293,29 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
   const isSignedIn = !!user?.username;
   const firstName  = isSignedIn ? (user.name || user.username).split(' ')[0] : null;
 
+  const ACT = () => { onLearning(); setOpenNav(null); };
   const learningMega = [
     {
       col: 'subjects',
       items: [
-        { icon: <Calculator size={15}/>, label: 'Math',          links: ['Skills','Lessons','Videos','Games'], badge: null,  act: () => { onLearning(); setOpenNav(null); } },
-        { icon: <BookOpen size={15}/>,   label: 'Language arts', links: ['Skills','Videos','Games'],           badge: null,  act: () => { onLearning(); setOpenNav(null); } },
-        { icon: <FlaskConical size={15}/>, label: 'Science',     links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
-        { icon: <Globe2 size={15}/>,     label: 'Social studies',links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
-        { icon: <BookOpen size={15}/>,   label: 'Spanish',       links: [],                                    badge: null,  act: () => { onLearning(); setOpenNav(null); } },
+        { label: 'Math',          icon: <Calculator size={17}/>,   inlineLinks: ['Skills','Lessons','Videos','Games'], extra: { label: 'Fluency Zone', badge: 'New!' }, act: ACT },
+        { label: 'Language arts', icon: <BookOpen size={17}/>,     inlineLinks: ['Skills','Videos','Games'],           act: ACT },
+        { label: 'Science',       icon: <FlaskConical size={17}/>, act: ACT },
+        { label: 'Social studies',icon: <Globe2 size={17}/>,       act: ACT },
+        { label: 'Spanish',       icon: <BookOpen size={17}/>,     act: ACT },
       ],
     },
     {
       col: 'recommendations',
-      items: [
-        { icon: <Star size={15}/>,     label: 'Recommendations', links: ['Recommendations wall'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
-      ],
+      items: [{ label: 'Recommendations', icon: <Star size={17}/>,    blockLinks: ['Recommendations wall'], act: ACT }],
     },
     {
       col: 'skillplans',
-      items: [
-        { icon: <BarChart3 size={15}/>, label: 'Skill plans', links: ['Wijs plans','State standards','Textbooks','Test prep'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
-      ],
+      items: [{ label: 'Skill plans', icon: <BarChart3 size={17}/>,   blockLinks: ['IXL plans','Georgia state standards','Textbooks','Test prep'], act: ACT }],
     },
     {
       col: 'awards',
-      items: [
-        { icon: <Trophy size={15}/>, label: 'Awards', links: ['Student awards'], badge: null, act: () => { onLearning(); setOpenNav(null); } },
-      ],
+      items: [{ label: 'Awards', icon: <Trophy size={17}/>,           blockLinks: ['Student awards'], act: ACT }],
     },
   ];
 
@@ -1293,8 +1346,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
 
         {/* Logo */}
         <button onClick={onHome} style={hStyles.logo}>
-          <span style={hStyles.logoMark}>🎓</span>
-          <span style={hStyles.logoText}>Wijs</span>
+          <img src="/assets/kids/logo_2.png" alt="Wijs" style={{ height: 64, width: 'auto', display: 'block' }} />
         </button>
 
         {/* Search bar */}
@@ -1446,34 +1498,45 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
                 onMouseEnter={() => openDrop(item.key)}
                 onMouseLeave={closeDrop}
               >
-                {learningMega.map(col => (
-                  <div key={col.col} style={hStyles.megaCol}>
+                {learningMega.map((col, ci) => (
+                  <div key={col.col} style={{ ...hStyles.megaCol, ...(ci === 0 ? { minWidth: 220, paddingRight: 40 } : ci === 1 ? { minWidth: 220, paddingLeft: 36, paddingRight: 40, borderLeft: '1px solid #E9ECEF' } : ci === 2 ? { minWidth: 240, paddingLeft: 36, paddingRight: 44, borderLeft: '1px solid #E9ECEF' } : { minWidth: 180, paddingLeft: 36, borderLeft: '1px solid #E9ECEF' }) }}>
                     {col.items.map(entry => (
                       <div key={entry.label} style={hStyles.megaGroup}>
-                        <button onClick={entry.act} style={hStyles.megaHeading}>
+                        {/* Heading row */}
+                        <button onClick={entry.act} style={hStyles.megaHeading} className="mega-heading">
                           <span style={hStyles.megaHeadingIcon}>{entry.icon}</span>
-                          {entry.label}
-                          {entry.badge && <span style={hStyles.megaBadge}>{entry.badge}</span>}
+                          <span>{entry.label}</span>
                         </button>
-                        {entry.links.length > 0 && (
-                          entry.links.length > 3
-                            ? /* vertical list for long link sets */
-                              <div style={{ paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 5 }}>
-                                {entry.links.map(lk => (
-                                  <button key={lk} onClick={entry.act} style={{ ...hStyles.megaLink, display: 'flex', alignItems: 'center', gap: 5, color: '#6B7280' }}>
-                                    <span style={{ fontSize: 10, color: '#D1D5DB' }}>›</span>{lk}
-                                  </button>
-                                ))}
-                              </div>
-                            : /* inline dots for short link sets */
-                              <div style={hStyles.megaLinks}>
-                                {entry.links.map((lk, i) => (
-                                  <span key={lk}>
-                                    {i > 0 && <span style={hStyles.megaDot}> • </span>}
-                                    <button onClick={entry.act} style={hStyles.megaLink}>{lk}</button>
-                                  </span>
-                                ))}
-                              </div>
+
+                        {/* Inline bullet links (Math, Language arts style) */}
+                        {entry.inlineLinks && entry.inlineLinks.length > 0 && (
+                          <div style={hStyles.megaInlineLinks}>
+                            {entry.inlineLinks.map((lk, li) => (
+                              <span key={lk} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                                {li > 0 && <span style={hStyles.megaBullet}>•</span>}
+                                <button onClick={entry.act} className="mega-link" style={hStyles.megaInlineLink}>{lk}</button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Extra item with badge (Fluency Zone New!) */}
+                        {entry.extra && (
+                          <div style={{ paddingLeft: 28, marginTop: 2 }}>
+                            <button onClick={entry.act} className="mega-link" style={{ ...hStyles.megaInlineLink, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                              {entry.extra.label}
+                              {entry.extra.badge && <span style={hStyles.megaBadge}>{entry.extra.badge}</span>}
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Block links — one per line (Skill plans, Recommendations, Awards) */}
+                        {entry.blockLinks && entry.blockLinks.length > 0 && (
+                          <div style={hStyles.megaBlockLinks}>
+                            {entry.blockLinks.map(lk => (
+                              <button key={lk} onClick={entry.act} className="mega-link" style={hStyles.megaBlockLink}>{lk}</button>
+                            ))}
+                          </div>
                         )}
                       </div>
                     ))}
@@ -1900,8 +1963,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
 
   const artS = {
     page: { background: '#FFFBF5', color: '#1C1215' },
-    hero: { background: '#fff', padding: '72px 24px 80px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, flexWrap: 'wrap' },
-    heroLeft: { maxWidth: 560, flex: '1 1 320px' },
+    hero: { background: '#F5E6C8', padding: '72px 0 80px', width: '100%' },
+    heroInner: { maxWidth: 1200, margin: '0 auto', padding: '0 24px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, flexWrap: 'wrap', boxSizing: 'border-box' },
+    heroLeft: { maxWidth: 560, flex: '0 1 480px', minWidth: 280 },
     welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#EDE9FE', color: '#5B21B6', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
     h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1C1215' },
     h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#7C3AED' },
@@ -1909,7 +1973,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     heroBtn: { background: '#7C3AED', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(124,58,237,0.32)' },
     tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
     tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
-    heroVisual: { position: 'relative', flex: '1 1 620px', maxWidth: 680, minHeight: 446, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' },
+    heroVisual: { position: 'relative', flex: '0 1 580px', maxWidth: 620, minWidth: 280, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' },
     subjectStack: { width: 300, position: 'relative', userSelect: 'none', zIndex: 2 },
     avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#EDE9FE', border: '5px solid #7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(124,58,237,0.18)', flexShrink: 0 },
     badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#F5F3FF', color: '#5B21B6', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
@@ -1961,6 +2025,13 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden', border: '1px solid #F0E6D6' },
     faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1C1215', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
     faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B5E55', lineHeight: 1.7, margin: 0 },
+    photosSec: { background: '#fff', padding: '72px 24px' },
+    photosGrid: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginTop: 36 },
+    photoCard: { position: 'relative', borderRadius: 20, overflow: 'hidden', aspectRatio: '4/3', background: '#E5E7EB', boxShadow: '0 8px 28px rgba(0,0,0,0.10)' },
+    photoImg: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' },
+    photoOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 20px 16px', background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)' },
+    photoCaption: { color: '#fff', fontWeight: 800, fontSize: 16, margin: 0, lineHeight: 1.3 },
+    photoTag: { display: 'inline-block', background: '#7C3AED', color: '#fff', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 800, letterSpacing: 0.5, marginBottom: 6 },
   };
 
   const gradeColors = ['#FDE8BB','#FEF3C7','#D1FAE5','#CFFAFE','#EDE9FE','#FCE7F3','#FFE4E6','#FDE8BB','#FEF3C7','#D1FAE5','#EDE9FE','#FCE7F3','#FDE8BB','#CFFAFE'];
@@ -1977,6 +2048,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
 
       {/* ── Hero ── */}
       <section style={artS.hero} className="art-hero">
+        <div style={artS.heroInner} className="art-hero-inner">
         <div style={artS.heroLeft} className="art-hero-left">
           <div style={artS.welcomePill}>✳ Welcome to Wijs Academy</div>
           <h1 style={artS.h1}>
@@ -2118,6 +2190,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
 
         </div>
+        </div>{/* end heroInner */}
       </section>
 
       {/* ── Program cards ── */}
@@ -2179,6 +2252,37 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
                 <div style={{ ...artS.whyIcon, background: item.bg }}>{item.icon}</div>
                 <h3 style={artS.whyTitle}>{item.title}</h3>
                 <p style={artS.whyText}>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Photo Gallery ── */}
+      <section style={artS.photosSec} className="art-section art-photos-sec">
+        <div style={artS.secWrap} className="art-section-wrap">
+          <div style={artS.secLabel}>Learning in Action</div>
+          <h2 style={artS.secTitle}>Real students, <em style={artS.secEm}>real results</em></h2>
+          <p style={artS.secDesc}>Thousands of students K–12 are building skills, boosting confidence, and loving learning every day.</p>
+          <div style={artS.photosGrid} className="art-photos-grid">
+            {[
+              { src: '/assets/kids/kid.jpg',    tag: 'Math',           caption: 'Making numbers exciting for every student'    },
+              { src: '/assets/kids/kid_1.png',  tag: 'Early Learning', caption: 'Interactive lessons for our youngest learners' },
+              { src: '/assets/kids/kid_2.webp', tag: 'Practice',       caption: 'Adaptive quizzes that meet kids where they are'},
+              { src: '/assets/kids/kid_3.jpg',  tag: 'Classroom',      caption: 'Building confidence one skill at a time'       },
+            ].map(({ src, tag, caption }) => (
+              <div key={src} style={artS.photoCard} className="art-photo-card">
+                <img
+                  src={src}
+                  alt={caption}
+                  style={artS.photoImg}
+                  loading="lazy"
+                  onError={e => { e.currentTarget.style.opacity = '0.3'; }}
+                />
+                <div style={artS.photoOverlay}>
+                  <span style={artS.photoTag}>{tag}</span>
+                  <p style={artS.photoCaption}>{caption}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -4743,8 +4847,9 @@ function StyleInjector() {
         font-display: swap;
       }
 
-      html { overflow-x: hidden; }
-      body { margin: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+      html { overflow-x: hidden; width: 100%; }
+      body { margin: 0; padding: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; width: 100%; }
+      #root { width: 100%; }
       *, *::before, *::after { box-sizing: border-box; }
       img, video, iframe, svg { max-width: 100%; height: auto; }
 
@@ -4883,6 +4988,9 @@ function StyleInjector() {
       .subject-card-anim:hover { transform: translateY(-4px) scale(1.01) !important; box-shadow: 0 12px 28px rgba(0,0,0,0.1) !important; }
       .badge-card-anim:hover { transform: scale(1.06) !important; }
 
+      .art-photo-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .art-photo-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.18) !important; }
+      .art-photo-card:hover img { transform: scale(1.04); }
       .grade-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
       .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
       .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
@@ -4908,14 +5016,16 @@ function StyleInjector() {
       .h-drop-item:hover { background: #F9FAFB !important; }
       .h-drop-item:hover .h-drop-label { color: #111827 !important; }
       .h-suggest-item:hover { background: #F5F7FF !important; }
-      button[style*="megaHeading"]:hover, .mega-heading:hover { color: #004F7A !important; }
-      .mega-link-btn:hover { color: #0070A0 !important; text-decoration: underline; }
+      .mega-heading:hover { color: #065F7A !important; }
+      .mega-link:hover { color: #065F7A !important; text-decoration: underline; }
 
       /* ── TABLET (≤900px) ── */
       @media (max-width: 900px) {
-        .art-hero { gap: 40px !important; padding: 52px 20px 60px !important; }
-        .art-hero-right { flex-basis: 620px !important; width: min(100%, 680px) !important; }
+        .art-hero { padding: 52px 0 60px !important; }
+        .art-hero-inner { gap: 40px !important; padding: 0 20px !important; }
+        .art-hero-right { flex-basis: 520px !important; width: min(100%, 580px) !important; }
         .art-cards-grid, .art-why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        .art-photos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 16px !important; }
         .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
         .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -4929,13 +5039,15 @@ function StyleInjector() {
         .resp-container { padding: 20px 16px !important; }
 
         /* home hero */
-        .art-hero {
+        .art-hero { padding: 40px 0 48px !important; }
+        .art-hero-inner {
           flex-direction: column !important;
-          padding: 40px 16px 48px !important;
+          padding: 0 16px !important;
           gap: 28px !important;
           text-align: center !important;
+          align-items: center !important;
         }
-        .art-hero-left { max-width: 100% !important; }
+        .art-hero-left { max-width: 100% !important; flex-basis: 100% !important; }
         .art-hero-right {
           display: flex !important;
           width: min(100%, 430px) !important;
@@ -5014,6 +5126,8 @@ function StyleInjector() {
         .art-stats-row { grid-template-columns: 1fr 1fr !important; }
         .hero-clouds, .grade-catalog-grid, .grade8-skill-columns,
         .support-grid, .impact-grid, .home-stats, .promo-cards, .responsive-grid,
+        .art-photos-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+        .art-photos-sec { padding: 48px 16px !important; }
         .art-cards-grid, .art-why-grid, .art-start-inner {
           grid-template-columns: 1fr !important;
         }
@@ -5119,6 +5233,7 @@ const FONT_DISPLAY = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-seri
 const styles = {
   app: {
     minHeight: '100vh',
+    width: '100%',
     fontFamily: FONT_BODY,
     background: '#FFFBF5',
     color: '#1C1215',
@@ -7515,29 +7630,29 @@ const hStyles = {
   },
   navLink: {
     background: 'none', border: 'none', cursor: 'pointer',
-    fontSize: 14, fontWeight: 500, color: '#374151',
-    fontFamily: FONT_BODY, padding: '8px 12px', borderRadius: 8,
+    fontSize: 15.5, fontWeight: 700, color: '#374151',
+    fontFamily: FONT_BODY, padding: '8px 14px', borderRadius: 8,
     display: 'flex', alignItems: 'center',
     transition: 'background 0.15s, color 0.15s',
   },
   navActive: {
-    color: '#111827', fontWeight: 700, background: '#F3F4F6',
+    color: '#111827', fontWeight: 800, background: '#F3F4F6',
   },
 
   // Dropdown panel
   dropdown: {
-    position: 'absolute', top: 'calc(100% + 6px)', left: '50%',
+    position: 'absolute', top: 'calc(100% + 4px)', left: '50%',
     transform: 'translateX(-50%)',
-    background: 'white', borderRadius: 14,
-    boxShadow: '0 8px 30px rgba(0,0,0,0.11), 0 1px 4px rgba(0,0,0,0.06)',
-    border: '1px solid #F3F4F6', padding: 8,
-    minWidth: 230, zIndex: 500,
+    background: 'white', borderRadius: 4,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06)',
+    border: '1px solid #E5E7EB', padding: '8px 4px',
+    minWidth: 240, zIndex: 500,
     animation: 'dropdownSlide 0.15s ease both',
   },
   dropItem: {
     display: 'flex', alignItems: 'flex-start', gap: 10,
     width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-    padding: '10px 12px', borderRadius: 8, textAlign: 'left',
+    padding: '12px 16px', borderRadius: 0, textAlign: 'left',
     transition: 'background 0.1s',
   },
   dropIcon:  { fontSize: 18, lineHeight: 1, marginTop: 1 },
@@ -7587,12 +7702,12 @@ const hStyles = {
   // Two-row layout containers
   topRow: {
     maxWidth: 1280, margin: '0 auto', padding: '0 24px',
-    height: 56, display: 'flex', alignItems: 'center', gap: 10,
+    height: 72, display: 'flex', alignItems: 'center', gap: 10,
   },
   navRow: {
     maxWidth: 1280, margin: '0 auto', padding: '0 24px',
     height: 40, display: 'flex', alignItems: 'center', gap: 2,
-    borderTop: '1px solid #F3F4F6',
+    borderTop: '1px solid #F3F4F6', position: 'relative', overflow: 'visible',
   },
 
   // Logo mark (emoji / icon container)
@@ -7688,50 +7803,66 @@ const hStyles = {
 
   // Mega menu panel
   megaPanel: {
-    position: 'absolute', top: 'calc(100% + 6px)', left: 0,
-    background: 'white', borderRadius: 16,
-    boxShadow: '0 16px 48px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06)',
+    position: 'absolute', top: 'calc(100% + 4px)', left: 0,
+    background: 'white', borderRadius: 0,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)',
     border: '1px solid #E5E7EB',
-    padding: '28px 36px 32px',
-    display: 'flex', flexDirection: 'row', gap: 48,
-    zIndex: 600, minWidth: 720,
+    padding: '32px 44px 36px',
+    display: 'inline-flex', flexDirection: 'row', alignItems: 'flex-start',
+    gap: 0, flexWrap: 'nowrap',
+    width: 'max-content',
+    zIndex: 600,
     animation: 'dropdownSlide 0.15s ease both',
   },
   megaCol: {
-    display: 'flex', flexDirection: 'column', gap: 24,
-    minWidth: 155,
+    display: 'flex', flexDirection: 'column', gap: 0,
+    flex: '0 0 auto',
   },
   megaGroup: {
-    display: 'flex', flexDirection: 'column', gap: 8,
+    display: 'flex', flexDirection: 'column', gap: 0, marginBottom: 22,
   },
   megaHeading: {
-    display: 'inline-flex', alignItems: 'center', gap: 8,
+    display: 'inline-flex', alignItems: 'center', gap: 10,
     background: 'none', border: 'none', cursor: 'pointer',
-    fontSize: 14, fontWeight: 700, color: '#0070A0',
-    fontFamily: FONT_BODY, padding: 0, textAlign: 'left',
-    transition: 'color 0.12s', marginBottom: 2,
+    fontSize: 14.5, fontWeight: 700, color: '#0B7DA1',
+    fontFamily: FONT_BODY, padding: '6px 0', textAlign: 'left',
+    transition: 'color 0.13s',
+    whiteSpace: 'nowrap',
   },
   megaHeadingIcon: {
-    color: '#0070A0', display: 'flex', alignItems: 'center',
+    color: '#0B7DA1', display: 'flex', alignItems: 'center', flexShrink: 0,
   },
   megaBadge: {
-    background: '#8B5CF6', color: 'white',
-    fontSize: 10, fontWeight: 800, borderRadius: 4,
-    padding: '1px 6px', marginLeft: 4, letterSpacing: '0.02em',
+    background: '#2563EB', color: 'white',
+    fontSize: 10, fontWeight: 800, borderRadius: 999,
+    padding: '2px 8px', letterSpacing: '0.02em',
   },
-  megaLinks: {
-    fontSize: 12.5, color: '#374151', paddingLeft: 24,
-    display: 'flex', flexDirection: 'row', flexWrap: 'nowrap',
-    alignItems: 'center', gap: 0, whiteSpace: 'nowrap',
+  megaInlineLinks: {
+    display: 'flex', flexWrap: 'wrap', alignItems: 'center',
+    gap: 6, paddingLeft: 27, marginTop: 10,
   },
-  megaLink: {
+  megaInlineLink: {
     background: 'none', border: 'none', cursor: 'pointer',
-    fontSize: 12.5, color: '#374151', fontFamily: FONT_BODY,
-    padding: 0, transition: 'color 0.12s',
+    fontSize: 13.5, color: '#0B9DC7', fontFamily: FONT_BODY,
+    padding: '3px 0', transition: 'color 0.12s',
   },
-  megaDot: {
-    color: '#D1D5DB', fontSize: 13, padding: '0 5px',
+  megaBullet: {
+    color: '#B0BEC5', fontSize: 13,
   },
+  megaBlockLinks: {
+    display: 'flex', flexDirection: 'column', gap: 0,
+    paddingLeft: 27, marginTop: 10,
+  },
+  megaBlockLink: {
+    background: 'none', border: 'none', cursor: 'pointer',
+    fontSize: 13.5, color: '#0B9DC7', fontFamily: FONT_BODY,
+    padding: '6px 0', textAlign: 'left',
+    borderBottom: '1px solid #F3F7FA',
+    transition: 'color 0.12s',
+  },
+  megaLinks: { display: 'none' },
+  megaLink:  { display: 'none' },
+  megaDot:   {},
 
   // Active nav indicator dot
   navCaret: {
