@@ -1193,64 +1193,6 @@ export default function WijsApp() {
   );
 }
 
-// ---------- WIJS LOGO SVG ----------
-function WijsLogo({ height = 44 }) {
-  const w = height * (200 / 230);
-  return (
-    <svg width={w} height={height} viewBox="0 0 200 230" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Wijs">
-      {/* Shield outline */}
-      <path d="M100 4 L192 38 L192 148 Q192 208 100 226 Q8 208 8 148 L8 38 Z" fill="#3B5C7D" />
-      <path d="M100 11 L185 43 L185 148 Q185 202 100 219 Q15 202 15 148 L15 43 Z" fill="white" />
-
-      {/* Top section background */}
-      <path d="M100 11 L185 43 L185 88 L15 88 L15 43 Z" fill="white" />
-
-      {/* Left laurel */}
-      <path d="M38 82 Q22 68 28 52 Q35 64 42 74 Z" fill="#7A9E6E" />
-      <path d="M44 79 Q24 62 33 44 Q42 58 48 71 Z" fill="#7A9E6E" />
-      <path d="M50 75 Q34 55 46 38 Q52 53 54 67 Z" fill="#8AAE7E" />
-
-      {/* Right laurel */}
-      <path d="M162 82 Q178 68 172 52 Q165 64 158 74 Z" fill="#7A9E6E" />
-      <path d="M156 79 Q176 62 167 44 Q158 58 152 71 Z" fill="#7A9E6E" />
-      <path d="M150 75 Q166 55 154 38 Q148 53 146 67 Z" fill="#8AAE7E" />
-
-      {/* Graduation cap board */}
-      <rect x="68" y="54" width="64" height="10" rx="2" fill="#3B5C7D" />
-      {/* Cap top */}
-      <path d="M88 54 L100 44 L112 54 L100 62 Z" fill="#3B5C7D" />
-      {/* Tassel string */}
-      <line x1="128" y1="58" x2="133" y2="72" stroke="#3B5C7D" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="133" cy="75" r="3" fill="#3B5C7D" />
-
-      {/* Middle banner */}
-      <rect x="15" y="88" width="170" height="52" fill="#3B5C7D" />
-      {/* WIJS text */}
-      <text x="100" y="127" textAnchor="middle" fill="white" fontFamily="Arial Black, Impact, sans-serif" fontSize="34" fontWeight="900" letterSpacing="6">WIJS</text>
-
-      {/* Bottom section */}
-      <path d="M15 140 L185 140 L185 148 Q185 202 100 219 Q15 202 15 148 Z" fill="white" />
-
-      {/* Open book / leaves bottom-left */}
-      <path d="M100 218 Q58 208 34 185 Q42 175 58 170 Q72 168 85 178 Q94 185 100 195 Z" fill="#7A9E6E" />
-      <path d="M100 218 Q58 208 38 190 Q46 178 62 174 Q76 172 89 183 Q97 190 100 200 Z" fill="#8AAE7E" opacity="0.7" />
-
-      {/* Open book / leaves bottom-right */}
-      <path d="M100 218 Q142 208 166 185 Q158 175 142 170 Q128 168 115 178 Q106 185 100 195 Z" fill="#7A9E6E" />
-      <path d="M100 218 Q142 208 162 190 Q154 178 138 174 Q124 172 111 183 Q103 190 100 200 Z" fill="#8AAE7E" opacity="0.7" />
-
-      {/* Pencil */}
-      <rect x="96" y="152" width="8" height="58" rx="2" fill="#E8A838" />
-      {/* Pencil tip triangle */}
-      <path d="M96 152 L100 143 L104 152 Z" fill="#F5C842" />
-      {/* Pencil eraser/base */}
-      <rect x="96" y="207" width="8" height="5" rx="1" fill="#C47F20" />
-      {/* Pencil tip point */}
-      <path d="M97.5 212 L100 219 L102.5 212 Z" fill="#8B5E20" />
-    </svg>
-  );
-}
-
 // ---------- HEADER ----------
 function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPractice, onDashboard, onParent, onReports, onAdmin, onBadges, onSubscribe, onReset, onSelectGrade, onPickSkill }) {
   const [menuOpen, setMenuOpen]           = useState(false);
@@ -1346,7 +1288,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
 
         {/* Logo */}
         <button onClick={onHome} style={hStyles.logo}>
-          <img src="/assets/kids/logo_2.png" alt="Wijs" style={{ height: 64, width: 'auto', display: 'block' }} />
+          <img src="/assets/kids/logo_2.png" alt="Wijs" style={{ height: 80, width: 'auto', display: 'block' }} />
         </button>
 
         {/* Search bar */}
@@ -7702,7 +7644,7 @@ const hStyles = {
   // Two-row layout containers
   topRow: {
     maxWidth: 1280, margin: '0 auto', padding: '0 24px',
-    height: 72, display: 'flex', alignItems: 'center', gap: 10,
+    height: 88, display: 'flex', alignItems: 'center', gap: 10,
   },
   navRow: {
     maxWidth: 1280, margin: '0 auto', padding: '0 24px',
