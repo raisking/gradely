@@ -1285,7 +1285,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
 
         {/* Logo */}
         <button onClick={onHome} style={hStyles.logo}>
-          <img src="/assets/kids/logo_2.png" alt="WIJS" style={{ height: 80, width: 'auto', display: 'block' }} />
+          <img src="/assets/kids/logo_v.png" alt="WIJS" style={{ height: 80, width: 'auto', display: 'block' }} />
         </button>
 
         {/* Search bar */}
