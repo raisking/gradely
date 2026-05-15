@@ -2564,6 +2564,19 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
 function LearningCatalogScreen({ progress, onGoToSubject }) {
   const [activeSubject, setActiveSubject] = useState('math');
   const [activeView, setActiveView] = useState('Grades');
+  const tabBarRef = useRef(null);
+
+  useEffect(() => {
+    const el = tabBarRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
 
   const GRADE_DISPLAY = {
     k:    { name: 'Kindergarten', badge: 'K'  },
@@ -2637,8 +2650,8 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
     <div>
       {/* Subject Tabs */}
       <div className="lc-tab-bar-wrap">
-      <div style={styles.lcSubjectBar} className="lc-tab-bar">
-        <div style={{ ...styles.lcBarInner, alignItems: 'stretch' }}>
+      <div ref={tabBarRef} style={styles.lcSubjectBar} className="lc-tab-bar">
+        <div style={{ ...styles.lcBarInner, alignItems: 'stretch', flexWrap: 'nowrap' }}>
           {subjectTabs.map(tab => {
             const Icon = tab.icon;
             const isActive = tab.id === activeSubject;
@@ -7360,6 +7373,7 @@ const styles = {
     fontFamily: FONT_BODY,
     transition: 'color 0.15s, border-color 0.15s',
     minWidth: 72,
+    flexShrink: 0,
   },
   lcSubjectTabDisabled: {
     color: '#9CA3AF',
