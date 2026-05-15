@@ -2636,6 +2636,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   return (
     <div>
       {/* Subject Tabs */}
+      <div className="lc-tab-bar-wrap">
       <div style={styles.lcSubjectBar} className="lc-tab-bar">
         <div style={{ ...styles.lcBarInner, alignItems: 'stretch' }}>
           {subjectTabs.map(tab => {
@@ -2661,6 +2662,7 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
             );
           })}
         </div>
+      </div>
       </div>
 
       {/* View By Bar */}
@@ -5170,10 +5172,22 @@ function StyleInjector() {
       .lc-tab-bar { scrollbar-width: none !important; }
       .lc-tab-bar::-webkit-scrollbar { display: none; }
       .lc-tab-bar { overflow-x: auto !important; }
+
+      /* fade hint on right edge for mobile */
+      .lc-tab-bar-wrap { position: relative; }
+      .lc-tab-bar-wrap::after {
+        content: '';
+        position: absolute; top: 0; right: 0; bottom: 0;
+        width: 40px;
+        background: linear-gradient(to right, transparent, white);
+        pointer-events: none;
+        z-index: 2;
+      }
+
       @media (max-width: 768px) {
-        .lc-tab-bar { -webkit-overflow-scrolling: touch !important; }
-        .lc-tab-bar > div { padding: 0 8px !important; gap: 0 !important; }
-        .lc-tab { padding: 8px 8px 6px !important; min-width: 52px !important; font-size: 10px !important; }
+        .lc-tab-bar { -webkit-overflow-scrolling: touch !important; scroll-snap-type: x mandatory !important; }
+        .lc-tab-bar > div { padding: 0 8px !important; gap: 0 !important; flex-wrap: nowrap !important; }
+        .lc-tab { padding: 8px 14px 6px !important; min-width: 72px !important; flex-shrink: 0 !important; font-size: 11px !important; scroll-snap-align: start; }
         .lc-tab svg { width: 16px !important; height: 16px !important; }
         .lc-tab .lc-tab-label { display: none !important; }
         .lc-tab .lc-tab-label-short { display: block !important; }
@@ -5182,6 +5196,7 @@ function StyleInjector() {
       @media (min-width: 769px) {
         .lc-tab .lc-tab-label { display: block !important; }
         .lc-tab .lc-tab-label-short { display: none !important; }
+        .lc-tab-bar-wrap::after { display: none; }
       }
 
       /* -- MISC COMPONENTS -- */
