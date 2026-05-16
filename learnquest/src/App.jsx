@@ -1164,6 +1164,7 @@ export default function WijsApp() {
                                   />}
         {view === 'badges'    && <BadgesScreen stats={stats} onBack={goHome} />}
         {view === 'signin'    && <SignInScreen onSignIn={handleSignIn} onCreateAccount={handleCreateAccount} onJoin={() => setView('subscription')} onBack={goHome} />}
+        {view === 'about'     && <AboutScreen onBack={goHome} />}
       </main>
 
       {/* Toasts */}
@@ -1178,7 +1179,7 @@ export default function WijsApp() {
         ))}
       </div>
 
-      <Footer />
+      <Footer onAbout={() => setView('about')} />
     </div>
   );
 }
@@ -2364,6 +2365,56 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
   );
 }
 
+// ---------- ABOUT US ----------
+function AboutScreen({ onBack }) {
+  return (
+    <div style={{ background: '#F5FBFF', minHeight: '100vh', padding: '0 0 80px' }}>
+      {/* Hero banner */}
+      <div style={{ background: 'linear-gradient(135deg, #525AFF 0%, #4AB5B5 100%)', padding: '64px 24px 72px', textAlign: 'center', color: '#fff' }}>
+        <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, marginBottom: 12 }}>Our Story</div>
+        <h1 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 900, margin: '0 0 16px', lineHeight: 1.1 }}>About <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>WIJS</em></h1>
+        <p style={{ fontSize: 16, opacity: 0.9, maxWidth: 520, margin: '0 auto' }}>A platform born from a parent's belief that every child deserves to love learning.</p>
+      </div>
+
+      {/* Content */}
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '56px 24px 0' }}>
+        {/* Quote block */}
+        <div style={{ background: '#E0F4FF', borderLeft: '4px solid #525AFF', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40 }}>
+          <p style={{ fontSize: 18, fontWeight: 700, color: '#1C1215', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: 1.5 }}>
+            "Learning should be joyful, engaging, and empowering — together we can make that happen for our kids."
+          </p>
+        </div>
+
+        {/* Story paragraphs */}
+        {[
+          'As a parent, I\'m always on the lookout for tools that genuinely help my child grow. I started using an online learning app for my kid, and the difference has been truly remarkable. What began as a simple way to keep them engaged quickly turned into a real learning journey. I\'ve watched their confidence build, their curiosity spark, and their skills sharpen week after week, especially in core subjects like Math, English Language Arts (ELA), and Science. Concepts that once felt overwhelming now click with ease, and the best part is that my child actually looks forward to learning time.',
+          'Seeing this transformation inspired me to share my experience with other parents. I know how challenging it can be to find the right resources that balance learning with fun, and I want to help other moms and dads discover tools that make a real difference. My goal is to support fellow parents in helping their kids strengthen their skills in Math, ELA, and Science, while also building the confidence and love for learning that will carry them far beyond the classroom.',
+          'Whether your child is struggling with a tricky concept, needs extra practice, or simply thrives on new challenges, the right learning app can turn screen time into growth time. If my journey can help even one parent unlock that same spark in their child, then sharing it is absolutely worth it.',
+        ].map((para, i) => (
+          <p key={i} style={{ fontSize: 16, color: '#4B5563', lineHeight: 1.8, marginBottom: 24 }}>{para}</p>
+        ))}
+
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '40px 0', justifyContent: 'center' }}>
+          {[['500+', 'Skills available'], ['13', 'Grade levels'], ['4', 'Core subjects'], ['K–12', 'Coverage']].map(([val, label]) => (
+            <div key={label} style={{ background: '#fff', border: '1px solid #B8E4FB', borderRadius: 16, padding: '24px 32px', textAlign: 'center', flex: '1 1 130px', minWidth: 120 }}>
+              <div style={{ fontSize: 28, fontWeight: 900, color: '#525AFF' }}>{val}</div>
+              <div style={{ fontSize: 13, color: '#6B7280', marginTop: 4 }}>{label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div style={{ textAlign: 'center', marginTop: 48 }}>
+          <button onClick={onBack} style={{ background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' }}>
+            Start learning ↗
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---------- SIGN IN ----------
 function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
   const [mode, setMode] = useState('signin');
@@ -2401,7 +2452,7 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
       text: 'Easy-to-use reports provide real-time insight into student progress' },
   ];
 
-  const footerLinks = ['Company','Membership','Blog','Help center','Tell us what you think','Testimonials','Careers','Contact us','Terms of service','Privacy policy'];
+  const footerLinks = ['About us','Company','Membership','Blog','Help center','Tell us what you think','Testimonials','Careers','Contact us','Terms of service','Privacy policy'];
 
   return (
     <div>
@@ -4785,7 +4836,7 @@ function BackBtn({ onClick, label }) {
   );
 }
 
-function Footer() {
+function Footer({ onAbout }) {
   const cols = [
     {
       heading: 'What we offer',
@@ -4823,7 +4874,9 @@ function Footer() {
               <div key={col.heading} style={styles.footerCol}>
                 <h4 style={styles.footerColHead}>{col.heading}</h4>
                 {col.links.map(link => (
-                  <div key={link} style={styles.footerLink}>{link}</div>
+                  <div key={link} style={{ ...styles.footerLink, cursor: link === 'About us' ? 'pointer' : 'default' }}
+                    onClick={link === 'About us' && onAbout ? onAbout : undefined}
+                  >{link}</div>
                 ))}
               </div>
             ))}
