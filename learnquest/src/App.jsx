@@ -2064,7 +2064,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
         <div style={artS.heroVisual} className="art-hero-right">
 
           <img
-            src="/assets/kids/wijs_v1.png"
+            src="/assets/kids/wijs_1.png"
             alt="WIJS learning app preview"
             style={{ width: '100%', maxWidth: 480, borderRadius: 24, display: 'block', objectFit: 'contain' }}
           />
