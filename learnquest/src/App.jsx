@@ -1097,6 +1097,7 @@ export default function WijsApp() {
                                     onSelectGrade={(g) => { setSelectedGrade(g); setView('grade'); }}
                                     onDashboard={() => setView('dashboard')}
                                     onSignIn={goSignIn}
+                                    onAbout={() => setView('about')}
                                   />}
         {view === 'grade'     && selectedGrade && <GradeScreen
                                     grade={selectedGrade}
@@ -1620,7 +1621,7 @@ function FloatingShape({ style, delay }) {
 }
 
 // ---------- HOME ----------
-function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignIn }) {
+function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignIn, onAbout }) {
   const accuracy = stats.totalAnswered > 0
     ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100)
     : 0;
@@ -1636,6 +1637,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
         onSelectGrade={onSelectGrade}
         onDashboard={onDashboard}
         onSignIn={onSignIn}
+        onAbout={onAbout}
       />
     );
   }
@@ -1895,7 +1897,7 @@ function WelcomePopup({ onSignIn, onClose }) {
   );
 }
 
-function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard, onSignIn }) {
+function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard, onSignIn, onAbout }) {
   const [openFaq, setOpenFaq] = useState(null);
   const [faqExpanded, setFaqExpanded] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -2329,6 +2331,20 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* ── About Us punchline ── */}
+      <section style={{ background: '#F0FAFF', padding: '64px 24px', textAlign: 'center' }} className="art-section">
+        <div style={artS.secWrap}>
+          <div style={artS.secLabel}>Our Story</div>
+          <h2 style={artS.secTitle}>Built by a <em style={artS.secEm}>parent</em>, for every child</h2>
+          <p style={{ fontSize: 16, color: '#6B5E55', maxWidth: 600, margin: '16px auto 28px', lineHeight: 1.7 }}>
+            "When learning feels like play, kids absorb more and develop a lasting love for discovery." — A WIJS parent
+          </p>
+          <button onClick={onAbout} style={{ background: 'none', border: '2px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
+            Read our story →
+          </button>
         </div>
       </section>
 
