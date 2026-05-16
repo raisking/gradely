@@ -2019,11 +2019,11 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </button>
 
           {/* About me punchline quotation */}
-          <div style={{ marginTop: 20, display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 480 }}>
-            <span style={{ fontSize: 32, lineHeight: 1, color: '#4AB5B5', flexShrink: 0, marginTop: -4 }}>"</span>
-            <p style={{ margin: 0, fontSize: 14, color: '#6B5E55', lineHeight: 1.65, fontStyle: 'italic' }}>
+          <div style={{ marginTop: 20, display: 'flex', alignItems: 'flex-start', gap: 12, maxWidth: 480 }}>
+            <span style={{ fontSize: 72, lineHeight: 0.8, color: '#4AB5B5', flexShrink: 0, fontFamily: 'Georgia, serif', fontWeight: 900, marginTop: 6 }}>"</span>
+            <p style={{ margin: 0, fontSize: 17, color: '#3D3580', lineHeight: 1.7, fontStyle: 'italic', fontWeight: 600 }}>
               When learning feels like play, kids absorb more and develop a lasting love for discovery.{' '}
-              <button onClick={onAbout} style={{ background: 'none', border: 'none', padding: 0, color: '#525AFF', fontWeight: 700, fontSize: 14, cursor: 'pointer', textDecoration: 'underline', fontStyle: 'normal' }}>Read our story →</button>
+              <button onClick={onAbout} style={{ background: 'none', border: 'none', padding: 0, color: '#525AFF', fontWeight: 700, fontSize: 17, cursor: 'pointer', textDecoration: 'underline', fontStyle: 'normal' }}>Read our story →</button>
             </p>
           </div>
 
