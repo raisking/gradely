@@ -2343,9 +2343,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: openFaq === i ? '#525AFF' : '#E5E7EB', color: openFaq === i ? '#fff' : '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>
-                  {openFaq === i ? '−' : '+'}
-                </span>
+                <ChevronRight size={20} style={{ flexShrink: 0, color: openFaq === i ? '#525AFF' : '#9CA3AF', transform: openFaq === i ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease, color 0.2s ease' }} />
               </button>
               {openFaq === i && <p style={artS.faqA}>{faq.a}</p>}
             </div>
@@ -2381,15 +2379,15 @@ function AboutScreen({ onBack }) {
         {/* Quote block */}
         <div style={{ background: '#E0F4FF', borderLeft: '4px solid #525AFF', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40 }}>
           <p style={{ fontSize: 18, fontWeight: 700, color: '#1C1215', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: 1.5 }}>
-            "Learning should be joyful, engaging, and empowering — together we can make that happen for our kids."
+            "When learning feels like play, kids absorb more and develop a lasting love for discovery."
           </p>
         </div>
 
         {/* Story paragraphs */}
         {[
-          'As a parent, I\'m always on the lookout for tools that genuinely help my child grow. I started using an online learning app for my kid, and the difference has been truly remarkable. What began as a simple way to keep them engaged quickly turned into a real learning journey. I\'ve watched their confidence build, their curiosity spark, and their skills sharpen week after week, especially in core subjects like Math, English Language Arts (ELA), and Science. Concepts that once felt overwhelming now click with ease, and the best part is that my child actually looks forward to learning time.',
-          'Seeing this transformation inspired me to share my experience with other parents. I know how challenging it can be to find the right resources that balance learning with fun, and I want to help other moms and dads discover tools that make a real difference. My goal is to support fellow parents in helping their kids strengthen their skills in Math, ELA, and Science, while also building the confidence and love for learning that will carry them far beyond the classroom.',
-          'Whether your child is struggling with a tricky concept, needs extra practice, or simply thrives on new challenges, the right learning app can turn screen time into growth time. If my journey can help even one parent unlock that same spark in their child, then sharing it is absolutely worth it.',
+          'As a parent, I\'m always looking for tools that help my child truly grow. Since starting an online learning app, the difference has been remarkable — my kid\'s confidence, curiosity, and skills have grown week after week, especially in Math, ELA, and Science. Concepts that once felt overwhelming now click with ease, and best of all, my child actually looks forward to learning time.',
+          'My goal is simple: help kids learn new skills in a fun, joyful way. Learning should never feel stressful or forced. Kids are naturally curious, and we should capitalize on that curiosity to guide them. When learning feels like play, kids absorb more and develop a lasting love for discovery.',
+          'That\'s why I want to share my experience with other parents — to help your kids strengthen their skills in Math, ELA, and Science while building confidence and a genuine love for learning. The right app can turn screen time into growth time. Let\'s nurture our kids\' curiosity together and help them thrive.',
         ].map((para, i) => (
           <p key={i} style={{ fontSize: 16, color: '#4B5563', lineHeight: 1.8, marginBottom: 24 }}>{para}</p>
         ))}

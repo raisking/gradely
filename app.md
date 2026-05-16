@@ -10,10 +10,10 @@ Make sure to document this application and update everytime the update happens
 When a user clicks the App Store or Google Play icons /button , redirect to the respectives sites
 
 #FAQ
-Add more frequestly add questions and answers. Only show three questions and make it expandable. 
+Add more frequestly add questions and answers. Only show three questions and make it expandable when drop down arrrow is clicked. 
 
 #About us
 Add a link that is visible when website is preview with description -  
-As a parent, I'm always on the lookout for tools that genuinely help my child grow. I started using an online learning app for my kid, and the difference has been truly remarkable. What began as a simple way to keep them engaged quickly turned into a real learning journey. I've watched their confidence build, their curiosity spark, and their skills sharpen week after week, especially in core subjects like math, English Language Arts (ELA), and science. Concepts that once felt overwhelming now click with ease, and the best part is that my child actually looks forward to learning time.
-Seeing this transformation inspired me to share my experience with other parents. I know how challenging it can be to find the right resources that balance learning with fun, and I want to help other moms and dads discover tools that make a real difference. My goal is to support fellow parents in helping their kids strengthen their skills in math, ELA, and science, while also building the confidence and love for learning that will carry them far beyond the classroom.
-Whether your child is struggling with a tricky concept, needs extra practice, or simply thrives on new challenges, the right learning app can turn screen time into growth time. If my journey can help even one parent unlock that same spark in their child, then sharing it is absolutely worth it. Learning should be joyful, engaging, and empowering, and together we can make that happen for our kids.
+As a parent, I'm always looking for tools that help my child truly grow. Since starting an online learning app, the difference has been remarkable, my kid's confidence, curiosity, and skills have grown week after week, especially in math, ELA, and science. Concepts that once felt overwhelming now click with ease, and best of all, my child actually looks forward to learning time.
+My goal is simple: help kids learn new skills in a fun, joyful way. Learning should never feel stressful or forced. Kids are naturally curious, and we should capitalize on that curiosity to guide them. When learning feels like play, kids absorb more and develop a lasting love for discovery.
+That's why I want to share my experience with other parents, to help your kids strengthen their skills in math, ELA, and science while building confidence and a genuine love for learning. The right app can turn screen time into growth time. Let's nurture our kids' curiosity together and help them thrive.
