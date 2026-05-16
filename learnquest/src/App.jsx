@@ -1896,6 +1896,7 @@ function WelcomePopup({ onSignIn, onClose }) {
 
 function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, onDashboard, onSignIn }) {
   const [openFaq, setOpenFaq] = useState(null);
+  const [faqExpanded, setFaqExpanded] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -2337,7 +2338,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <h2 style={artS.secTitle}>Common <em style={artS.secEm}>questions</em></h2>
         </div>
         <div style={artS.faqInner}>
-          {faqs.map((faq, i) => (
+          {(faqExpanded ? faqs : faqs.slice(0, 3)).map((faq, i) => (
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
@@ -2348,6 +2349,14 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
               {openFaq === i && <p style={artS.faqA}>{faq.a}</p>}
             </div>
           ))}
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <button
+              onClick={() => { setFaqExpanded(e => !e); setOpenFaq(null); }}
+              style={{ background: 'none', border: '1.5px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '10px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+            >
+              {faqExpanded ? '− Show less' : `+ Show ${faqs.length - 3} more questions`}
+            </button>
+          </div>
         </div>
       </section>
 
