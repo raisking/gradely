@@ -2010,7 +2010,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           {/* App store download badges */}
           <div className="app-badges-row" style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
             {/* App Store */}
-            <button type="button" aria-label="Download on the App Store" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#000', color: '#fff', borderRadius: 10, padding: '9px 18px', border: 'none', cursor: 'pointer', minWidth: 148, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
+            <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#000', color: '#fff', borderRadius: 10, padding: '9px 18px', textDecoration: 'none', minWidth: 148, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.15-2.19 1.28-2.17 3.82.03 3.02 2.65 4.03 2.68 4.04l-.06.26zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
               </svg>
@@ -2018,9 +2018,9 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
                 <div style={{ fontSize: 9, fontWeight: 500, opacity: 0.85, letterSpacing: 0.3 }}>Download on the</div>
                 <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: 0.2 }}>App Store</div>
               </div>
-            </button>
+            </a>
             {/* Google Play */}
-            <button type="button" aria-label="Get it on Google Play" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#000', color: '#fff', borderRadius: 10, padding: '9px 18px', border: 'none', cursor: 'pointer', minWidth: 162, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
+            <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" aria-label="Get it on Google Play" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#000', color: '#fff', borderRadius: 10, padding: '9px 18px', textDecoration: 'none', minWidth: 162, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.18 23.76c.3.16.64.2.97.11l11.64-11.64L12.17 8.6 3.18 23.76z" fill="#EA4335"/>
                 <path d="M20.48 10.56l-2.73-1.57-3.34 3.34 3.34 3.34 2.76-1.59c.79-.45.79-1.97-.03-3.52z" fill="#FBBC04"/>
@@ -2031,7 +2031,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
                 <div style={{ fontSize: 9, fontWeight: 500, opacity: 0.85, letterSpacing: 0.3 }}>Get it on</div>
                 <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: 0.2 }}>Google Play</div>
               </div>
-            </button>
+            </a>
           </div>
 
           <div style={artS.tagsRow} className="art-tags-row">

@@ -4,3 +4,10 @@ You are sure this app is vibecoded. find security vulnerabilities and run a full
 
 ##Documentation
 Make sure to document this application and update everytime the update happens 
+
+
+#Documentation
+When a user clicks the App Store or Google Play icons /button , redirect to the respectives sites
+
+#FAQ
+Add more frequestly add questions and answers 
