@@ -2018,6 +2018,15 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             Start learning ↗
           </button>
 
+          {/* About me punchline quotation */}
+          <div style={{ marginTop: 20, display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 480 }}>
+            <span style={{ fontSize: 32, lineHeight: 1, color: '#4AB5B5', flexShrink: 0, marginTop: -4 }}>"</span>
+            <p style={{ margin: 0, fontSize: 14, color: '#6B5E55', lineHeight: 1.65, fontStyle: 'italic' }}>
+              When learning feels like play, kids absorb more and develop a lasting love for discovery.{' '}
+              <button onClick={onAbout} style={{ background: 'none', border: 'none', padding: 0, color: '#525AFF', fontWeight: 700, fontSize: 14, cursor: 'pointer', textDecoration: 'underline', fontStyle: 'normal' }}>Read our story →</button>
+            </p>
+          </div>
+
           {/* App store download badges */}
           <div className="app-badges-row" style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
             {/* App Store */}
@@ -2054,125 +2063,11 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
         {/* ── Hero visual: illustrated kids scene + subject cards ── */}
         <div style={artS.heroVisual} className="art-hero-right">
 
-          {/* ── Illustrated background: kids learning ── */}
-          <div className="art-illustrated-bg" style={{
-            position: 'absolute', left: 0, top: 6, bottom: 6, width: 430,
-            borderRadius: 28, overflow: 'hidden',
-            background: 'linear-gradient(145deg, #FFF7ED 0%, #E0F4FF 55%, #F0FDFA 100%)',
-          }} aria-hidden="true">
-
-            {/* Soft glow blobs */}
-            <div style={{ position:'absolute', top:-70, right:-70, width:220, height:220, borderRadius:'50%', background:'rgba(253,230,138,0.45)', filter:'blur(28px)' }} />
-            <div style={{ position:'absolute', bottom:-50, left:-50, width:180, height:180, borderRadius:'50%', background:'rgba(196,181,253,0.4)', filter:'blur(24px)' }} />
-            <div style={{ position:'absolute', top:'38%', left:'25%', width:130, height:130, borderRadius:'50%', background:'rgba(110,231,183,0.32)', filter:'blur(20px)' }} />
-
-            {/* ── Card 1: Reading 📚 ── */}
-            <div style={{
-              position:'absolute', left:18, top:26,
-              background:'linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%)',
-              borderRadius:22, padding:'16px 16px 14px', width:158,
-              transform:'rotate(-6deg)',
-              boxShadow:'0 12px 32px rgba(234,179,8,0.22)',
-              border:'2px solid rgba(255,255,255,0.9)',
-            }}>
-              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>📚</div>
-              <div style={{ fontWeight:900, fontSize:16, color:'#92400E' }}>Reading</div>
-              <div style={{ fontSize:12, color:'#B45309', marginTop:3, fontWeight:600, lineHeight:1.5 }}>Stories &amp; books ✨<br/>Phonics &amp; fluency</div>
-              <div style={{ marginTop:10, display:'flex', gap:5 }}>
-                {['A','B','C'].map(l => (
-                  <span key={l} style={{ width:22, height:22, background:'#F59E0B', borderRadius:'50%', display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:900, color:'white' }}>{l}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Card 2: Math 🔢 ── */}
-            <div style={{
-              position:'absolute', left:200, top:14,
-              background:'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
-              borderRadius:22, padding:'16px 16px 14px', width:166,
-              transform:'rotate(6deg)',
-              boxShadow:'0 12px 32px rgba(82,90,255,0.32)',
-              color:'white',
-              border:'2px solid rgba(255,255,255,0.18)',
-            }}>
-              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>🔢</div>
-              <div style={{ fontWeight:900, fontSize:16 }}>Math Fun!</div>
-              <div style={{ fontFamily:'monospace', fontSize:13, opacity:0.9, marginTop:6, lineHeight:1.8 }}>
-                2 + 3 = 5 🎉<br/>4 × 6 = 24 ✅
-              </div>
-              <div style={{ marginTop:8, fontSize:11, opacity:0.8, fontWeight:700 }}>Numbers · Shapes · Patterns</div>
-            </div>
-
-            {/* ── Card 3: Science 🔬 ── */}
-            <div style={{
-              position:'absolute', left:26, top:210,
-              background:'linear-gradient(135deg, #4AB5B5 0%, #10B981 100%)',
-              borderRadius:22, padding:'16px 16px 14px', width:155,
-              transform:'rotate(5deg)',
-              boxShadow:'0 12px 32px rgba(13,148,136,0.30)',
-              color:'white',
-              border:'2px solid rgba(255,255,255,0.18)',
-            }}>
-              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>🔬</div>
-              <div style={{ fontWeight:900, fontSize:16 }}>Science!</div>
-              <div style={{ display:'flex', flexWrap:'wrap', gap:5, marginTop:8 }}>
-                {['🌱 Plants','☀️ Solar','💧 Water','⚡ Energy'].map(t => (
-                  <span key={t} style={{ background:'rgba(255,255,255,0.18)', borderRadius:8, padding:'3px 8px', fontSize:11, fontWeight:700 }}>{t}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Card 4: Writing ✏️ ── */}
-            <div style={{
-              position:'absolute', left:204, top:212,
-              background:'linear-gradient(135deg, #FB923C 0%, #F97316 100%)',
-              borderRadius:22, padding:'16px 16px 14px', width:158,
-              transform:'rotate(-5deg)',
-              boxShadow:'0 12px 32px rgba(249,115,22,0.28)',
-              color:'white',
-              border:'2px solid rgba(255,255,255,0.18)',
-            }}>
-              <div style={{ fontSize:46, lineHeight:1, marginBottom:8 }}>✏️</div>
-              <div style={{ fontWeight:900, fontSize:16 }}>Writing</div>
-              <div style={{ fontSize:12, opacity:0.92, marginTop:5, lineHeight:1.6, fontWeight:600 }}>
-                Essays · Stories<br/>Grammar · Nouns
-              </div>
-              <div style={{ marginTop:8, fontSize:20 }}>🌟 🎨 📝</div>
-            </div>
-
-            {/* ── Card 5: Social Studies 🌍 (bottom center) ── */}
-            <div style={{
-              position:'absolute', left:'50%', bottom:22,
-              transform:'translateX(-50%) rotate(-2deg)',
-              background:'linear-gradient(135deg, #92400E 0%, #D97706 100%)',
-              borderRadius:22, padding:'12px 18px', width:200,
-              boxShadow:'0 10px 26px rgba(217,119,6,0.28)',
-              color:'white',
-              border:'2px solid rgba(255,255,255,0.18)',
-              display:'flex', alignItems:'center', gap:10,
-            }}>
-              <span style={{ fontSize:34 }}>🌍</span>
-              <div>
-                <div style={{ fontWeight:900, fontSize:14 }}>Social Studies</div>
-                <div style={{ fontSize:11, opacity:0.9, fontWeight:600, marginTop:2 }}>Maps · History · World</div>
-              </div>
-            </div>
-
-            {/* Floating sparkles */}
-            {[
-              { top:100, left:170, size:18, emoji:'⭐' },
-              { top:50,  left:380, size:16, emoji:'✨' },
-              { top:180, left:360, size:20, emoji:'🌟' },
-              { top:340, left:10,  size:16, emoji:'💫' },
-              { top:310, left:390, size:18, emoji:'⭐' },
-            ].map((s, i) => (
-              <div key={i} style={{
-                position:'absolute', top:s.top, left:s.left,
-                fontSize:s.size, lineHeight:1, pointerEvents:'none',
-                animation:`floatSpark ${2.5 + i * 0.4}s ease-in-out infinite alternate`,
-              }}>{s.emoji}</div>
-            ))}
-          </div>
+          <img
+            src="/assets/kids/wijs.png"
+            alt="WIJS learning app preview"
+            style={{ width: '100%', maxWidth: 480, borderRadius: 24, display: 'block', objectFit: 'contain' }}
+          />
 
         </div>
         </div>{/* end heroInner */}
