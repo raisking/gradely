@@ -2149,10 +2149,8 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <p style={artS.secDesc}>Thousands of students K–12 are building skills, boosting confidence, and loving learning every day.</p>
           <div style={artS.photosGrid} className="art-photos-grid">
             {[
-              { src: '/assets/kids/kid.jpg',    tag: 'Math',           caption: 'Making numbers exciting for every student'    },
-              { src: '/assets/kids/kid_1.png',  tag: 'Early Learning', caption: 'Interactive lessons for our youngest learners' },
-              { src: '/assets/kids/kid_2.webp', tag: 'Practice',       caption: 'Adaptive quizzes that meet kids where they are'},
-              { src: '/assets/kids/kid_3.jpg',  tag: 'Classroom',      caption: 'Building confidence one skill at a time'       },
+              { src: '/assets/kids/kid.jpg',   tag: 'Math',           caption: 'Making numbers exciting for every student'    },
+              { src: '/assets/kids/kid_1.png', tag: 'Early Learning', caption: 'Interactive lessons for our youngest learners' },
             ].map(({ src, tag, caption }) => (
               <div key={src} style={artS.photoCard} className="art-photo-card">
                 <img
