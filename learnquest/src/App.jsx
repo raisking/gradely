@@ -2064,7 +2064,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
         <div style={artS.heroVisual} className="art-hero-right">
 
           <img
-            src="/assets/kids/wijs.png"
+            src="/assets/kids/wijs_v1.png"
             alt="WIJS learning app preview"
             style={{ width: '100%', maxWidth: 480, borderRadius: 24, display: 'block', objectFit: 'contain' }}
           />
@@ -2238,7 +2238,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             "When learning feels like play, kids absorb more and develop a lasting love for discovery." — A WIJS parent
           </p>
           <button onClick={onAbout} style={{ background: 'none', border: '2px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
-            Read our story →
+            Read →
           </button>
         </div>
       </section>
