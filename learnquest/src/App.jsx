@@ -5,7 +5,7 @@ import {
   TrendingUp, BarChart3, GraduationCap,
   Heart, Crown, ArrowRight, Brain,
   Lock, CheckCircle2, Circle, Play, Settings, Users, Search, UserCircle,
-  Cpu, Code2
+  Cpu, Code2, ChevronDown
 } from 'lucide-react';
 import {
   clearSavedSession,
@@ -2262,7 +2262,10 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
               onClick={() => { setFaqExpanded(e => !e); setOpenFaq(null); }}
               style={{ background: 'none', border: '1.5px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '10px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
             >
-              {faqExpanded ? '− Show less' : `+ Show ${faqs.length - 3} more questions`}
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                {faqExpanded ? 'Show less' : `Show ${faqs.length - 3} more questions`}
+                <ChevronDown size={16} style={{ transform: faqExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+              </span>
             </button>
           </div>
         </div>
