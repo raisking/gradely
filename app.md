@@ -10,4 +10,4 @@ Make sure to document this application and update everytime the update happens
 When a user clicks the App Store or Google Play icons /button , redirect to the respectives sites
 
 #FAQ
-Add more frequestly add questions and answers 
+Add more frequestly add questions and answers.
