@@ -41,5 +41,13 @@
     { "section": "C", "title": "Expressions & Equations", "skills": [{ "title": "Order of operations", "skillId": "math-5-fractions" }, { "title": "Write numerical expressions", "skillId": "math-5-fractions" }, { "title": "Evaluate expressions", "skillId": "math-5-fractions" }] },
     { "section": "D", "title": "Geometry & Volume", "skills": [{ "title": "Coordinate plane", "skillId": "math-5-fractions" }, { "title": "Classify quadrilaterals", "skillId": "math-5-fractions" }, { "title": "Volume of rectangular prisms", "skillId": "math-5-fractions" }] },
     { "section": "E", "title": "Data & Statistics", "skills": [{ "title": "Dot plots and frequency tables", "skillId": "math-5-fractions" }, { "title": "Mean, median, mode", "skillId": "math-5-fractions" }, { "title": "Line graphs", "skillId": "math-5-fractions" }] }
+  ],
+  "math-8": [
+    { "section": "A", "title": "Perimeter & Area", "skills": [
+      { "title": "Perimeter of rectangles and squares", "skillId": "math-8-perimeter" },
+      { "title": "Perimeter of triangles and polygons", "skillId": "math-8-perimeter" },
+      { "title": "Missing side from perimeter", "skillId": "math-8-perimeter" },
+      { "title": "Perimeter with algebraic expressions", "skillId": "math-8-perimeter" }
+    ]}
   ]
 }

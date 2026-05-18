@@ -658,6 +658,27 @@ const SKILLS = {
     ],
   },
 
+  // ============ MATH — GRADE 8 ============
+  'math-8-perimeter': {
+    id: 'math-8-perimeter', subject: 'math', grade: '8',
+    title: 'Perimeter', description: 'Calculate perimeter of polygons and solve real-world problems',
+    explanation: 'Perimeter is the total distance around a shape. For a rectangle: P = 2(l + w). For a square: P = 4s. For any polygon: add all side lengths.',
+    questions: [
+      { id: 'q1',  type: 'mcq', difficulty: 1, prompt: 'A rectangle has a length of 12 cm and a width of 5 cm. What is its perimeter?', options: ['17 cm','24 cm','34 cm','60 cm'], answer: '34 cm', hint: 'Add the length and width, then multiply by 2.' },
+      { id: 'q2',  type: 'mcq', difficulty: 1, prompt: 'A square has a side length of 9 inches. What is its perimeter?', options: ['18 inches','27 inches','36 inches','81 inches'], answer: '36 inches', hint: 'Multiply the side length by 4.' },
+      { id: 'q3',  type: 'mcq', difficulty: 1, prompt: 'A triangle has side lengths of 7 m, 8 m, and 10 m. What is the perimeter?', options: ['15 m','18 m','25 m','56 m'], answer: '25 m', hint: 'Add all three side lengths.' },
+      { id: 'q4',  type: 'mcq', difficulty: 2, prompt: 'A rectangle has a perimeter of 48 feet. Its length is 14 feet. What is its width?', options: ['8 feet','10 feet','12 feet','20 feet'], answer: '10 feet', hint: 'Divide the perimeter by 2 first.' },
+      { id: 'q5',  type: 'mcq', difficulty: 2, prompt: 'A regular hexagon has a side length of 6 cm. What is its perimeter?', options: ['12 cm','24 cm','36 cm','42 cm'], answer: '36 cm', hint: 'A hexagon has 6 sides.' },
+      { id: 'q6',  type: 'mcq', difficulty: 2, prompt: 'The sides of a quadrilateral are 11 cm, 13 cm, 15 cm, and 17 cm. What is the perimeter?', options: ['39 cm','45 cm','56 cm','66 cm'], answer: '56 cm', hint: 'Perimeter means the total distance around the shape.' },
+      { id: 'q7',  type: 'mcq', difficulty: 2, prompt: 'A rectangular garden is 18 yards long and 7 yards wide. How many yards of fencing are needed to go around it?', options: ['25 yards','36 yards','50 yards','126 yards'], answer: '50 yards', hint: 'Fencing around a shape means perimeter.' },
+      { id: 'q8',  type: 'mcq', difficulty: 2, prompt: 'An equilateral triangle has a perimeter of 45 inches. What is the length of each side?', options: ['12 inches','15 inches','18 inches','20 inches'], answer: '15 inches', hint: 'Equilateral means all sides are equal.' },
+      { id: 'q9',  type: 'mcq', difficulty: 3, prompt: 'A rectangle has a length of x + 6 and a width of x + 2. Which expression represents its perimeter?', options: ['2x + 8','4x + 8','4x + 16','x² + 8x + 12'], answer: '4x + 16', hint: 'Add the length and width first, then multiply by 2.' },
+      { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'A regular octagon has a perimeter of 96 cm. What is the length of each side?', options: ['8 cm','10 cm','12 cm','14 cm'], answer: '12 cm', hint: 'An octagon has 8 sides.' },
+      { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'A rectangle has a width of 9 inches. Its length is twice its width. What is the perimeter?', options: ['27 inches','36 inches','54 inches','81 inches'], answer: '54 inches', hint: 'Find the length first.' },
+      { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'A park is shaped like a rectangle with a length of 3x meters and a width of x + 4 meters. Which expression represents the perimeter?', options: ['4x + 4','6x + 8','8x + 8','3x² + 12x'], answer: '8x + 8', hint: 'Combine like terms inside the parentheses first.' },
+    ],
+  },
+
 };
 
 // Helper: get skills for a given grade + subject
