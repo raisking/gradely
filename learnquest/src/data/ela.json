@@ -32,5 +32,41 @@
     { "section": "A", "title": "Grammar", "skills": [{ "title": "Verb tenses", "skillId": "ela-3-grammar" }, { "title": "Comma usage", "skillId": "ela-3-grammar" }, { "title": "Active and passive voice", "skillId": "ela-3-grammar" }] },
     { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Connotation and denotation", "skillId": "ela-3-vocabulary" }, { "title": "Greek and Latin roots", "skillId": "ela-3-vocabulary" }, { "title": "Analogies", "skillId": "ela-3-vocabulary" }] },
     { "section": "C", "title": "Reading Comprehension", "skills": [{ "title": "Theme and central message", "skillId": "ela-3-reading-comprehension" }, { "title": "Compare texts", "skillId": "ela-3-reading-comprehension" }, { "title": "Text structure", "skillId": "ela-3-reading-comprehension" }] }
+  ],
+  "ela-6": [
+    { "section": "A", "title": "Grammar & Language", "skills": [{ "title": "Pronouns and antecedents", "skillId": "ela-6-grammar" }, { "title": "Varied sentence structure", "skillId": "ela-6-grammar" }, { "title": "Punctuation review", "skillId": "ela-6-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Context clues in complex texts", "skillId": "ela-6-vocabulary" }, { "title": "Word relationships", "skillId": "ela-6-vocabulary" }, { "title": "Figurative language", "skillId": "ela-6-vocabulary" }] },
+    { "section": "C", "title": "Reading & Comprehension", "skills": [{ "title": "Cite textual evidence", "skillId": "ela-6-reading" }, { "title": "Central idea and summary", "skillId": "ela-6-reading" }, { "title": "Author's purpose and perspective", "skillId": "ela-6-reading" }] },
+    { "section": "D", "title": "Writing", "skills": [{ "title": "Argumentative writing", "skillId": "ela-6-writing" }, { "title": "Informative writing", "skillId": "ela-6-writing" }, { "title": "Narrative techniques", "skillId": "ela-6-writing" }] }
+  ],
+  "ela-7": [
+    { "section": "A", "title": "Grammar & Language", "skills": [{ "title": "Misplaced and dangling modifiers", "skillId": "ela-7-grammar" }, { "title": "Phrases and clauses", "skillId": "ela-7-grammar" }, { "title": "Capitalization rules", "skillId": "ela-7-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Denotation vs connotation", "skillId": "ela-7-vocabulary" }, { "title": "Academic vocabulary", "skillId": "ela-7-vocabulary" }, { "title": "Roots, prefixes, suffixes", "skillId": "ela-7-vocabulary" }] },
+    { "section": "C", "title": "Reading & Literature", "skills": [{ "title": "Analyze character development", "skillId": "ela-7-reading" }, { "title": "Compare literary themes", "skillId": "ela-7-reading" }, { "title": "Evaluate arguments in text", "skillId": "ela-7-reading" }] },
+    { "section": "D", "title": "Writing", "skills": [{ "title": "Claim and evidence", "skillId": "ela-7-writing" }, { "title": "Research and citations", "skillId": "ela-7-writing" }] }
+  ],
+  "ela-8": [
+    { "section": "A", "title": "Grammar & Style", "skills": [{ "title": "Gerunds, infinitives, and participles", "skillId": "ela-8-grammar" }, { "title": "Active vs passive voice", "skillId": "ela-8-grammar" }, { "title": "Style and tone", "skillId": "ela-8-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Etymology and word origins", "skillId": "ela-8-vocabulary" }, { "title": "Nuances in word meaning", "skillId": "ela-8-vocabulary" }] },
+    { "section": "C", "title": "Reading & Analysis", "skills": [{ "title": "Analyze theme across texts", "skillId": "ela-8-reading" }, { "title": "Evaluate reasoning and evidence", "skillId": "ela-8-reading" }, { "title": "Point of view in literature", "skillId": "ela-8-reading" }] },
+    { "section": "D", "title": "Writing", "skills": [{ "title": "Argumentative essay structure", "skillId": "ela-8-writing" }, { "title": "Integrating sources", "skillId": "ela-8-writing" }] }
+  ],
+  "ela-9": [
+    { "section": "A", "title": "Literature", "skills": [{ "title": "Elements of fiction", "skillId": "ela-9-literature" }, { "title": "Plot, conflict, and resolution", "skillId": "ela-9-literature" }, { "title": "Symbolism and imagery", "skillId": "ela-9-literature" }] },
+    { "section": "B", "title": "Language & Grammar", "skills": [{ "title": "Subordination and coordination", "skillId": "ela-9-grammar" }, { "title": "Standard English conventions", "skillId": "ela-9-grammar" }] },
+    { "section": "C", "title": "Writing", "skills": [{ "title": "Literary analysis essays", "skillId": "ela-9-writing" }, { "title": "Thesis development", "skillId": "ela-9-writing" }, { "title": "Evidence and commentary", "skillId": "ela-9-writing" }] }
+  ],
+  "ela-10": [
+    { "section": "A", "title": "World Literature", "skills": [{ "title": "Cultural context in literature", "skillId": "ela-10-literature" }, { "title": "Universal themes", "skillId": "ela-10-literature" }, { "title": "Compare world literary works", "skillId": "ela-10-literature" }] },
+    { "section": "B", "title": "Rhetoric & Argument", "skills": [{ "title": "Rhetorical appeals — ethos, pathos, logos", "skillId": "ela-10-rhetoric" }, { "title": "Identify logical fallacies", "skillId": "ela-10-rhetoric" }] },
+    { "section": "C", "title": "Writing", "skills": [{ "title": "Analytical essay writing", "skillId": "ela-10-writing" }, { "title": "Synthesizing multiple sources", "skillId": "ela-10-writing" }] }
+  ],
+  "ela-11": [
+    { "section": "A", "title": "American Literature", "skills": [{ "title": "Puritanism to Realism", "skillId": "ela-11-literature" }, { "title": "Modernist and contemporary writers", "skillId": "ela-11-literature" }, { "title": "Social themes in American writing", "skillId": "ela-11-literature" }] },
+    { "section": "B", "title": "Advanced Writing", "skills": [{ "title": "Research paper writing", "skillId": "ela-11-writing" }, { "title": "MLA and APA citation", "skillId": "ela-11-writing" }, { "title": "Revision and editing strategies", "skillId": "ela-11-writing" }] }
+  ],
+  "ela-12": [
+    { "section": "A", "title": "British & World Literature", "skills": [{ "title": "Epic poetry and drama", "skillId": "ela-12-literature" }, { "title": "Shakespeare and Renaissance literature", "skillId": "ela-12-literature" }, { "title": "Post-colonial literature", "skillId": "ela-12-literature" }] },
+    { "section": "B", "title": "College-Ready Writing", "skills": [{ "title": "College application essays", "skillId": "ela-12-writing" }, { "title": "Advanced argumentation", "skillId": "ela-12-writing" }, { "title": "Style and voice in writing", "skillId": "ela-12-writing" }] }
   ]
 }

@@ -42,12 +42,48 @@
     { "section": "D", "title": "Geometry & Volume", "skills": [{ "title": "Coordinate plane", "skillId": "math-5-fractions" }, { "title": "Classify quadrilaterals", "skillId": "math-5-fractions" }, { "title": "Volume of rectangular prisms", "skillId": "math-5-fractions" }] },
     { "section": "E", "title": "Data & Statistics", "skills": [{ "title": "Dot plots and frequency tables", "skillId": "math-5-fractions" }, { "title": "Mean, median, mode", "skillId": "math-5-fractions" }, { "title": "Line graphs", "skillId": "math-5-fractions" }] }
   ],
+  "math-6": [
+    { "section": "A", "title": "Ratios & Proportions", "skills": [{ "title": "Write and simplify ratios", "skillId": "math-6-ratios" }, { "title": "Unit rates", "skillId": "math-6-ratios" }, { "title": "Solve proportions", "skillId": "math-6-ratios" }] },
+    { "section": "B", "title": "Expressions & Equations", "skills": [{ "title": "Write algebraic expressions", "skillId": "math-6-expressions" }, { "title": "Evaluate expressions", "skillId": "math-6-expressions" }, { "title": "Solve one-step equations", "skillId": "math-6-expressions" }] },
+    { "section": "C", "title": "Geometry", "skills": [{ "title": "Area of triangles & quadrilaterals", "skillId": "math-6-geometry" }, { "title": "Surface area", "skillId": "math-6-geometry" }, { "title": "Volume of prisms", "skillId": "math-6-geometry" }] },
+    { "section": "D", "title": "Statistics & Probability", "skills": [{ "title": "Mean, median, mode, range", "skillId": "math-6-statistics" }, { "title": "Histograms & box plots", "skillId": "math-6-statistics" }] }
+  ],
+  "math-7": [
+    { "section": "A", "title": "Integers & Rational Numbers", "skills": [{ "title": "Add and subtract integers", "skillId": "math-7-integers" }, { "title": "Multiply and divide integers", "skillId": "math-7-integers" }, { "title": "Operations with fractions & decimals", "skillId": "math-7-integers" }] },
+    { "section": "B", "title": "Proportional Relationships", "skills": [{ "title": "Constant of proportionality", "skillId": "math-7-proportions" }, { "title": "Percent problems", "skillId": "math-7-proportions" }, { "title": "Scale drawings", "skillId": "math-7-proportions" }] },
+    { "section": "C", "title": "Equations & Inequalities", "skills": [{ "title": "Solve two-step equations", "skillId": "math-7-equations" }, { "title": "Solve inequalities", "skillId": "math-7-equations" }, { "title": "Word problems with equations", "skillId": "math-7-equations" }] },
+    { "section": "D", "title": "Geometry", "skills": [{ "title": "Angle relationships", "skillId": "math-7-geometry" }, { "title": "Area & circumference of circles", "skillId": "math-7-geometry" }] }
+  ],
   "math-8": [
     { "section": "A", "title": "Perimeter & Area", "skills": [
       { "title": "Perimeter of rectangles and squares", "skillId": "math-8-perimeter" },
       { "title": "Perimeter of triangles and polygons", "skillId": "math-8-perimeter" },
       { "title": "Missing side from perimeter", "skillId": "math-8-perimeter" },
       { "title": "Perimeter with algebraic expressions", "skillId": "math-8-perimeter" }
-    ]}
+    ]},
+    { "section": "B", "title": "Linear Equations & Functions", "skills": [{ "title": "Slope and y-intercept", "skillId": "math-8-functions" }, { "title": "Graph linear equations", "skillId": "math-8-functions" }, { "title": "Systems of equations", "skillId": "math-8-functions" }] },
+    { "section": "C", "title": "Geometry & Pythagorean Theorem", "skills": [{ "title": "Pythagorean theorem", "skillId": "math-8-pythagorean" }, { "title": "Distance in the coordinate plane", "skillId": "math-8-pythagorean" }, { "title": "Transformations", "skillId": "math-8-pythagorean" }] }
+  ],
+  "math-9": [
+    { "section": "A", "title": "Algebra I — Linear Equations", "skills": [{ "title": "Solve multi-step equations", "skillId": "math-9-algebra" }, { "title": "Linear inequalities", "skillId": "math-9-algebra" }, { "title": "Absolute value equations", "skillId": "math-9-algebra" }] },
+    { "section": "B", "title": "Systems of Equations", "skills": [{ "title": "Solve by substitution", "skillId": "math-9-systems" }, { "title": "Solve by elimination", "skillId": "math-9-systems" }, { "title": "Word problems with systems", "skillId": "math-9-systems" }] },
+    { "section": "C", "title": "Quadratics", "skills": [{ "title": "Factor quadratic expressions", "skillId": "math-9-quadratics" }, { "title": "Solve quadratic equations", "skillId": "math-9-quadratics" }, { "title": "Quadratic formula", "skillId": "math-9-quadratics" }] },
+    { "section": "D", "title": "Functions", "skills": [{ "title": "Function notation", "skillId": "math-9-functions" }, { "title": "Domain and range", "skillId": "math-9-functions" }, { "title": "Interpret function graphs", "skillId": "math-9-functions" }] }
+  ],
+  "math-10": [
+    { "section": "A", "title": "Geometry — Proofs & Properties", "skills": [{ "title": "Triangle congruence", "skillId": "math-10-geometry" }, { "title": "Parallel lines & transversals", "skillId": "math-10-geometry" }, { "title": "Quadrilateral properties", "skillId": "math-10-geometry" }] },
+    { "section": "B", "title": "Circles", "skills": [{ "title": "Arc length & sector area", "skillId": "math-10-circles" }, { "title": "Inscribed angles", "skillId": "math-10-circles" }, { "title": "Equations of circles", "skillId": "math-10-circles" }] },
+    { "section": "C", "title": "Right Triangle Trigonometry", "skills": [{ "title": "Sin, cos, and tan ratios", "skillId": "math-10-trig" }, { "title": "Solve right triangles", "skillId": "math-10-trig" }, { "title": "Angles of elevation & depression", "skillId": "math-10-trig" }] }
+  ],
+  "math-11": [
+    { "section": "A", "title": "Polynomials & Factoring", "skills": [{ "title": "Add and subtract polynomials", "skillId": "math-11-polynomials" }, { "title": "Multiply polynomials", "skillId": "math-11-polynomials" }, { "title": "Factor completely", "skillId": "math-11-polynomials" }] },
+    { "section": "B", "title": "Rational & Radical Expressions", "skills": [{ "title": "Simplify radical expressions", "skillId": "math-11-radicals" }, { "title": "Rational exponents", "skillId": "math-11-radicals" }, { "title": "Add and subtract radicals", "skillId": "math-11-radicals" }] },
+    { "section": "C", "title": "Logarithms & Exponentials", "skills": [{ "title": "Exponential growth & decay", "skillId": "math-11-logs" }, { "title": "Properties of logarithms", "skillId": "math-11-logs" }, { "title": "Solve logarithmic equations", "skillId": "math-11-logs" }] },
+    { "section": "D", "title": "Sequences & Series", "skills": [{ "title": "Arithmetic sequences", "skillId": "math-11-sequences" }, { "title": "Geometric sequences", "skillId": "math-11-sequences" }, { "title": "Sigma notation", "skillId": "math-11-sequences" }] }
+  ],
+  "math-12": [
+    { "section": "A", "title": "Pre-Calculus", "skills": [{ "title": "Trigonometric functions", "skillId": "math-12-precalc" }, { "title": "Unit circle", "skillId": "math-12-precalc" }, { "title": "Trig identities", "skillId": "math-12-precalc" }] },
+    { "section": "B", "title": "Limits & Introduction to Calculus", "skills": [{ "title": "Evaluate limits", "skillId": "math-12-calculus" }, { "title": "Definition of a derivative", "skillId": "math-12-calculus" }, { "title": "Basic differentiation rules", "skillId": "math-12-calculus" }] },
+    { "section": "C", "title": "Statistics & Probability", "skills": [{ "title": "Normal distribution", "skillId": "math-12-statistics" }, { "title": "Confidence intervals", "skillId": "math-12-statistics" }, { "title": "Hypothesis testing basics", "skillId": "math-12-statistics" }] }
   ]
 }
