@@ -1,0 +1,32 @@
+{
+  "science-k": [
+    { "section": "A", "title": "Living Things", "skills": [{ "title": "Plants vs. animals", "skillId": "science-1-animals" }, { "title": "Animal body coverings", "skillId": "science-1-animals" }] },
+    { "section": "B", "title": "Earth Science", "skills": [{ "title": "Weather patterns", "skillId": "science-1-animals" }, { "title": "Types of weather", "skillId": "science-1-animals" }] },
+    { "section": "C", "title": "Physical Science", "skills": [{ "title": "Properties of objects", "skillId": "science-1-animals" }, { "title": "Sorting objects", "skillId": "science-1-animals" }] }
+  ],
+  "science-1": [
+    { "section": "A", "title": "Animal Habitats", "skills": [{ "title": "Animal homes and habitats", "skillId": "science-1-animals" }, { "title": "Animals and their needs", "skillId": "science-1-animals" }, { "title": "Land vs. water animals", "skillId": "science-1-animals" }] },
+    { "section": "B", "title": "Plants", "skills": [{ "title": "Parts of a plant", "skillId": "science-3-plants" }, { "title": "What plants need to grow", "skillId": "science-3-plants" }] },
+    { "section": "C", "title": "Earth Science", "skills": [{ "title": "Soil, rock, and water", "skillId": "science-1-animals" }, { "title": "Weather and seasons", "skillId": "science-1-animals" }] }
+  ],
+  "science-2": [
+    { "section": "A", "title": "Life Science", "skills": [{ "title": "Life cycles", "skillId": "science-3-plants" }, { "title": "Ecosystems", "skillId": "science-1-animals" }, { "title": "Food chains", "skillId": "science-1-animals" }] },
+    { "section": "B", "title": "Earth Science", "skills": [{ "title": "Landforms and water", "skillId": "science-1-animals" }, { "title": "Natural resources", "skillId": "science-1-animals" }] },
+    { "section": "C", "title": "Physical Science", "skills": [{ "title": "Forces and motion", "skillId": "science-5-states" }, { "title": "Energy forms", "skillId": "science-5-states" }] }
+  ],
+  "science-3": [
+    { "section": "A", "title": "Plant Life Cycle", "skills": [{ "title": "Parts of a flower", "skillId": "science-3-plants" }, { "title": "Seed to plant", "skillId": "science-3-plants" }, { "title": "How plants reproduce", "skillId": "science-3-plants" }] },
+    { "section": "B", "title": "Animal Adaptations", "skills": [{ "title": "Adaptations for survival", "skillId": "science-1-animals" }, { "title": "Camouflage and mimicry", "skillId": "science-1-animals" }] },
+    { "section": "C", "title": "Forces", "skills": [{ "title": "Push and pull", "skillId": "science-5-states" }, { "title": "Gravity and friction", "skillId": "science-5-states" }] }
+  ],
+  "science-4": [
+    { "section": "A", "title": "States of Matter", "skills": [{ "title": "Solids, liquids, gases", "skillId": "science-5-states" }, { "title": "Changes of state", "skillId": "science-5-states" }, { "title": "Physical vs. chemical changes", "skillId": "science-5-states" }] },
+    { "section": "B", "title": "Ecosystems", "skills": [{ "title": "Producers, consumers, decomposers", "skillId": "science-1-animals" }, { "title": "Food webs", "skillId": "science-1-animals" }] },
+    { "section": "C", "title": "Earth Science", "skills": [{ "title": "The water cycle", "skillId": "science-5-states" }, { "title": "Rock cycle", "skillId": "science-5-states" }] }
+  ],
+  "science-5": [
+    { "section": "A", "title": "States of Matter", "skills": [{ "title": "Properties of solids, liquids, gases", "skillId": "science-5-states" }, { "title": "Mixtures and solutions", "skillId": "science-5-states" }, { "title": "Chemical reactions", "skillId": "science-5-states" }] },
+    { "section": "B", "title": "Energy", "skills": [{ "title": "Light and sound energy", "skillId": "science-5-states" }, { "title": "Heat transfer", "skillId": "science-5-states" }, { "title": "Electrical energy", "skillId": "science-5-states" }] },
+    { "section": "C", "title": "Earth & Space", "skills": [{ "title": "Earth's layers", "skillId": "science-5-states" }, { "title": "Solar system", "skillId": "science-5-states" }, { "title": "Moon phases", "skillId": "science-5-states" }] }
+  ]
+}

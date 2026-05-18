@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import faqs from './data/faqs.json';
+import mathCatalog from './data/math.json';
+import elaCatalog from './data/ela.json';
+import scienceCatalog from './data/science.json';
+import socialCatalog from './data/social_studies.json';
 import {
   Sparkles, Trophy, Flame, Star, Target, BookOpen, Calculator, FlaskConical,
   Globe2, ChevronRight, ChevronLeft, Check, X, Lightbulb, RotateCcw, Menu,
@@ -660,145 +664,12 @@ const SKILLS = {
 const getSkillsFor = (grade, subject) =>
   Object.values(SKILLS).filter(s => s.grade === grade && s.subject === subject);
 
-// IXL-style skill catalog: organized into named sections per grade+subject
+// IXL-style skill catalog: assembled from subject-specific JSON data files
 const SKILL_CATALOG = {
-  'math-k': [
-    { section:'A', title:'Counting to 10', skills:[{title:'Counting review — up to 10',skillId:'math-k-counting-10'},{title:'Count objects to 10',skillId:'math-k-counting-10'},{title:'What number comes next?',skillId:'math-k-counting-10'},{title:'Compare groups: more or fewer',skillId:'math-k-counting-10'}]},
-    { section:'B', title:'Adding & Subtracting to 5', skills:[{title:'Adding to 5',skillId:'math-k-add-subtract-5'},{title:'Subtracting to 5',skillId:'math-k-add-subtract-5'},{title:'Adding with pictures',skillId:'math-k-add-subtract-5'},{title:'Number stories',skillId:'math-k-add-subtract-5'}]},
-    { section:'C', title:'2D Shapes', skills:[{title:'Name 2D shapes',skillId:'math-k-shapes-2d'},{title:'Count sides and corners',skillId:'math-k-shapes-2d'},{title:'Sort shapes by attribute',skillId:'math-k-shapes-2d'}]},
-    { section:'D', title:'Patterns', skills:[{title:'Identify AB patterns',skillId:'math-k-odd-even'},{title:'Extend a pattern',skillId:'math-k-odd-even'},{title:'Create a pattern',skillId:'math-k-odd-even'}]},
-    { section:'E', title:'Ten Frames', skills:[{title:'Count using ten frames',skillId:'math-k-ten-frames'},{title:'Fill the ten frame',skillId:'math-k-ten-frames'},{title:'Compare using ten frames',skillId:'math-k-ten-frames'}]},
-  ],
-  'math-1': [
-    { section:'A', title:'Counting to 100', skills:[{title:'Count by 1s to 100',skillId:'math-k-counting-10'},{title:'Count by 2s',skillId:'math-k-counting-10'},{title:'Count by 5s',skillId:'math-k-counting-10'},{title:'Count by 10s',skillId:'math-k-counting-10'},{title:'Odd and even numbers',skillId:'math-k-odd-even'}]},
-    { section:'B', title:'Addition within 20', skills:[{title:'Add within 20',skillId:'math-1-addition'},{title:'Add three numbers',skillId:'math-1-addition'},{title:'Addition word problems',skillId:'math-1-addition'},{title:'Missing addend',skillId:'math-1-addition'}]},
-    { section:'C', title:'Subtraction within 20', skills:[{title:'Subtract within 20',skillId:'math-1-subtraction'},{title:'Related addition & subtraction facts',skillId:'math-1-subtraction'},{title:'Subtraction word problems',skillId:'math-1-subtraction'}]},
-    { section:'D', title:'Place Value', skills:[{title:'Tens and ones',skillId:'math-1-place-value'},{title:'Compare 2-digit numbers',skillId:'math-1-place-value'},{title:'Order numbers to 100',skillId:'math-1-place-value'}]},
-    { section:'E', title:'Number Bonds', skills:[{title:'Number bonds — sums of 8',skillId:'math-1-number-bonds-8'},{title:'Number bonds — sums of 10',skillId:'math-1-number-bonds-8'},{title:'Number bonds — mixed',skillId:'math-1-number-bonds-8'}]},
-    { section:'F', title:'Measurement & Time', skills:[{title:'Compare lengths',skillId:'math-1-place-value'},{title:'Measure with units',skillId:'math-1-place-value'},{title:'Tell time to the hour',skillId:'math-1-place-value'}]},
-  ],
-  'math-2': [
-    { section:'A', title:'Place Value to 1,000', skills:[{title:'Hundreds, tens, and ones',skillId:'math-2-place-value-100'},{title:'Write numbers in words',skillId:'math-2-place-value-100'},{title:'Compare 3-digit numbers',skillId:'math-2-place-value-100'},{title:'Order 3-digit numbers',skillId:'math-2-place-value-100'}]},
-    { section:'B', title:'Addition & Subtraction', skills:[{title:'Add within 100',skillId:'math-2-add-subtract-100'},{title:'Subtract within 100',skillId:'math-2-add-subtract-100'},{title:'Add and subtract word problems',skillId:'math-2-add-subtract-100'},{title:'Add three numbers',skillId:'math-2-add-subtract-100'}]},
-    { section:'C', title:'Time & Money', skills:[{title:'Tell time to the quarter hour',skillId:'math-2-time-money'},{title:'Count coins',skillId:'math-2-time-money'},{title:'Add dollar amounts',skillId:'math-2-time-money'}]},
-    { section:'D', title:'Fractions', skills:[{title:'Equal parts',skillId:'math-2-time-money'},{title:'Halves, thirds, fourths',skillId:'math-2-time-money'},{title:'Identify fractions',skillId:'math-2-time-money'}]},
-    { section:'E', title:'Data & Graphs', skills:[{title:'Read a bar graph',skillId:'math-2-add-subtract-100'},{title:'Make a bar graph',skillId:'math-2-add-subtract-100'},{title:'Read a picture graph',skillId:'math-2-add-subtract-100'}]},
-  ],
-  'math-3': [
-    { section:'A', title:'Multiplication Facts', skills:[{title:'Multiply by 2',skillId:'math-3-multiplication'},{title:'Multiply by 5',skillId:'math-3-multiplication'},{title:'Multiply by 10',skillId:'math-3-multiplication'},{title:'Multiply by 3 and 4',skillId:'math-3-multiplication'},{title:'Mixed multiplication facts',skillId:'math-3-multiplication'}]},
-    { section:'B', title:'Division Basics', skills:[{title:'Divide by 2',skillId:'math-3-division'},{title:'Divide by 5',skillId:'math-3-division'},{title:'Related multiplication & division',skillId:'math-3-division'},{title:'Division word problems',skillId:'math-3-division'}]},
-    { section:'C', title:'Fractions', skills:[{title:'Identify fractions',skillId:'math-3-fractions-intro'},{title:'Compare fractions',skillId:'math-3-fractions-intro'},{title:'Fractions on a number line',skillId:'math-3-fractions-intro'},{title:'Equivalent fractions',skillId:'math-3-fractions-intro'}]},
-    { section:'D', title:'Measurement', skills:[{title:'Measure in centimeters',skillId:'math-3-multiplication'},{title:'Perimeter of shapes',skillId:'math-3-multiplication'},{title:'Area of rectangles',skillId:'math-3-multiplication'}]},
-    { section:'E', title:'Time & Data', skills:[{title:'Elapsed time',skillId:'math-3-division'},{title:'Read a line plot',skillId:'math-3-division'},{title:'Bar graphs and pictographs',skillId:'math-3-division'}]},
-  ],
-  'math-4': [
-    { section:'A', title:'Multi-Digit Multiplication', skills:[{title:'Multiply 2-digit numbers',skillId:'math-4-multiplication'},{title:'Multiply 3-digit by 1-digit',skillId:'math-4-multiplication'},{title:'Multiply with area models',skillId:'math-4-multiplication'},{title:'Estimate products',skillId:'math-4-multiplication'}]},
-    { section:'B', title:'Division', skills:[{title:'Divide 2-digit by 1-digit',skillId:'math-4-multiplication'},{title:'Divide with remainders',skillId:'math-4-multiplication'},{title:'Division word problems',skillId:'math-4-multiplication'}]},
-    { section:'C', title:'Fractions & Decimals', skills:[{title:'Add and subtract fractions',skillId:'math-4-fractions'},{title:'Mixed numbers',skillId:'math-4-fractions'},{title:'Multiply fractions by whole numbers',skillId:'math-4-fractions'},{title:'Decimals to hundredths',skillId:'math-4-fractions'}]},
-    { section:'D', title:'Geometry', skills:[{title:'Types of angles',skillId:'math-4-geometry'},{title:'Classify triangles',skillId:'math-4-geometry'},{title:'Lines of symmetry',skillId:'math-4-geometry'}]},
-    { section:'E', title:'Measurement & Data', skills:[{title:'Convert units of length',skillId:'math-4-fractions'},{title:'Area and perimeter',skillId:'math-4-geometry'},{title:'Line plots with fractions',skillId:'math-4-fractions'}]},
-  ],
-  'math-5': [
-    { section:'A', title:'Decimals', skills:[{title:'Multiply decimals',skillId:'math-5-fractions'},{title:'Divide decimals',skillId:'math-5-fractions'},{title:'Rounding decimals',skillId:'math-5-fractions'}]},
-    { section:'B', title:'Fractions', skills:[{title:'Add fractions — unlike denominators',skillId:'math-5-fractions'},{title:'Subtract fractions — unlike denominators',skillId:'math-5-fractions'},{title:'Multiply fractions',skillId:'math-5-fractions'},{title:'Divide fractions',skillId:'math-5-fractions'}]},
-    { section:'C', title:'Expressions & Equations', skills:[{title:'Order of operations',skillId:'math-5-fractions'},{title:'Write numerical expressions',skillId:'math-5-fractions'},{title:'Evaluate expressions',skillId:'math-5-fractions'}]},
-    { section:'D', title:'Geometry & Volume', skills:[{title:'Coordinate plane',skillId:'math-5-fractions'},{title:'Classify quadrilaterals',skillId:'math-5-fractions'},{title:'Volume of rectangular prisms',skillId:'math-5-fractions'}]},
-    { section:'E', title:'Data & Statistics', skills:[{title:'Dot plots and frequency tables',skillId:'math-5-fractions'},{title:'Mean, median, mode',skillId:'math-5-fractions'},{title:'Line graphs',skillId:'math-5-fractions'}]},
-  ],
-  'ela-k': [
-    { section:'A', title:'Letter Sounds', skills:[{title:'Letter sounds — consonants',skillId:'ela-k-letters'},{title:'Letter sounds — vowels',skillId:'ela-k-letters'},{title:'Match letter to sound',skillId:'ela-k-letters'}]},
-    { section:'B', title:'Sight Words', skills:[{title:'Sight words — set 1',skillId:'ela-k-sight-words'},{title:'Sight words — set 2',skillId:'ela-k-sight-words'},{title:'Read sight words in sentences',skillId:'ela-k-sight-words'}]},
-    { section:'C', title:'Beginning Sounds', skills:[{title:'Identify beginning sounds',skillId:'ela-k-beginning-sounds'},{title:'Match beginning sounds',skillId:'ela-k-beginning-sounds'}]},
-    { section:'D', title:'Rhyming', skills:[{title:'Do the words rhyme?',skillId:'ela-k-letters'},{title:'Complete the rhyme',skillId:'ela-k-letters'}]},
-  ],
-  'ela-1': [
-    { section:'A', title:'Short Vowel Words', skills:[{title:'Short vowel CVC words',skillId:'ela-1-cvc-words'},{title:'Blend CVC words',skillId:'ela-1-cvc-words'},{title:'Read short vowel sentences',skillId:'ela-1-cvc-words'}]},
-    { section:'B', title:'Word Families', skills:[{title:'-at and -an words',skillId:'ela-1-word-families'},{title:'-ig and -og words',skillId:'ela-1-word-families'},{title:'-ot and -ut words',skillId:'ela-1-word-families'}]},
-    { section:'C', title:'Sentences', skills:[{title:'Build a sentence',skillId:'ela-1-sentences'},{title:'Capitalize the first word',skillId:'ela-1-sentences'},{title:'End punctuation',skillId:'ela-1-sentences'}]},
-    { section:'D', title:'Sight Words', skills:[{title:'Grade 1 sight words — set 1',skillId:'ela-k-sight-words'},{title:'Grade 1 sight words — set 2',skillId:'ela-k-sight-words'}]},
-  ],
-  'ela-2': [
-    { section:'A', title:'Nouns & Verbs', skills:[{title:'Common and proper nouns',skillId:'ela-2-grammar'},{title:'Action and linking verbs',skillId:'ela-2-grammar'},{title:'Subject-verb agreement',skillId:'ela-2-grammar'}]},
-    { section:'B', title:'Plurals & Possessives', skills:[{title:'Singular and plural nouns',skillId:'ela-2-plurals'},{title:'Irregular plural nouns',skillId:'ela-2-plurals'},{title:'Possessive nouns',skillId:'ela-2-plurals'}]},
-    { section:'C', title:'Reading Stories', skills:[{title:'Identify the main idea',skillId:'ela-2-reading-basic'},{title:'Key details in a story',skillId:'ela-2-reading-basic'},{title:'Character and setting',skillId:'ela-2-reading-basic'}]},
-    { section:'D', title:'Vocabulary', skills:[{title:'Compound words',skillId:'ela-2-grammar'},{title:'Contractions',skillId:'ela-2-grammar'},{title:'Context clues',skillId:'ela-2-reading-basic'}]},
-  ],
-  'ela-3': [
-    { section:'A', title:'Grammar', skills:[{title:'Adjectives and their uses',skillId:'ela-3-grammar'},{title:'Adverbs — how and when',skillId:'ela-3-grammar'},{title:'Comparative adjectives',skillId:'ela-3-grammar'}]},
-    { section:'B', title:'Vocabulary', skills:[{title:'Synonyms',skillId:'ela-3-vocabulary'},{title:'Antonyms',skillId:'ela-3-vocabulary'},{title:'Prefixes and suffixes',skillId:'ela-3-vocabulary'}]},
-    { section:'C', title:'Reading Comprehension', skills:[{title:'Main idea and details',skillId:'ela-3-reading-comprehension'},{title:'Compare and contrast',skillId:'ela-3-reading-comprehension'},{title:'Cause and effect',skillId:'ela-3-reading-comprehension'},{title:"Author's purpose",skillId:'ela-3-reading-comprehension'}]},
-    { section:'D', title:'Writing', skills:[{title:'Topic sentences',skillId:'ela-3-grammar'},{title:'Supporting details',skillId:'ela-3-grammar'},{title:'Paragraph structure',skillId:'ela-3-grammar'}]},
-  ],
-  'ela-4': [
-    { section:'A', title:'Grammar & Usage', skills:[{title:'Subject and predicate',skillId:'ela-3-grammar'},{title:'Compound sentences',skillId:'ela-3-grammar'},{title:'Pronoun agreement',skillId:'ela-3-grammar'}]},
-    { section:'B', title:'Vocabulary', skills:[{title:'Context clues',skillId:'ela-3-vocabulary'},{title:'Figurative language',skillId:'ela-3-vocabulary'},{title:'Multiple-meaning words',skillId:'ela-3-vocabulary'}]},
-    { section:'C', title:'Reading Comprehension', skills:[{title:'Main idea vs. supporting details',skillId:'ela-3-reading-comprehension'},{title:'Point of view',skillId:'ela-3-reading-comprehension'},{title:'Summarize a text',skillId:'ela-3-reading-comprehension'}]},
-  ],
-  'ela-5': [
-    { section:'A', title:'Grammar', skills:[{title:'Verb tenses',skillId:'ela-3-grammar'},{title:'Comma usage',skillId:'ela-3-grammar'},{title:'Active and passive voice',skillId:'ela-3-grammar'}]},
-    { section:'B', title:'Vocabulary', skills:[{title:'Connotation and denotation',skillId:'ela-3-vocabulary'},{title:'Greek and Latin roots',skillId:'ela-3-vocabulary'},{title:'Analogies',skillId:'ela-3-vocabulary'}]},
-    { section:'C', title:'Reading Comprehension', skills:[{title:'Theme and central message',skillId:'ela-3-reading-comprehension'},{title:'Compare texts',skillId:'ela-3-reading-comprehension'},{title:'Text structure',skillId:'ela-3-reading-comprehension'}]},
-  ],
-  'science-k': [
-    { section:'A', title:'Living Things', skills:[{title:'Plants vs. animals',skillId:'science-1-animals'},{title:'Animal body coverings',skillId:'science-1-animals'}]},
-    { section:'B', title:'Earth Science', skills:[{title:'Weather patterns',skillId:'science-1-animals'},{title:'Types of weather',skillId:'science-1-animals'}]},
-    { section:'C', title:'Physical Science', skills:[{title:'Properties of objects',skillId:'science-1-animals'},{title:'Sorting objects',skillId:'science-1-animals'}]},
-  ],
-  'science-1': [
-    { section:'A', title:'Animal Habitats', skills:[{title:'Animal homes and habitats',skillId:'science-1-animals'},{title:'Animals and their needs',skillId:'science-1-animals'},{title:'Land vs. water animals',skillId:'science-1-animals'}]},
-    { section:'B', title:'Plants', skills:[{title:'Parts of a plant',skillId:'science-3-plants'},{title:'What plants need to grow',skillId:'science-3-plants'}]},
-    { section:'C', title:'Earth Science', skills:[{title:'Soil, rock, and water',skillId:'science-1-animals'},{title:'Weather and seasons',skillId:'science-1-animals'}]},
-  ],
-  'science-2': [
-    { section:'A', title:'Life Science', skills:[{title:'Life cycles',skillId:'science-3-plants'},{title:'Ecosystems',skillId:'science-1-animals'},{title:'Food chains',skillId:'science-1-animals'}]},
-    { section:'B', title:'Earth Science', skills:[{title:'Landforms and water',skillId:'science-1-animals'},{title:'Natural resources',skillId:'science-1-animals'}]},
-    { section:'C', title:'Physical Science', skills:[{title:'Forces and motion',skillId:'science-5-states'},{title:'Energy forms',skillId:'science-5-states'}]},
-  ],
-  'science-3': [
-    { section:'A', title:'Plant Life Cycle', skills:[{title:'Parts of a flower',skillId:'science-3-plants'},{title:'Seed to plant',skillId:'science-3-plants'},{title:'How plants reproduce',skillId:'science-3-plants'}]},
-    { section:'B', title:'Animal Adaptations', skills:[{title:'Adaptations for survival',skillId:'science-1-animals'},{title:'Camouflage and mimicry',skillId:'science-1-animals'}]},
-    { section:'C', title:'Forces', skills:[{title:'Push and pull',skillId:'science-5-states'},{title:'Gravity and friction',skillId:'science-5-states'}]},
-  ],
-  'science-4': [
-    { section:'A', title:'States of Matter', skills:[{title:'Solids, liquids, gases',skillId:'science-5-states'},{title:'Changes of state',skillId:'science-5-states'},{title:'Physical vs. chemical changes',skillId:'science-5-states'}]},
-    { section:'B', title:'Ecosystems', skills:[{title:'Producers, consumers, decomposers',skillId:'science-1-animals'},{title:'Food webs',skillId:'science-1-animals'}]},
-    { section:'C', title:'Earth Science', skills:[{title:'The water cycle',skillId:'science-5-states'},{title:'Rock cycle',skillId:'science-5-states'}]},
-  ],
-  'science-5': [
-    { section:'A', title:'States of Matter', skills:[{title:'Properties of solids, liquids, gases',skillId:'science-5-states'},{title:'Mixtures and solutions',skillId:'science-5-states'},{title:'Chemical reactions',skillId:'science-5-states'}]},
-    { section:'B', title:'Energy', skills:[{title:'Light and sound energy',skillId:'science-5-states'},{title:'Heat transfer',skillId:'science-5-states'},{title:'Electrical energy',skillId:'science-5-states'}]},
-    { section:'C', title:'Earth & Space', skills:[{title:"Earth's layers",skillId:'science-5-states'},{title:'Solar system',skillId:'science-5-states'},{title:'Moon phases',skillId:'science-5-states'}]},
-  ],
-  'social-k': [
-    { section:'A', title:'All About Me', skills:[{title:'Feelings and emotions',skillId:'social-2-community'},{title:'Taking turns and sharing',skillId:'social-2-community'}]},
-    { section:'B', title:'Community', skills:[{title:'Community helpers',skillId:'social-2-community'},{title:'Rules and laws',skillId:'social-2-community'}]},
-    { section:'C', title:'Maps & Geography', skills:[{title:'Use a map',skillId:'social-4-geography'},{title:'Land and water',skillId:'social-4-geography'}]},
-  ],
-  'social-1': [
-    { section:'A', title:'Community Helpers', skills:[{title:'Who helps in our community?',skillId:'social-2-community'},{title:'Jobs in the community',skillId:'social-2-community'},{title:'Community services',skillId:'social-2-community'}]},
-    { section:'B', title:'Maps & Location', skills:[{title:'Map skills',skillId:'social-4-geography'},{title:'Cardinal directions',skillId:'social-4-geography'}]},
-    { section:'C', title:'American Symbols', skills:[{title:'National symbols',skillId:'social-2-community'},{title:'Holidays and traditions',skillId:'social-2-community'}]},
-  ],
-  'social-2': [
-    { section:'A', title:'Community Helpers', skills:[{title:'Community workers and their tools',skillId:'social-2-community'},{title:'Government workers',skillId:'social-2-community'},{title:'Goods and services',skillId:'social-2-community'}]},
-    { section:'B', title:'History', skills:[{title:'Then and now',skillId:'social-2-community'},{title:'Important people in history',skillId:'social-2-community'}]},
-    { section:'C', title:'Geography', skills:[{title:'Continents and oceans',skillId:'social-4-geography'},{title:'Read a map',skillId:'social-4-geography'}]},
-  ],
-  'social-3': [
-    { section:'A', title:'Communities', skills:[{title:'Types of communities',skillId:'social-2-community'},{title:'Rural, suburban, urban',skillId:'social-2-community'}]},
-    { section:'B', title:'Geography', skills:[{title:'Map skills — latitude & longitude',skillId:'social-4-geography'},{title:'Landforms',skillId:'social-4-geography'},{title:'Natural resources',skillId:'social-4-geography'}]},
-    { section:'C', title:'Economics', skills:[{title:'Producers and consumers',skillId:'social-2-community'},{title:'Supply and demand',skillId:'social-2-community'}]},
-  ],
-  'social-4': [
-    { section:'A', title:'US Geography', skills:[{title:'Regions of the United States',skillId:'social-4-geography'},{title:'State capitals',skillId:'social-4-geography'},{title:'Rivers and mountains',skillId:'social-4-geography'}]},
-    { section:'B', title:'US History', skills:[{title:'Native American cultures',skillId:'social-2-community'},{title:'Colonial America',skillId:'social-2-community'},{title:'The American Revolution',skillId:'social-2-community'}]},
-    { section:'C', title:'Government', skills:[{title:'Three branches of government',skillId:'social-2-community'},{title:'Rights and responsibilities',skillId:'social-2-community'}]},
-  ],
-  'social-5': [
-    { section:'A', title:'World Geography', skills:[{title:'Continents and countries',skillId:'social-4-geography'},{title:'World climate zones',skillId:'social-4-geography'},{title:'Physical features of continents',skillId:'social-4-geography'}]},
-    { section:'B', title:'World History', skills:[{title:'Ancient civilizations',skillId:'social-2-community'},{title:'Age of exploration',skillId:'social-2-community'}]},
-    { section:'C', title:'Economics & Civics', skills:[{title:'Global trade',skillId:'social-4-geography'},{title:'International organizations',skillId:'social-2-community'}]},
-  ],
+  ...mathCatalog,
+  ...elaCatalog,
+  ...scienceCatalog,
+  ...socialCatalog,
 };
 
 // Adaptive engine: pick next question based on recent performance

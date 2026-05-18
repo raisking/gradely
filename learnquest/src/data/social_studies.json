@@ -1,0 +1,32 @@
+{
+  "social-k": [
+    { "section": "A", "title": "All About Me", "skills": [{ "title": "Feelings and emotions", "skillId": "social-2-community" }, { "title": "Taking turns and sharing", "skillId": "social-2-community" }] },
+    { "section": "B", "title": "Community", "skills": [{ "title": "Community helpers", "skillId": "social-2-community" }, { "title": "Rules and laws", "skillId": "social-2-community" }] },
+    { "section": "C", "title": "Maps & Geography", "skills": [{ "title": "Use a map", "skillId": "social-4-geography" }, { "title": "Land and water", "skillId": "social-4-geography" }] }
+  ],
+  "social-1": [
+    { "section": "A", "title": "Community Helpers", "skills": [{ "title": "Who helps in our community?", "skillId": "social-2-community" }, { "title": "Jobs in the community", "skillId": "social-2-community" }, { "title": "Community services", "skillId": "social-2-community" }] },
+    { "section": "B", "title": "Maps & Location", "skills": [{ "title": "Map skills", "skillId": "social-4-geography" }, { "title": "Cardinal directions", "skillId": "social-4-geography" }] },
+    { "section": "C", "title": "American Symbols", "skills": [{ "title": "National symbols", "skillId": "social-2-community" }, { "title": "Holidays and traditions", "skillId": "social-2-community" }] }
+  ],
+  "social-2": [
+    { "section": "A", "title": "Community Helpers", "skills": [{ "title": "Community workers and their tools", "skillId": "social-2-community" }, { "title": "Government workers", "skillId": "social-2-community" }, { "title": "Goods and services", "skillId": "social-2-community" }] },
+    { "section": "B", "title": "History", "skills": [{ "title": "Then and now", "skillId": "social-2-community" }, { "title": "Important people in history", "skillId": "social-2-community" }] },
+    { "section": "C", "title": "Geography", "skills": [{ "title": "Continents and oceans", "skillId": "social-4-geography" }, { "title": "Read a map", "skillId": "social-4-geography" }] }
+  ],
+  "social-3": [
+    { "section": "A", "title": "Communities", "skills": [{ "title": "Types of communities", "skillId": "social-2-community" }, { "title": "Rural, suburban, urban", "skillId": "social-2-community" }] },
+    { "section": "B", "title": "Geography", "skills": [{ "title": "Map skills — latitude & longitude", "skillId": "social-4-geography" }, { "title": "Landforms", "skillId": "social-4-geography" }, { "title": "Natural resources", "skillId": "social-4-geography" }] },
+    { "section": "C", "title": "Economics", "skills": [{ "title": "Producers and consumers", "skillId": "social-2-community" }, { "title": "Supply and demand", "skillId": "social-2-community" }] }
+  ],
+  "social-4": [
+    { "section": "A", "title": "US Geography", "skills": [{ "title": "Regions of the United States", "skillId": "social-4-geography" }, { "title": "State capitals", "skillId": "social-4-geography" }, { "title": "Rivers and mountains", "skillId": "social-4-geography" }] },
+    { "section": "B", "title": "US History", "skills": [{ "title": "Native American cultures", "skillId": "social-2-community" }, { "title": "Colonial America", "skillId": "social-2-community" }, { "title": "The American Revolution", "skillId": "social-2-community" }] },
+    { "section": "C", "title": "Government", "skills": [{ "title": "Three branches of government", "skillId": "social-2-community" }, { "title": "Rights and responsibilities", "skillId": "social-2-community" }] }
+  ],
+  "social-5": [
+    { "section": "A", "title": "World Geography", "skills": [{ "title": "Continents and countries", "skillId": "social-4-geography" }, { "title": "World climate zones", "skillId": "social-4-geography" }, { "title": "Physical features of continents", "skillId": "social-4-geography" }] },
+    { "section": "B", "title": "World History", "skills": [{ "title": "Ancient civilizations", "skillId": "social-2-community" }, { "title": "Age of exploration", "skillId": "social-2-community" }] },
+    { "section": "C", "title": "Economics & Civics", "skills": [{ "title": "Global trade", "skillId": "social-4-geography" }, { "title": "International organizations", "skillId": "social-2-community" }] }
+  ]
+}

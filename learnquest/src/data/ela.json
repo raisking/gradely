@@ -1,0 +1,36 @@
+{
+  "ela-k": [
+    { "section": "A", "title": "Letter Sounds", "skills": [{ "title": "Letter sounds — consonants", "skillId": "ela-k-letters" }, { "title": "Letter sounds — vowels", "skillId": "ela-k-letters" }, { "title": "Match letter to sound", "skillId": "ela-k-letters" }] },
+    { "section": "B", "title": "Sight Words", "skills": [{ "title": "Sight words — set 1", "skillId": "ela-k-sight-words" }, { "title": "Sight words — set 2", "skillId": "ela-k-sight-words" }, { "title": "Read sight words in sentences", "skillId": "ela-k-sight-words" }] },
+    { "section": "C", "title": "Beginning Sounds", "skills": [{ "title": "Identify beginning sounds", "skillId": "ela-k-beginning-sounds" }, { "title": "Match beginning sounds", "skillId": "ela-k-beginning-sounds" }] },
+    { "section": "D", "title": "Rhyming", "skills": [{ "title": "Do the words rhyme?", "skillId": "ela-k-letters" }, { "title": "Complete the rhyme", "skillId": "ela-k-letters" }] }
+  ],
+  "ela-1": [
+    { "section": "A", "title": "Short Vowel Words", "skills": [{ "title": "Short vowel CVC words", "skillId": "ela-1-cvc-words" }, { "title": "Blend CVC words", "skillId": "ela-1-cvc-words" }, { "title": "Read short vowel sentences", "skillId": "ela-1-cvc-words" }] },
+    { "section": "B", "title": "Word Families", "skills": [{ "title": "-at and -an words", "skillId": "ela-1-word-families" }, { "title": "-ig and -og words", "skillId": "ela-1-word-families" }, { "title": "-ot and -ut words", "skillId": "ela-1-word-families" }] },
+    { "section": "C", "title": "Sentences", "skills": [{ "title": "Build a sentence", "skillId": "ela-1-sentences" }, { "title": "Capitalize the first word", "skillId": "ela-1-sentences" }, { "title": "End punctuation", "skillId": "ela-1-sentences" }] },
+    { "section": "D", "title": "Sight Words", "skills": [{ "title": "Grade 1 sight words — set 1", "skillId": "ela-k-sight-words" }, { "title": "Grade 1 sight words — set 2", "skillId": "ela-k-sight-words" }] }
+  ],
+  "ela-2": [
+    { "section": "A", "title": "Nouns & Verbs", "skills": [{ "title": "Common and proper nouns", "skillId": "ela-2-grammar" }, { "title": "Action and linking verbs", "skillId": "ela-2-grammar" }, { "title": "Subject-verb agreement", "skillId": "ela-2-grammar" }] },
+    { "section": "B", "title": "Plurals & Possessives", "skills": [{ "title": "Singular and plural nouns", "skillId": "ela-2-plurals" }, { "title": "Irregular plural nouns", "skillId": "ela-2-plurals" }, { "title": "Possessive nouns", "skillId": "ela-2-plurals" }] },
+    { "section": "C", "title": "Reading Stories", "skills": [{ "title": "Identify the main idea", "skillId": "ela-2-reading-basic" }, { "title": "Key details in a story", "skillId": "ela-2-reading-basic" }, { "title": "Character and setting", "skillId": "ela-2-reading-basic" }] },
+    { "section": "D", "title": "Vocabulary", "skills": [{ "title": "Compound words", "skillId": "ela-2-grammar" }, { "title": "Contractions", "skillId": "ela-2-grammar" }, { "title": "Context clues", "skillId": "ela-2-reading-basic" }] }
+  ],
+  "ela-3": [
+    { "section": "A", "title": "Grammar", "skills": [{ "title": "Adjectives and their uses", "skillId": "ela-3-grammar" }, { "title": "Adverbs — how and when", "skillId": "ela-3-grammar" }, { "title": "Comparative adjectives", "skillId": "ela-3-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Synonyms", "skillId": "ela-3-vocabulary" }, { "title": "Antonyms", "skillId": "ela-3-vocabulary" }, { "title": "Prefixes and suffixes", "skillId": "ela-3-vocabulary" }] },
+    { "section": "C", "title": "Reading Comprehension", "skills": [{ "title": "Main idea and details", "skillId": "ela-3-reading-comprehension" }, { "title": "Compare and contrast", "skillId": "ela-3-reading-comprehension" }, { "title": "Cause and effect", "skillId": "ela-3-reading-comprehension" }, { "title": "Author's purpose", "skillId": "ela-3-reading-comprehension" }] },
+    { "section": "D", "title": "Writing", "skills": [{ "title": "Topic sentences", "skillId": "ela-3-grammar" }, { "title": "Supporting details", "skillId": "ela-3-grammar" }, { "title": "Paragraph structure", "skillId": "ela-3-grammar" }] }
+  ],
+  "ela-4": [
+    { "section": "A", "title": "Grammar & Usage", "skills": [{ "title": "Subject and predicate", "skillId": "ela-3-grammar" }, { "title": "Compound sentences", "skillId": "ela-3-grammar" }, { "title": "Pronoun agreement", "skillId": "ela-3-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Context clues", "skillId": "ela-3-vocabulary" }, { "title": "Figurative language", "skillId": "ela-3-vocabulary" }, { "title": "Multiple-meaning words", "skillId": "ela-3-vocabulary" }] },
+    { "section": "C", "title": "Reading Comprehension", "skills": [{ "title": "Main idea vs. supporting details", "skillId": "ela-3-reading-comprehension" }, { "title": "Point of view", "skillId": "ela-3-reading-comprehension" }, { "title": "Summarize a text", "skillId": "ela-3-reading-comprehension" }] }
+  ],
+  "ela-5": [
+    { "section": "A", "title": "Grammar", "skills": [{ "title": "Verb tenses", "skillId": "ela-3-grammar" }, { "title": "Comma usage", "skillId": "ela-3-grammar" }, { "title": "Active and passive voice", "skillId": "ela-3-grammar" }] },
+    { "section": "B", "title": "Vocabulary", "skills": [{ "title": "Connotation and denotation", "skillId": "ela-3-vocabulary" }, { "title": "Greek and Latin roots", "skillId": "ela-3-vocabulary" }, { "title": "Analogies", "skillId": "ela-3-vocabulary" }] },
+    { "section": "C", "title": "Reading Comprehension", "skills": [{ "title": "Theme and central message", "skillId": "ela-3-reading-comprehension" }, { "title": "Compare texts", "skillId": "ela-3-reading-comprehension" }, { "title": "Text structure", "skillId": "ela-3-reading-comprehension" }] }
+  ]
+}
