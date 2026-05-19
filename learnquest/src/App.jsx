@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import faqs from './data/faqs.json';
 import mathCatalog from './data/math.json';
+import math9Questions from './data/math/grade9.json';
 import elaCatalog from './data/ela.json';
 import scienceCatalog from './data/science.json';
 import socialCatalog from './data/social_studies.json';
@@ -61,7 +62,7 @@ const SUBJECTS = {
   math:    { label: 'Math',           icon: Calculator,   color: '#525AFF', bg: '#F0FAFF', tagline: 'Numbers, shapes & patterns' },
   ela:     { label: 'ELA',            icon: BookOpen,     color: '#DB2777', bg: '#FDF2F8', tagline: 'Reading, writing & grammar' },
   science: { label: 'Science',        icon: FlaskConical, color: '#4AB5B5', bg: '#F0FDFA', tagline: 'Discover how the world works' },
-  social:  { label: 'Social Studies', icon: Globe2,       color: '#B45309', bg: '#FFFBEB', tagline: 'History, geography & civics' },
+  social:  { label: 'Social Studies', icon: Globe2,       color: '#B45309', bg: '#EEF5EB', tagline: 'History, geography & civics' },
 };
 
 // Skill catalog. Each skill has a curated set of questions across types.
@@ -798,6 +799,18 @@ const SKILLS = {
       { id: 'q10', type: 'mcq', difficulty: 3, prompt: 'A regular octagon has a perimeter of 96 cm. What is the length of each side?', options: ['8 cm','10 cm','12 cm','14 cm'], answer: '12 cm', hint: 'An octagon has 8 sides.' },
       { id: 'q11', type: 'mcq', difficulty: 3, prompt: 'A rectangle has a width of 9 inches. Its length is twice its width. What is the perimeter?', options: ['27 inches','36 inches','54 inches','81 inches'], answer: '54 inches', hint: 'Find the length first.' },
       { id: 'q12', type: 'mcq', difficulty: 3, prompt: 'A park is shaped like a rectangle with a length of 3x meters and a width of x + 4 meters. Which expression represents the perimeter?', options: ['4x + 4','6x + 8','8x + 8','3x² + 12x'], answer: '8x + 8', hint: 'Combine like terms inside the parentheses first.' },
+      { id: 'q13', type: 'mcq', difficulty: 1, prompt: 'A rectangle has a length of 10 cm and a width of 4 cm. What is its perimeter?', options: ['14 cm','20 cm','28 cm','40 cm'], answer: '28 cm', hint: 'Add the length and width, then multiply by 2.' },
+      { id: 'q14', type: 'mcq', difficulty: 1, prompt: 'A square has a side length of 8 inches. What is its perimeter?', options: ['16 inches','24 inches','32 inches','64 inches'], answer: '32 inches', hint: 'Multiply the side length by 4.' },
+      { id: 'q15', type: 'mcq', difficulty: 1, prompt: 'A triangle has side lengths of 6 m, 9 m, and 11 m. What is its perimeter?', options: ['20 m','24 m','26 m','30 m'], answer: '26 m', hint: 'Perimeter means the total distance around a shape.' },
+      { id: 'q16', type: 'mcq', difficulty: 1, prompt: 'A regular pentagon has a side length of 7 cm. What is its perimeter?', options: ['21 cm','28 cm','35 cm','49 cm'], answer: '35 cm', hint: 'A pentagon has 5 sides.' },
+      { id: 'q17', type: 'mcq', difficulty: 2, prompt: 'A rectangle has a perimeter of 54 feet and a length of 18 feet. What is its width?', options: ['6 feet','9 feet','12 feet','15 feet'], answer: '9 feet', hint: 'Divide the perimeter by 2 first.' },
+      { id: 'q18', type: 'mcq', difficulty: 2, prompt: 'A rectangular garden is 22 yards long and 13 yards wide. How many yards of fencing are needed to go around it?', options: ['35 yards','57 yards','70 yards','286 yards'], answer: '70 yards', hint: 'Use the rectangle perimeter formula.' },
+      { id: 'q19', type: 'mcq', difficulty: 2, prompt: 'An equilateral triangle has a perimeter of 72 inches. What is the length of each side?', options: ['18 inches','24 inches','27 inches','36 inches'], answer: '24 inches', hint: 'Equilateral means all sides are equal.' },
+      { id: 'q20', type: 'mcq', difficulty: 2, prompt: 'A regular hexagon has a perimeter of 96 cm. What is the length of one side?', options: ['12 cm','14 cm','16 cm','18 cm'], answer: '16 cm', hint: 'A hexagon has 6 sides.' },
+      { id: 'q21', type: 'mcq', difficulty: 3, prompt: 'A rectangle has a length of x + 9 and a width of x + 3. Which expression represents its perimeter?', options: ['2x + 12','4x + 12','4x + 24','x² + 12x + 27'], answer: '4x + 24', hint: 'Add the length and width first, then multiply by 2.' },
+      { id: 'q22', type: 'mcq', difficulty: 3, prompt: 'A rectangular field has a width of 15 meters. Its length is 3 meters more than twice its width. What is the perimeter?', options: ['90 meters','96 meters','102 meters','108 meters'], answer: '96 meters', hint: 'Find the length first using the width.' },
+      { id: 'q23', type: 'mcq', difficulty: 3, prompt: 'The perimeter of a rectangle is 10x + 28. Its length is 3x + 8. Which expression represents its width?', options: ['2x + 6','2x + 10','4x + 20','7x + 20'], answer: '2x + 6', hint: 'Half of the perimeter equals length plus width.' },
+      { id: 'q24', type: 'mcq', difficulty: 3, prompt: 'A walking path is shaped like a rectangle that is 40 meters long and 25 meters wide. A person walks around it 3 times. How far does the person walk in total?', options: ['65 meters','130 meters','195 meters','390 meters'], answer: '390 meters', hint: 'Find the perimeter first, then multiply by 3.' },
     ],
   },
   'math-8-functions': {
@@ -890,6 +903,18 @@ const SKILLS = {
       { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'A function is increasing when:', options: ['It goes up from left to right','It goes down from left to right','It forms a U shape','It is a horizontal line'], answer: 'It goes up from left to right', hint: 'Increasing means as x increases, y increases.' },
       { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'What is the inverse of f(x) = 3x − 6?', options: ['f⁻¹(x) = (x+6)/3','f⁻¹(x) = (x−6)/3','f⁻¹(x) = 3x + 6','f⁻¹(x) = x/3 − 6'], answer: 'f⁻¹(x) = (x+6)/3', hint: 'Replace f(x) with y, swap x and y, then solve for y.' },
     ],
+  },
+  'math-9-perimeter': {
+    id: 'math-9-perimeter', subject: 'math', grade: '9',
+    title: 'Perimeter', description: 'Calculate perimeter of polygons and solve algebraic perimeter problems',
+    explanation: 'Perimeter = total distance around a shape. Rectangle: P = 2(l + w) | Square: P = 4s | Triangle: P = a + b + c | Regular polygon: P = n × s',
+    questions: math9Questions.perimeter,
+  },
+  'math-9-area': {
+    id: 'math-9-area', subject: 'math', grade: '9',
+    title: 'Area', description: 'Calculate area of polygons, circles, and composite figures — including algebraic expressions',
+    explanation: 'Area formulas: Rectangle = l×w | Square = s² | Triangle = ½bh | Parallelogram = bh | Trapezoid = ½(b₁+b₂)h | Circle = πr²',
+    questions: math9Questions.area,
   },
   // ============ MATH — GRADE 10 ============
   'math-10-geometry': {
@@ -1042,6 +1067,719 @@ const SKILLS = {
       { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A 95% confidence interval means:', options: ['95% of the data falls in the interval','We are 95% confident the true mean is in the interval','The sample mean equals the population mean','The sample size is large enough'], answer: 'We are 95% confident the true mean is in the interval', hint: 'Confidence intervals estimate population parameters.' },
       { id: 'q7', type: 'mcq', difficulty: 3, prompt: 'What increases the power of a hypothesis test?', options: ['Smaller sample size','Smaller effect size','Larger sample size','Higher p-value threshold'], answer: 'Larger sample size', hint: 'More data → more power to detect real differences.' },
       { id: 'q8', type: 'mcq', difficulty: 3, prompt: 'Permutations of 5 items taken 3 at a time (P(5,3)) =', options: ['10','20','60','120'], answer: '60', hint: 'P(n,r) = n!/(n−r)! = 5!/2! = 60.' },
+    ],
+  },
+
+  // ── ELA 6-12 ────────────────────────────────────────────────────────────────
+  'ela-6-grammar': {
+    id: 'ela-6-grammar', subject: 'ela', grade: '6',
+    title: 'Grammar & Language', description: 'Pronouns, sentence structure, punctuation',
+    explanation: 'Strong grammar makes your writing clear and professional.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Which sentence uses correct pronoun-antecedent agreement?', options: ['Each student must bring their book.','Each student must bring his or her book.','Each student must bring its book.','Each student must bring our book.'], answer: 'Each student must bring his or her book.', hint: 'Singular antecedent → singular pronoun.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Which is a compound sentence?', options: ['I ran fast.','I ran fast, and I won the race.','Running fast, I won.','Because I ran fast.'], answer: 'I ran fast, and I won the race.', hint: 'Compound = two independent clauses joined by a conjunction.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Identify the error: "Between you and I, this is wrong."', options: ['No error','Should be "between you and me"','Should be "between us and I"','Should be "among you and me"'], answer: 'Should be "between you and me"', hint: 'After a preposition, use object pronouns (me, him, her).' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which correctly uses a semicolon?', options: ['I like cats; but not dogs.','I like cats; however, I prefer dogs.','I like; cats and dogs.','I like cats; and dogs.'], answer: 'I like cats; however, I prefer dogs.', hint: 'Semicolons join independent clauses, often with a conjunctive adverb.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What is a dangling modifier?', options: ['A modifier far from the word it modifies','A modifier that modifies nothing in the sentence','A misplaced adjective','A redundant phrase'], answer: 'A modifier that modifies nothing in the sentence', hint: 'Example: "Running down the hall, the bell rang." — who was running?' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which sentence is in the passive voice?', options: ['The dog chased the cat.','The cat was chased by the dog.','The cat ran away.','Dogs chase cats.'], answer: 'The cat was chased by the dog.', hint: 'Passive: subject receives the action.' },
+    ],
+  },
+  'ela-6-vocabulary': {
+    id: 'ela-6-vocabulary', subject: 'ela', grade: '6',
+    title: 'Vocabulary', description: 'Context clues, figurative language, word relationships',
+    explanation: 'A strong vocabulary helps you read and write with precision.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What does "benevolent" mean?', options: ['Cruel','Kind and generous','Angry','Shy'], answer: 'Kind and generous', hint: 'Bene- means good.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A "metaphor" directly compares two things without using:', options: ['Nouns','Like or as','Adjectives','Verbs'], answer: 'Like or as', hint: 'Similes use "like" or "as"; metaphors do not.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"The wind whispered through the trees" is an example of:', options: ['Hyperbole','Personification','Simile','Alliteration'], answer: 'Personification', hint: 'Giving human qualities to non-human things.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Use context: "The arid desert had not seen rain in months." Arid means:', options: ['Cold','Wet','Dry','Dark'], answer: 'Dry', hint: 'No rain for months suggests very dry conditions.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What is the relationship between "frugal" and "extravagant"?', options: ['Synonyms','Antonyms','Homophones','Homographs'], answer: 'Antonyms', hint: 'Frugal = careful with money; extravagant = overspending.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"I have told you a million times" is an example of:', options: ['Simile','Metaphor','Hyperbole','Understatement'], answer: 'Hyperbole', hint: 'Extreme exaggeration for effect.' },
+    ],
+  },
+  'ela-6-reading': {
+    id: 'ela-6-reading', subject: 'ela', grade: '6',
+    title: 'Reading & Comprehension', description: 'Cite evidence, central idea, author\'s purpose',
+    explanation: 'Good readers find evidence in the text to support their thinking.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Textual evidence means:', options: ['Your personal opinion','Specific words or quotes from the text','A summary of the story','Information from another book'], answer: 'Specific words or quotes from the text', hint: 'Always go back to the text.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The central idea of a nonfiction text is:', options: ['The first sentence','The most important point the author makes','The last paragraph','The title'], answer: 'The most important point the author makes', hint: 'Central idea = the main message.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'To "summarize" a text means to:', options: ['Copy it word for word','Retell every detail','Briefly state the main points','Add your own ideas'], answer: 'Briefly state the main points', hint: 'A summary is short and sticks to the main ideas.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'An author writing to persuade is trying to:', options: ['Tell a story','Explain how something works','Change the reader\'s opinion or actions','Describe a person'], answer: 'Change the reader\'s opinion or actions', hint: 'Persuasive writing uses arguments and evidence.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which best describes an "inference"?', options: ['A direct quote from the text','A conclusion drawn from evidence and reasoning','A fact stated in the text','An opinion from the author'], answer: 'A conclusion drawn from evidence and reasoning', hint: 'Inferences go beyond what is directly stated.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'When comparing two texts on the same topic, you should look for:', options: ['Which is longer','Similarities and differences in content and perspective','Which has more pictures','Which was written first'], answer: 'Similarities and differences in content and perspective', hint: 'Compare the authors\' claims, evidence, and viewpoints.' },
+    ],
+  },
+  'ela-6-writing': {
+    id: 'ela-6-writing', subject: 'ela', grade: '6',
+    title: 'Writing', description: 'Argumentative, informative, and narrative writing',
+    explanation: 'Good writing has a clear purpose, organization, and supporting details.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'An argumentative essay must include:', options: ['A made-up story','A clear claim and supporting evidence','Only personal opinions','A list of vocabulary words'], answer: 'A clear claim and supporting evidence', hint: 'Arguments need a position and proof.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A thesis statement appears:', options: ['At the end of the essay','In the introduction','In every paragraph','Only in conclusions'], answer: 'In the introduction', hint: 'The thesis tells the reader your main argument.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Transition words like "however" and "therefore" help with:', options: ['Adding humor','Connecting ideas','Describing characters','Starting a story'], answer: 'Connecting ideas', hint: 'Transitions guide the reader between thoughts.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A counterargument in persuasive writing is:', options: ['Your main claim','An opposing viewpoint you address','A supporting detail','The conclusion'], answer: 'An opposing viewpoint you address', hint: 'Addressing counterarguments strengthens your position.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which type of evidence is strongest in an argumentative essay?', options: ['Personal feelings','Statistics from a reliable source','An opinion from a friend','A made-up example'], answer: 'Statistics from a reliable source', hint: 'Data and facts from credible sources are most convincing.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'In narrative writing, "pacing" refers to:', options: ['Word choice','How fast or slow the story moves','The setting','Character description'], answer: 'How fast or slow the story moves', hint: 'Short sentences speed up action; longer ones slow it down.' },
+    ],
+  },
+
+  'ela-7-grammar': {
+    id: 'ela-7-grammar', subject: 'ela', grade: '7',
+    title: 'Grammar & Language', description: 'Modifiers, phrases, clauses, capitalization',
+    explanation: 'Understanding sentence structure helps you write with precision.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A phrase is:', options: ['A complete sentence','A group of words without a subject and verb acting as one unit','Two independent clauses','A paragraph'], answer: 'A group of words without a subject and verb acting as one unit', hint: 'Phrases do not have both a subject and a predicate.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Identify the misplaced modifier: "She almost drove her kids to school every day."', options: ['No error','Almost should be near every day','Almost should follow kids','The sentence has no modifier'], answer: 'Almost should be near every day', hint: 'Modifiers should be placed next to what they modify.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which is a dependent clause?', options: ['The dog barked.','When the dog barked','The dog barked loudly.','Bark!'], answer: 'When the dog barked', hint: 'Dependent clauses cannot stand alone.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which word should be capitalized? "we visited the amazon river."', options: ['visited','the','amazon river','we'], answer: 'amazon river', hint: 'Proper nouns — names of specific places — are capitalized.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What is a participial phrase?', options: ['A phrase using a gerund as a noun','A phrase using a verb form as an adjective','A phrase starting with a preposition','A phrase with two subjects'], answer: 'A phrase using a verb form as an adjective', hint: 'Example: "Running quickly, she caught the bus." — "running quickly" modifies "she".' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'In "Swimming is fun," "swimming" is a:', options: ['Participle','Gerund','Infinitive','Adjective'], answer: 'Gerund', hint: 'A gerund is a verb form ending in -ing used as a noun.' },
+    ],
+  },
+  'ela-7-vocabulary': {
+    id: 'ela-7-vocabulary', subject: 'ela', grade: '7',
+    title: 'Vocabulary', description: 'Connotation, academic vocabulary, roots/affixes',
+    explanation: 'Word choice affects tone — connotation matters as much as definition.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Denotation is:', options: ['The emotional feeling of a word','The dictionary definition of a word','A word that sounds like another','A word\'s origin'], answer: 'The dictionary definition of a word', hint: 'Denotation = literal meaning.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Latin root "port" means:', options: ['To write','To carry','To build','To break'], answer: 'To carry', hint: 'Transport, portable, export all involve carrying.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Slender" and "scrawny" both mean thin, but "scrawny" has a __ connotation.', options: ['Positive','Neutral','Negative','Neither'], answer: 'Negative', hint: 'Scrawny implies unattractively thin.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The prefix "mis-" means:', options: ['Before','Again','Wrongly','Against'], answer: 'Wrongly', hint: 'Misuse, mistake, misplace — all involve doing something wrongly.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which word uses the Greek root "graph" (to write)?', options: ['Geography','Autobiography','Photograph','All of the above'], answer: 'All of the above', hint: '-graph and -graphy both relate to writing or recording.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Academic vocabulary words are:', options: ['Only used in science','Words used across many subjects and disciplines','Slang words','Words only in fiction'], answer: 'Words used across many subjects and disciplines', hint: 'Words like "analyze," "evaluate," and "justify" appear in all subjects.' },
+    ],
+  },
+  'ela-7-reading': {
+    id: 'ela-7-reading', subject: 'ela', grade: '7',
+    title: 'Reading & Literature', description: 'Character development, themes, evaluating arguments',
+    explanation: 'Analyzing literature means looking beyond the plot to the deeper meaning.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A static character is one who:', options: ['Changes a lot during the story','Does not change throughout the story','Is the main character','Is the villain'], answer: 'Does not change throughout the story', hint: 'Static = stays the same; dynamic = changes.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Theme is best described as:', options: ['The plot of the story','The main character\'s name','A universal message or lesson the story conveys','The setting'], answer: 'A universal message or lesson the story conveys', hint: 'Theme is the "big idea" — often about life, love, or justice.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'When evaluating an argument, you should check for:', options: ['Interesting vocabulary','Logical reasoning and credible evidence','Long sentences','Rhyme and rhythm'], answer: 'Logical reasoning and credible evidence', hint: 'Good arguments are logical and backed by reliable evidence.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What is a "foil" character?', options: ['The antagonist','A character who contrasts with the protagonist to highlight their traits','A minor background character','The narrator'], answer: 'A character who contrasts with the protagonist to highlight their traits', hint: 'Foil characters illuminate the main character by contrast.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Comparing themes across two texts helps you understand:', options: ['Which book is longer','How different authors approach similar ideas','Only the plot differences','Grammar conventions'], answer: 'How different authors approach similar ideas', hint: 'Cross-text comparison reveals different perspectives on universal ideas.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A narrator with limited omniscient point of view knows:', options: ['Everything about all characters','The thoughts of only one character','Only what is observed externally','Nothing about any character'], answer: 'The thoughts of only one character', hint: 'Limited omniscient = inside one character\'s head.' },
+    ],
+  },
+  'ela-7-writing': {
+    id: 'ela-7-writing', subject: 'ela', grade: '7',
+    title: 'Writing', description: 'Claim, evidence, research and citations',
+    explanation: 'Strong writing requires clear claims backed by well-cited evidence.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A claim in an essay is:', options: ['A question','The author\'s main argument or position','A summary','A quotation'], answer: 'The author\'s main argument or position', hint: 'The claim tells readers what you believe and will prove.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Why do we cite sources in essays?', options: ['To make essays longer','To give credit and let readers verify information','To add more vocabulary','To avoid using evidence'], answer: 'To give credit and let readers verify information', hint: 'Citations prevent plagiarism and build credibility.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which sentence is the strongest claim?', options: ['Some people think phones are good.','Smartphones benefit students by providing instant access to educational resources.','Phones can be bad.','This essay is about phones.'], answer: 'Smartphones benefit students by providing instant access to educational resources.', hint: 'A strong claim is specific and debatable.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A "works cited" page lists:', options: ['All words you defined','Every source you used in your essay','Your teacher\'s feedback','Your outline'], answer: 'Every source you used in your essay', hint: 'Works cited = bibliography — all sources used.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What does it mean to "integrate" a quote?', options: ['Copy a long passage word-for-word','Introduce, use, and explain the quote within your own writing','Use only the first sentence of a quote','Replace the quote with your own words'], answer: 'Introduce, use, and explain the quote within your own writing', hint: 'Quotes should be introduced and followed by analysis.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Paraphrasing means:', options: ['Copying text exactly','Restating information in your own words','Summarizing an entire chapter','Adding your opinion to a quote'], answer: 'Restating information in your own words', hint: 'Paraphrase: same meaning, different words.' },
+    ],
+  },
+
+  'ela-8-grammar': {
+    id: 'ela-8-grammar', subject: 'ela', grade: '8',
+    title: 'Grammar & Style', description: 'Gerunds, infinitives, voice, style and tone',
+    explanation: 'Mastering grammar lets you control the style and impact of your writing.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'An infinitive is:', options: ['A verb ending in -ing','The base form of a verb preceded by "to"','A past-tense verb','A linking verb'], answer: 'The base form of a verb preceded by "to"', hint: 'Examples: to run, to write, to think.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'In "To err is human," "to err" functions as:', options: ['An adverb','The subject of the sentence','An adjective','A direct object'], answer: 'The subject of the sentence', hint: 'The infinitive phrase acts as a noun here.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Active voice is preferred because it:', options: ['Uses more words','Is clearer and more direct','Hides the subject','Is only for fiction'], answer: 'Is clearer and more direct', hint: 'Active: subject acts. Passive: subject is acted upon.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Tone" in writing refers to:', options: ['The volume of the text','The author\'s attitude toward the subject','The speed of reading','The number of paragraphs'], answer: 'The author\'s attitude toward the subject', hint: 'Tone can be formal, humorous, angry, sad, etc.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which correctly uses a participial phrase?', options: ['Exhausted from the race, the runner collapsed.','The runner, he was exhausted, collapsed.','Collapsing, the runner was exhausted.','Exhausted and the runner collapsed.'], answer: 'Exhausted from the race, the runner collapsed.', hint: 'Participial phrases modify the nearest noun — here, "the runner."' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"Style" in writing includes:', options: ['Only grammar rules','Word choice, sentence structure, and voice','The essay\'s topic','The number of sources'], answer: 'Word choice, sentence structure, and voice', hint: 'Style is how you say something, not what you say.' },
+    ],
+  },
+  'ela-8-vocabulary': {
+    id: 'ela-8-vocabulary', subject: 'ela', grade: '8',
+    title: 'Vocabulary', description: 'Etymology, word origins, nuances in meaning',
+    explanation: 'Knowing word origins helps you decode unfamiliar words.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Etymology is the study of:', options: ['Insects','Word origins and history','Sentence structure','Poetry'], answer: 'Word origins and history', hint: 'Etymology traces how words developed over time.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The Greek root "chron" means:', options: ['Color','Time','Sound','Earth'], answer: 'Time', hint: 'Chronology, chronicle, synchronize — all relate to time.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: '"Notorious" and "famous" both describe being well-known, but "notorious" usually implies:', options: ['Something positive','Something negative or infamous','Something old','Something recent'], answer: 'Something negative or infamous', hint: 'Notorious carries a negative connotation.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The Latin root "aud" means:', options: ['To hear','To see','To speak','To write'], answer: 'To hear', hint: 'Audio, auditorium, audience — all involve hearing.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which word has a French origin?', options: ['Kindergarten','Ballet','Safari','Umbrella'], answer: 'Ballet', hint: 'Ballet comes from the French word "balet."' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"Guileless" means:', options: ['Full of tricks','Without deceit or cunning','Very angry','Extremely happy'], answer: 'Without deceit or cunning', hint: 'Guile = trickery; guileless = without guile.' },
+    ],
+  },
+  'ela-8-reading': {
+    id: 'ela-8-reading', subject: 'ela', grade: '8',
+    title: 'Reading & Analysis', description: 'Analyze theme, evaluate reasoning, point of view',
+    explanation: 'Skilled readers evaluate how an author builds an argument or tells a story.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'When you "analyze" a text, you:', options: ['Summarize every sentence','Examine the parts to understand the whole','Copy the text','Read it only once'], answer: 'Examine the parts to understand the whole', hint: 'Analysis breaks down how and why, not just what.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'What is "point of view" in literature?', options: ['The setting of the story','The narrator\'s perspective and position','The theme','The conflict'], answer: 'The narrator\'s perspective and position', hint: 'First person (I), third person limited, third person omniscient.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A logical fallacy is:', options: ['A strong argument','An error in reasoning','A cited statistic','A literary device'], answer: 'An error in reasoning', hint: 'Fallacies make arguments invalid, even if they sound convincing.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: '"Ad hominem" is a fallacy that:', options: ['Uses false statistics','Attacks the person making the argument rather than the argument','Assumes the conclusion','Uses circular reasoning'], answer: 'Attacks the person making the argument rather than the argument', hint: 'Ad hominem = "against the person" in Latin.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Analyzing theme across multiple texts involves:', options: ['Counting how many times a word appears','Comparing how different authors develop the same central message','Only reading one text deeply','Summarizing each text separately'], answer: 'Comparing how different authors develop the same central message', hint: 'Cross-textual analysis reveals how themes are universal yet handled differently.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which best evaluates the strength of evidence?', options: ['How long it is','How relevant, credible, and sufficient it is','Whether it agrees with you','Whether it comes from a book'], answer: 'How relevant, credible, and sufficient it is', hint: 'Good evidence is accurate, trustworthy, and actually supports the claim.' },
+    ],
+  },
+  'ela-8-writing': {
+    id: 'ela-8-writing', subject: 'ela', grade: '8',
+    title: 'Writing', description: 'Argumentative essay structure, integrating sources',
+    explanation: 'Argumentative essays present a clear position supported by integrated evidence.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The purpose of a conclusion paragraph is to:', options: ['Introduce new evidence','Restate the thesis and summarize main points','List all sources','Start a new argument'], answer: 'Restate the thesis and summarize main points', hint: 'Conclusions bring the essay full circle.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Which is the best way to introduce a quote?', options: ['Just paste it in with no context.','As the author states, "..."','Quotation:','Begin quote here:'], answer: 'As the author states, "..."', hint: 'Always introduce quotes with a signal phrase.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A rebuttal in an argumentative essay:', options: ['Repeats your thesis','Addresses and counters opposing arguments','Lists all your evidence','Introduces the topic'], answer: 'Addresses and counters opposing arguments', hint: 'A rebuttal shows you\'ve considered other views and explains why yours is stronger.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'When should you use a block quote?', options: ['Whenever you cite any source','For quotes longer than 4 lines','Only in fiction essays','Never'], answer: 'For quotes longer than 4 lines', hint: 'MLA format: quotes over 4 lines are indented as a block.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What is plagiarism?', options: ['Using too many quotes','Using someone else\'s work without credit','Writing a long essay','Using formal language'], answer: 'Using someone else\'s work without credit', hint: 'Always cite your sources to avoid plagiarism.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which organizational structure works best for comparing two topics?', options: ['Narrative structure','Point-by-point or block comparison','Chronological order','Problem-solution'], answer: 'Point-by-point or block comparison', hint: 'Compare/contrast essays use parallel structure to highlight similarities and differences.' },
+    ],
+  },
+
+  'ela-9-literature': {
+    id: 'ela-9-literature', subject: 'ela', grade: '9',
+    title: 'Literature', description: 'Fiction elements, plot/conflict, symbolism, imagery',
+    explanation: 'Literary analysis examines how authors use craft to create meaning.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The climax of a story is:', options: ['The introduction','The highest point of tension','The resolution','The falling action'], answer: 'The highest point of tension', hint: 'The climax is the turning point where tension peaks.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A symbol in literature is:', options: ['A punctuation mark','An object or idea representing something beyond its literal meaning','The main character','A plot twist'], answer: 'An object or idea representing something beyond its literal meaning', hint: 'A dove can symbolize peace; a storm can symbolize conflict.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Imagery appeals to:', options: ['Only sight','The reader\'s five senses','Only emotions','Only logic'], answer: 'The reader\'s five senses', hint: 'Imagery creates vivid mental pictures using sensory details.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'An external conflict is between:', options: ['A character and their own thoughts','Two aspects of a character\'s personality','A character and an outside force','A character and their past'], answer: 'A character and an outside force', hint: 'External = person vs. person, nature, society, or technology.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Dramatic irony occurs when:', options: ['The reader knows something a character doesn\'t','The author contradicts themselves','A character lies','Two characters disagree'], answer: 'The reader knows something a character doesn\'t', hint: 'Example: The audience knows the villain is behind the door, but the character doesn\'t.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'What is an archetype in literature?', options: ['A specific character','A recurring symbol, theme, or character type found across cultures','A type of rhyme scheme','A narrative structure'], answer: 'A recurring symbol, theme, or character type found across cultures', hint: 'The Hero\'s Journey is an archetypal narrative pattern.' },
+    ],
+  },
+  'ela-9-grammar': {
+    id: 'ela-9-grammar', subject: 'ela', grade: '9',
+    title: 'Language & Grammar', description: 'Subordination, coordination, standard conventions',
+    explanation: 'Complex sentence structures add sophistication to your writing.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Coordinating conjunctions connect:', options: ['Only nouns','Two equal grammatical elements','Dependent and independent clauses','Only verbs'], answer: 'Two equal grammatical elements', hint: 'FANBOYS: For, And, Nor, But, Or, Yet, So.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Subordination is used to:', options: ['Make two equal clauses','Show that one idea is less important than another','Add humor to writing','Connect two nouns'], answer: 'Show that one idea is less important than another', hint: 'Subordinating conjunctions: although, because, since, while.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which is a complex sentence?', options: ['I ran.','I ran and she walked.','Although it rained, we played outside.','It was a great day, but it ended.'], answer: 'Although it rained, we played outside.', hint: 'Complex = one independent + one dependent clause.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A run-on sentence is:', options: ['A very long sentence','Two or more independent clauses joined without proper punctuation','A sentence fragment','A sentence with too many adjectives'], answer: 'Two or more independent clauses joined without proper punctuation', hint: 'Fix run-ons with a period, semicolon, or conjunction.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which correctly punctuates a compound-complex sentence?', options: ['Although she tried hard she failed and gave up.','Although she tried hard, she failed, and she gave up.','Although she tried hard she failed, and gave up.','She tried hard although she failed and, she gave up.'], answer: 'Although she tried hard, she failed, and she gave up.', hint: 'Use a comma after the dependent clause and before the coordinating conjunction.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: '"Standard English conventions" include:', options: ['Slang and casual language','Grammar, punctuation, and usage rules for formal writing','Regional dialects','Internet abbreviations'], answer: 'Grammar, punctuation, and usage rules for formal writing', hint: 'Standard conventions ensure clarity in academic and professional contexts.' },
+    ],
+  },
+  'ela-9-writing': {
+    id: 'ela-9-writing', subject: 'ela', grade: '9',
+    title: 'Writing', description: 'Literary analysis essays, thesis development, evidence',
+    explanation: 'Literary analysis requires a clear argument supported by textual evidence.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A literary analysis essay focuses on:', options: ['Summarizing the plot','Analyzing how an author uses literary devices to convey meaning','Retelling the story in your own words','Describing the setting'], answer: 'Analyzing how an author uses literary devices to convey meaning', hint: 'Analysis goes beyond summary to explain the "how" and "why."' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A strong thesis for a literary analysis:', options: ['States a fact everyone agrees with','Makes a debatable claim about a literary text that can be proven with evidence','Summarizes the plot','Asks a question'], answer: 'Makes a debatable claim about a literary text that can be proven with evidence', hint: 'Your thesis should take a stand that others could argue against.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The C-E-E paragraph structure stands for:', options: ['Claim, Example, Explanation','Compare, Explain, Evaluate','Conclusion, Evidence, Edit','Claim, Evaluate, Expand'], answer: 'Claim, Example, Explanation', hint: 'State your point, give a quote/example, then explain how it proves your point.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Commentary in a literary analysis:', options: ['Is the same as a plot summary','Explains how the evidence proves your claim','Lists all literary devices','Introduces the author'], answer: 'Explains how the evidence proves your claim', hint: 'Commentary is your analysis — it does the work of connecting evidence to your argument.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which is the best literary analysis thesis?', options: ['The Great Gatsby is about the American Dream.','In The Great Gatsby, Fitzgerald uses Gatsby\'s green light to symbolize the corruption of the American Dream.','I liked The Great Gatsby.','The Great Gatsby is a famous novel.'], answer: 'In The Great Gatsby, Fitzgerald uses Gatsby\'s green light to symbolize the corruption of the American Dream.', hint: 'Specific + debatable + focused on a literary device = strong thesis.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'When you "embed" a quote, you:', options: ['Use only the entire quote as a sentence','Weave the quote naturally into your own sentence','Put the quote in a block format','Use brackets around the entire quote'], answer: 'Weave the quote naturally into your own sentence', hint: 'Embedded quotes fit grammatically within your sentence structure.' },
+    ],
+  },
+
+  'ela-10-literature': {
+    id: 'ela-10-literature', subject: 'ela', grade: '10',
+    title: 'World Literature', description: 'Cultural context, universal themes, compare world literary works',
+    explanation: 'World literature reveals how different cultures explore universal human experiences.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A universal theme is one that:', options: ['Only appears in American literature','Is found across different cultures and time periods','Is specific to one author','Only deals with nature'], answer: 'Is found across different cultures and time periods', hint: 'Love, loss, justice, and identity are universal themes.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Cultural context in literature means:', options: ['The book\'s page count','The historical and social background that shaped the work','The author\'s style','The number of characters'], answer: 'The historical and social background that shaped the work', hint: 'Context helps explain why characters act and think as they do.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Magical realism is a style that:', options: ['Only uses facts','Blends realistic settings with magical or fantastical elements','Is purely science fiction','Has no characters'], answer: 'Blends realistic settings with magical or fantastical elements', hint: 'Gabriel García Márquez is a famous magical realist author.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Post-colonial literature often explores:', options: ['Space exploration','The effects of colonialism on identity and culture','Medieval history','Mathematical problems'], answer: 'The effects of colonialism on identity and culture', hint: 'Authors like Chinua Achebe examine cultural displacement.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What is an "epic"?', options: ['A short poem','A long narrative poem featuring a hero on a grand journey','A type of play','A modern novel'], answer: 'A long narrative poem featuring a hero on a grand journey', hint: 'The Odyssey and Gilgamesh are classic epics.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Comparing literary works from different cultures helps us understand:', options: ['Which culture is superior','Shared human concerns expressed through different perspectives','Only the differences between cultures','Grammar rules'], answer: 'Shared human concerns expressed through different perspectives', hint: 'Comparison reveals both what unites humanity and what makes each culture unique.' },
+    ],
+  },
+  'ela-10-rhetoric': {
+    id: 'ela-10-rhetoric', subject: 'ela', grade: '10',
+    title: 'Rhetoric & Argument', description: 'Ethos, pathos, logos, logical fallacies',
+    explanation: 'Rhetoric is the art of persuasion — understanding it makes you a critical reader.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Ethos appeals to:', options: ['Emotion','Logic and facts','The speaker\'s credibility and authority','The audience\'s self-interest'], answer: 'The speaker\'s credibility and authority', hint: 'Ethos: "Trust me, I\'m an expert."' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Pathos appeals to:', options: ['Logic','Emotion','Credibility','Statistics'], answer: 'Emotion', hint: 'Pathos: "Think of the children!"' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Logos appeals to:', options: ['Emotion','Credibility','Logic, facts, and evidence','Personal stories'], answer: 'Logic, facts, and evidence', hint: 'Logos: "Statistics show that..."' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A "straw man" fallacy involves:', options: ['Attacking someone personally','Misrepresenting an opponent\'s argument to make it easier to attack','Using too much emotion','Circular reasoning'], answer: 'Misrepresenting an opponent\'s argument to make it easier to attack', hint: 'Building a "straw man" = arguing against a weaker version of the real position.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: '"Everyone is buying this product, so you should too" is an example of:', options: ['Ad hominem','Bandwagon fallacy','False dilemma','Slippery slope'], answer: 'Bandwagon fallacy', hint: 'Popularity doesn\'t make something correct.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A false dilemma presents:', options: ['Too many options','Only two options when more exist','A logical argument','Strong evidence'], answer: 'Only two options when more exist', hint: 'Example: "You\'re either with us or against us." — ignores middle ground.' },
+    ],
+  },
+  'ela-10-writing': {
+    id: 'ela-10-writing', subject: 'ela', grade: '10',
+    title: 'Writing', description: 'Analytical essays, synthesizing multiple sources',
+    explanation: 'Synthesis writing combines information from multiple sources into a unified argument.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'An analytical essay focuses on:', options: ['Telling a story','Breaking down and interpreting a topic using evidence','Summarizing an article','Describing your personal experience'], answer: 'Breaking down and interpreting a topic using evidence', hint: 'Analysis = how and why, not just what.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Synthesis writing means:', options: ['Choosing one source and copying it','Combining ideas from multiple sources to support your own argument','Summarizing each source separately','Using only direct quotes'], answer: 'Combining ideas from multiple sources to support your own argument', hint: 'Synthesis blends sources; it doesn\'t just list them.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'When two sources disagree, you should:', options: ['Ignore the one you disagree with','Acknowledge the disagreement and analyze why it exists','Only cite the one that supports you','Say both sources are wrong'], answer: 'Acknowledge the disagreement and analyze why it exists', hint: 'Acknowledging complexity strengthens your analysis.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'A "synthesis" is most like:', options: ['A grocery list','A patchwork quilt that uses many pieces to form one design','A copy of one source','A personal narrative'], answer: 'A patchwork quilt that uses many pieces to form one design', hint: 'Synthesis weaves together many sources into your unified argument.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which is the best way to avoid over-quoting in an essay?', options: ['Use no quotes at all','Paraphrase most evidence and use direct quotes only for powerful, specific language','Use only block quotes','Quote every sentence'], answer: 'Paraphrase most evidence and use direct quotes only for powerful, specific language', hint: 'Your voice should dominate; quotes support, not replace, your analysis.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'What is a "so what" moment in an essay?', options: ['The thesis statement','The moment where you explain the broader significance of your argument','A transition sentence','The introduction'], answer: 'The moment where you explain the broader significance of your argument', hint: '"So what?" asks: why does this argument matter beyond this paper?' },
+    ],
+  },
+
+  'ela-11-literature': {
+    id: 'ela-11-literature', subject: 'ela', grade: '11',
+    title: 'American Literature', description: 'Puritanism to Realism, Modernism, social themes',
+    explanation: 'American literature reflects the country\'s evolving values and social conflicts.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Puritanism in early American writing emphasized:', options: ['Individual freedom','Religious devotion, sin, and divine judgment','Scientific discovery','Political revolution'], answer: 'Religious devotion, sin, and divine judgment', hint: 'Puritan writers like Jonathan Edwards focused on God\'s power and human sinfulness.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Realism in 19th-century American literature aimed to:', options: ['Idealize life and nature','Portray everyday life truthfully without romanticism','Focus only on the wealthy','Use only fantasy elements'], answer: 'Portray everyday life truthfully without romanticism', hint: 'Realist authors like Mark Twain depicted authentic American experiences.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Harlem Renaissance was a:', options: ['Political movement only','Cultural and artistic movement celebrating African American life and creativity','Scientific revolution','Military event'], answer: 'Cultural and artistic movement celebrating African American life and creativity', hint: 'Writers like Langston Hughes flourished during the Harlem Renaissance.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Modernist literature often features:', options: ['Traditional linear plots','Fragmented narratives, stream of consciousness, and disillusionment','Romantic idealism','Happy endings'], answer: 'Fragmented narratives, stream of consciousness, and disillusionment', hint: 'WWI deeply influenced Modernist writers like F. Scott Fitzgerald and Ernest Hemingway.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The "Lost Generation" refers to:', options: ['Children who dropped out of school','American writers and artists who came of age during WWI and felt disillusioned','Immigrants who lost their culture','A generation that never wrote books'], answer: 'American writers and artists who came of age during WWI and felt disillusioned', hint: 'Gertrude Stein coined the term; Hemingway popularized it.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Social protest literature aims to:', options: ['Entertain only','Expose and critique social injustice to inspire change','Celebrate current society','Avoid political topics'], answer: 'Expose and critique social injustice to inspire change', hint: 'Works like The Grapes of Wrath critique poverty and injustice.' },
+    ],
+  },
+  'ela-11-writing': {
+    id: 'ela-11-writing', subject: 'ela', grade: '11',
+    title: 'Advanced Writing', description: 'Research papers, MLA/APA citation, revision strategies',
+    explanation: 'Research writing demands careful source evaluation, citation, and revision.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'MLA format is primarily used in:', options: ['Sciences and social sciences','Humanities, especially English and literature','Business writing','Medical writing'], answer: 'Humanities, especially English and literature', hint: 'MLA = Modern Language Association.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'APA format requires:', options: ['Author-page citations','Author-date citations','No in-text citations','Only footnotes'], answer: 'Author-date citations', hint: 'APA in-text: (Smith, 2020)' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'When revising an essay, you should first focus on:', options: ['Fixing spelling errors','Big-picture issues like argument, organization, and evidence','Punctuation','Font and spacing'], answer: 'Big-picture issues like argument, organization, and evidence', hint: 'Revise for content before editing for mechanics.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A peer-reviewed source is:', options: ['Any website','An article evaluated by experts in the field before publication','A newspaper article','A blog post'], answer: 'An article evaluated by experts in the field before publication', hint: 'Peer review = academic experts check the research before it\'s published.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A research paper\'s annotated bibliography includes:', options: ['Only source titles','Source citations plus a brief evaluation of each source','Only your own opinions','A list of quotes'], answer: 'Source citations plus a brief evaluation of each source', hint: 'An annotation summarizes and evaluates the source\'s usefulness.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Which is NOT a reliable source for academic research?', options: ['A peer-reviewed journal article','A university press book','A random Wikipedia article','A government report'], answer: 'A random Wikipedia article', hint: 'Wikipedia can be edited by anyone — use it to find sources, not as a source itself.' },
+    ],
+  },
+
+  'ela-12-literature': {
+    id: 'ela-12-literature', subject: 'ela', grade: '12',
+    title: 'British & World Literature', description: 'Epic poetry, Shakespeare, post-colonial literature',
+    explanation: 'Senior literature spans the breadth of Western and world literary traditions.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Shakespeare\'s plays are generally divided into:', options: ['Stories and poems','Tragedies, comedies, and histories','Fiction and nonfiction','Acts only'], answer: 'Tragedies, comedies, and histories', hint: 'Hamlet = tragedy; A Midsummer Night\'s Dream = comedy; Henry V = history.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Iambic pentameter is:', options: ['10 syllables per line, alternating unstressed-stressed','Any rhyming pattern','Free verse poetry','A type of metaphor'], answer: '10 syllables per line, alternating unstressed-stressed', hint: 'da-DUM da-DUM da-DUM da-DUM da-DUM — 5 iambic feet per line.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Beowulf is an example of:', options: ['A Renaissance sonnet','An Old English epic poem','A Victorian novel','A modern play'], answer: 'An Old English epic poem', hint: 'Beowulf is one of the oldest surviving works of Old English literature.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Post-colonial literature often examines:', options: ['Space travel','How colonized peoples reclaim identity and voice','Medieval warfare','Mathematical proof'], answer: 'How colonized peoples reclaim identity and voice', hint: 'Authors like Chinua Achebe (Things Fall Apart) explore colonialism\'s human cost.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A Shakespearean sonnet consists of:', options: ['14 lines: three quatrains and a couplet','14 lines with one octave and one sestet','20 lines of iambic pentameter','Any 14-line poem'], answer: '14 lines: three quatrains and a couplet', hint: 'ABAB CDCD EFEF GG — the final couplet often delivers the "turn."' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Canterbury Tales was written by:', options: ['Shakespeare','Geoffrey Chaucer','John Milton','Edmund Spenser'], answer: 'Geoffrey Chaucer', hint: 'Chaucer wrote The Canterbury Tales in Middle English in the 14th century.' },
+    ],
+  },
+  'ela-12-writing': {
+    id: 'ela-12-writing', subject: 'ela', grade: '12',
+    title: 'College-Ready Writing', description: 'College essays, advanced argumentation, style and voice',
+    explanation: 'College-ready writing blends strong arguments with a distinctive personal voice.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A college application essay should:', options: ['Be identical to a class essay','Show your unique personality and perspective','List all your accomplishments in bullet points','Be as long as possible'], answer: 'Show your unique personality and perspective', hint: 'Admissions officers want to know who you are, not just what you\'ve done.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Voice in writing refers to:', options: ['The volume of your words','The distinctive personality and style that comes through your writing','Grammar correctness only','The topic you choose'], answer: 'The distinctive personality and style that comes through your writing', hint: 'Voice is what makes your writing sound like you.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Advanced argumentation requires:', options: ['Simple claims and no evidence','Nuanced claims that acknowledge complexity and counterarguments','Only emotional appeals','Long paragraphs with no structure'], answer: 'Nuanced claims that acknowledge complexity and counterarguments', hint: 'Strong arguments recognize the complexity of issues.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Hedging language in academic writing (e.g., "may," "suggests") is used to:', options: ['Show weakness','Indicate uncertainty and intellectual honesty','Avoid making any claims','Confuse the reader'], answer: 'Indicate uncertainty and intellectual honesty', hint: 'Hedging shows you know the limits of your evidence.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which best describes a "hook" in an essay introduction?', options: ['The thesis statement','An opening that grabs the reader\'s attention','A works cited entry','A transition sentence'], answer: 'An opening that grabs the reader\'s attention', hint: 'Hooks can be anecdotes, surprising facts, bold claims, or questions.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Style in writing can be described as:', options: ['Following grammar rules only','The combination of word choice, sentence length, tone, and structure that reflects the writer','The topic of the essay','The number of words used'], answer: 'The combination of word choice, sentence length, tone, and structure that reflects the writer', hint: 'Style is HOW you write — your writing fingerprint.' },
+    ],
+  },
+
+  // ── SCIENCE 6-12 ────────────────────────────────────────────────────────────
+  'science-6-life': {
+    id: 'science-6-life', subject: 'science', grade: '6',
+    title: 'Life Science', description: 'Cell structure, photosynthesis, classification',
+    explanation: 'All living things are made of cells that carry out life processes.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What is the powerhouse of the cell?', options: ['Nucleus','Mitochondria','Ribosome','Cell membrane'], answer: 'Mitochondria', hint: 'Mitochondria produce ATP energy for the cell.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Photosynthesis converts:', options: ['Oxygen and water into sugar','Carbon dioxide and water into glucose using sunlight','Glucose into carbon dioxide','Sunlight into oxygen only'], answer: 'Carbon dioxide and water into glucose using sunlight', hint: 'CO₂ + H₂O + light → glucose + O₂' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Which kingdom includes single-celled organisms with no nucleus?', options: ['Fungi','Protista','Bacteria (Prokaryota)','Animalia'], answer: 'Bacteria (Prokaryota)', hint: 'Prokaryotes lack a membrane-bound nucleus.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The cell membrane controls:', options: ['DNA replication','What enters and exits the cell','Energy production','Protein synthesis'], answer: 'What enters and exits the cell', hint: 'The membrane is selectively permeable.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which is NOT found in a plant cell?', options: ['Cell wall','Chloroplast','Centriole','Vacuole'], answer: 'Centriole', hint: 'Centrioles are found in animal cells and help with cell division.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Cellular respiration produces:', options: ['Glucose and oxygen','ATP, carbon dioxide, and water','Only carbon dioxide','Sunlight energy'], answer: 'ATP, carbon dioxide, and water', hint: 'C₆H₁₂O₆ + O₂ → ATP + CO₂ + H₂O' },
+    ],
+  },
+  'science-6-earth': {
+    id: 'science-6-earth', subject: 'science', grade: '6',
+    title: 'Earth Science', description: 'Plate tectonics, rocks, atmosphere',
+    explanation: 'Earth\'s surface is constantly changing due to plate tectonic forces.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Tectonic plates move because of:', options: ['Ocean currents','Convection currents in the mantle','Gravity only','Wind'], answer: 'Convection currents in the mantle', hint: 'Heat from Earth\'s core drives mantle convection, moving plates.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Igneous rocks form from:', options: ['Compressed sediment','Cooled magma or lava','Chemical reactions in water','Extreme heat and pressure of existing rocks'], answer: 'Cooled magma or lava', hint: 'Igneous = "fire" — from volcanic activity.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'When two tectonic plates collide, they form:', options: ['Rift valleys','Mountain ranges or trenches','Volcanoes only','Flat plains'], answer: 'Mountain ranges or trenches', hint: 'The Himalayas formed from the collision of the Indian and Eurasian plates.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The ozone layer is located in the:', options: ['Troposphere','Stratosphere','Mesosphere','Thermosphere'], answer: 'Stratosphere', hint: 'The ozone layer protects Earth from harmful UV radiation.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Metamorphic rocks form when:', options: ['Lava cools','Sediments compress','Existing rocks are changed by heat and pressure','Minerals dissolve in water'], answer: 'Existing rocks are changed by heat and pressure', hint: 'Metamorphic = changed form.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The "greenhouse effect" occurs when:', options: ['Plants release oxygen','Atmospheric gases trap heat from the sun\'s radiation','The ozone blocks sunlight','Oceans absorb carbon dioxide'], answer: 'Atmospheric gases trap heat from the sun\'s radiation', hint: 'CO₂, methane, and water vapor act like a blanket around Earth.' },
+    ],
+  },
+  'science-6-physical': {
+    id: 'science-6-physical', subject: 'science', grade: '6',
+    title: 'Physical Science', description: 'Properties of matter, forces and Newton\'s laws',
+    explanation: 'Physical science explains the properties of matter and the forces that act on it.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Mass is measured in:', options: ['Newtons','Kilograms','Liters','Joules'], answer: 'Kilograms', hint: 'Mass = amount of matter; measured in grams or kilograms.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Newton\'s first law states:', options: ['Force equals mass times acceleration','An object in motion stays in motion unless acted upon by a force','Every action has an equal and opposite reaction','Objects fall at the same rate'], answer: 'An object in motion stays in motion unless acted upon by a force', hint: 'This is the law of inertia.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Density is calculated as:', options: ['Mass × Volume','Mass ÷ Volume','Volume ÷ Mass','Mass + Volume'], answer: 'Mass ÷ Volume', hint: 'D = m/v — a denser object has more mass packed into the same space.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'If you push a wall and it doesn\'t move, your applied force is:', options: ['Zero','Balanced by the wall\'s reaction force','Greater than gravity','Equal to friction'], answer: 'Balanced by the wall\'s reaction force', hint: 'Newton\'s 3rd law: every action has an equal and opposite reaction.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Net force determines:', options: ['Mass only','Whether an object changes its motion','Temperature','Color of an object'], answer: 'Whether an object changes its motion', hint: 'Zero net force = no change in motion; nonzero = acceleration.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A physical property can be measured:', options: ['Only by changing the substance','Without changing the substance\'s composition','Only through chemical reactions','Only in liquids'], answer: 'Without changing the substance\'s composition', hint: 'Physical properties: color, density, melting point — no new substance is formed.' },
+    ],
+  },
+
+  'science-7-life': {
+    id: 'science-7-life', subject: 'science', grade: '7',
+    title: 'Life Science', description: 'Cell division, genetics, evolution',
+    explanation: 'Understanding genetics helps explain how traits are inherited and how life evolves.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'DNA is found primarily in the:', options: ['Cell membrane','Mitochondria','Nucleus','Cytoplasm'], answer: 'Nucleus', hint: 'The nucleus is the control center and houses the cell\'s DNA.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Mitosis produces:', options: ['Two identical daughter cells','Four sex cells','Cells with half the DNA','Egg and sperm cells'], answer: 'Two identical daughter cells', hint: 'Mitosis = growth and repair; produces 2 identical cells.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A dominant allele:', options: ['Is always expressed over a recessive allele','Is expressed only when two copies are present','Is found only in females','Causes mutations'], answer: 'Is always expressed over a recessive allele', hint: 'Capital letter = dominant; lowercase = recessive.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Natural selection favors organisms that:', options: ['Are the largest','Are the fastest','Are best adapted to their environment','Reproduce the least'], answer: 'Are best adapted to their environment', hint: '"Survival of the fittest" = best adapted, not strongest.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Meiosis produces:', options: ['2 identical cells','4 genetically diverse sex cells','1 cell with double DNA','Somatic cells'], answer: '4 genetically diverse sex cells', hint: 'Meiosis = reproduction; produces gametes (sperm/egg) with half the chromosomes.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Evidence for evolution includes:', options: ['Only fossil records','Fossil records, comparative anatomy, DNA evidence, and observed speciation','Only DNA analysis','Religious texts'], answer: 'Fossil records, comparative anatomy, DNA evidence, and observed speciation', hint: 'Multiple independent lines of evidence all support evolution.' },
+    ],
+  },
+  'science-7-earth': {
+    id: 'science-7-earth', subject: 'science', grade: '7',
+    title: 'Earth Science', description: 'Weather systems, ocean currents, earthquakes',
+    explanation: 'Earth\'s dynamic systems — atmosphere and oceans — drive weather and shape landscapes.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'What causes wind?', options: ['Differences in air pressure','Ocean temperature','Earth\'s rotation alone','Tidal forces'], answer: 'Differences in air pressure', hint: 'Air flows from high pressure to low pressure areas.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The Richter scale measures:', options: ['Hurricane wind speed','Earthquake magnitude','Ocean depth','Atmospheric pressure'], answer: 'Earthquake magnitude', hint: 'Each unit increase = ~31x more energy released.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Ocean currents are driven by:', options: ['Only wind','Wind, temperature, and salinity differences','Moon phases','Tectonic plates'], answer: 'Wind, temperature, and salinity differences', hint: 'The thermohaline circulation is driven by temperature and salt density.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A cold front brings:', options: ['Warm and dry air','Sudden storms and dropping temperatures','Fog only','Calm weather'], answer: 'Sudden storms and dropping temperatures', hint: 'Cold fronts push under warm air masses, causing rapid cooling and storms.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Volcanoes are most common at:', options: ['Tectonic plate centers','Tectonic plate boundaries and hotspots','Random locations','Near the equator only'], answer: 'Tectonic plate boundaries and hotspots', hint: 'Most volcanoes occur at diverging/converging boundaries or above mantle hotspots.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'El Niño refers to:', options: ['A type of earthquake','Warming of Pacific Ocean surface temperatures affecting global weather','A cold ocean current','A hurricane classification'], answer: 'Warming of Pacific Ocean surface temperatures affecting global weather', hint: 'El Niño disrupts normal weather patterns worldwide.' },
+    ],
+  },
+  'science-7-physical': {
+    id: 'science-7-physical', subject: 'science', grade: '7',
+    title: 'Physical Science', description: 'Chemical vs physical changes, periodic table',
+    explanation: 'Chemistry begins with understanding matter and how it changes.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A chemical change produces:', options: ['The same substance in a different form','A new substance with different properties','Only a change in state','Only a change in size'], answer: 'A new substance with different properties', hint: 'Signs of chemical change: gas, heat, color change, new odor, precipitate.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Elements in the periodic table are arranged by:', options: ['Alphabetical order','Atomic number (number of protons)','Mass only','Discovery date'], answer: 'Atomic number (number of protons)', hint: 'Atomic number = number of protons in the nucleus.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Melting ice is a __ change.', options: ['Chemical','Physical','Nuclear','Electrical'], answer: 'Physical', hint: 'The water molecules don\'t change — only the state changes.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Metals are generally found on the __ of the periodic table.', options: ['Right side','Left and center','Top only','Along the diagonal'], answer: 'Left and center', hint: 'Metals are on the left; nonmetals on the right; metalloids along the staircase.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'What does the period number of an element tell you?', options: ['Number of protons','Number of electron shells (energy levels)','Number of neutrons','Atomic mass'], answer: 'Number of electron shells (energy levels)', hint: 'Period 3 elements have 3 electron shells.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Noble gases are unreactive because:', options: ['They have no electrons','Their outer electron shell is full','They are too heavy','They are metals'], answer: 'Their outer electron shell is full', hint: 'Full valence shell = stable; no need to gain or lose electrons.' },
+    ],
+  },
+
+  'science-8-physical': {
+    id: 'science-8-physical', subject: 'science', grade: '8',
+    title: 'Physical Science', description: 'Motion, Newton\'s three laws, work and energy',
+    explanation: 'Newton\'s laws describe how forces affect the motion of objects.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Speed is calculated as:', options: ['Distance × Time','Distance ÷ Time','Time ÷ Distance','Force × Mass'], answer: 'Distance ÷ Time', hint: 's = d/t' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Newton\'s second law: F = ma means:', options: ['Force equals mass plus acceleration','Force equals mass times acceleration','Mass equals force times acceleration','Acceleration equals mass divided by force'], answer: 'Force equals mass times acceleration', hint: 'Double the mass → double the force needed to achieve the same acceleration.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Work is done when:', options: ['A force is applied but there is no movement','A force causes an object to move in the direction of the force','An object stays still','Energy is stored'], answer: 'A force causes an object to move in the direction of the force', hint: 'W = F × d — no movement means no work done.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'An object\'s momentum equals:', options: ['Mass + Velocity','Mass × Velocity','Force × Time','Mass ÷ Velocity'], answer: 'Mass × Velocity', hint: 'p = mv — heavier or faster objects have more momentum.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A car accelerates from 0 to 20 m/s in 4 seconds. Its acceleration is:', options: ['80 m/s²','5 m/s²','0.2 m/s²','24 m/s²'], answer: '5 m/s²', hint: 'a = Δv/t = 20/4 = 5 m/s²' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The law of conservation of energy states:', options: ['Energy can be created and destroyed','Energy can be converted between forms but cannot be created or destroyed','All energy becomes heat','Mechanical energy is always conserved'], answer: 'Energy can be converted between forms but cannot be created or destroyed', hint: 'Total energy in a closed system remains constant.' },
+    ],
+  },
+  'science-8-chemistry': {
+    id: 'science-8-chemistry', subject: 'science', grade: '8',
+    title: 'Chemistry Fundamentals', description: 'Atomic structure, elements, compounds, bonding',
+    explanation: 'Atoms are the building blocks of all matter — their structure determines chemical behavior.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The nucleus of an atom contains:', options: ['Electrons and protons','Protons and neutrons','Only electrons','Only protons'], answer: 'Protons and neutrons', hint: 'Electrons orbit the nucleus; protons and neutrons are inside.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A compound is:', options: ['A single type of atom','Two or more elements chemically combined in a fixed ratio','A mixture of elements','A single element in solid form'], answer: 'Two or more elements chemically combined in a fixed ratio', hint: 'Water (H₂O) is a compound: 2 H atoms bonded to 1 O atom.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'An ionic bond forms between:', options: ['Two nonmetals','A metal and a nonmetal','Two metals','Two noble gases'], answer: 'A metal and a nonmetal', hint: 'Ionic bonds involve transfer of electrons — metal gives, nonmetal takes.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The atomic number of an element equals:', options: ['Number of neutrons','Number of protons','Atomic mass','Number of electron shells'], answer: 'Number of protons', hint: 'Atomic number is unique to each element.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Covalent bonds involve:', options: ['Transfer of electrons','Sharing of electrons between atoms','Opposite charges attracting','Only metals'], answer: 'Sharing of electrons between atoms', hint: 'Covalent bonds are typical between nonmetals.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Isotopes are atoms of the same element with:', options: ['Different numbers of protons','Different numbers of neutrons','Different numbers of electrons','Different atomic numbers'], answer: 'Different numbers of neutrons', hint: 'Carbon-12 and Carbon-14 are isotopes — same protons, different neutrons.' },
+    ],
+  },
+  'science-8-earth': {
+    id: 'science-8-earth', subject: 'science', grade: '8',
+    title: 'Earth & Space', description: 'Universe, galaxies, stars, stellar evolution',
+    explanation: 'The universe is vast — stars are born, evolve, and die over billions of years.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Milky Way is a:', options: ['Planet','Star','Galaxy','Nebula'], answer: 'Galaxy', hint: 'The Milky Way is a spiral galaxy containing our solar system.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Big Bang theory states that the universe:', options: ['Has always existed in its current form','Began as a hot, dense point and has been expanding since','Was created by a star explosion','Is shrinking'], answer: 'Began as a hot, dense point and has been expanding since', hint: 'Evidence: cosmic microwave background radiation and redshift of galaxies.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Stars generate energy through:', options: ['Chemical combustion','Nuclear fusion','Radioactive decay','Convection'], answer: 'Nuclear fusion', hint: 'Stars fuse hydrogen into helium, releasing enormous energy.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'What will eventually happen to our Sun?', options: ['It will explode as a supernova','It will become a red giant, then a white dwarf','It will become a black hole','It will simply go cold'], answer: 'It will become a red giant, then a white dwarf', hint: 'Medium-sized stars like the Sun end as white dwarfs after the red giant phase.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'A light-year is:', options: ['The time light takes to travel to the Sun','The distance light travels in one year','A measure of star brightness','A unit of time'], answer: 'The distance light travels in one year', hint: 'Light travels ~9.46 × 10¹² km in one year.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A black hole forms when:', options: ['A star cools down','A massive star collapses under its own gravity after a supernova','Two galaxies collide','A planet is destroyed'], answer: 'A massive star collapses under its own gravity after a supernova', hint: 'Black holes have gravity so strong that light cannot escape.' },
+    ],
+  },
+
+  'science-9-biology': {
+    id: 'science-9-biology', subject: 'science', grade: '9',
+    title: 'Biology', description: 'DNA, protein synthesis, ecosystems, human body systems',
+    explanation: 'Biology at this level connects molecular processes to whole-body and ecosystem function.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'DNA stands for:', options: ['Deoxyribonucleic Acid','Dinucleic Ribose Acid','Deoxyribose Nitrogen Acid','Double Nucleotide Array'], answer: 'Deoxyribonucleic Acid', hint: 'DNA carries genetic information in all living organisms.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Transcription is the process of:', options: ['DNA copying DNA','DNA being read to produce mRNA','mRNA being read to build proteins','Proteins being decoded'], answer: 'DNA being read to produce mRNA', hint: 'Transcription: DNA → mRNA (in the nucleus).' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Translation occurs at the:', options: ['Nucleus','Mitochondria','Ribosome','Cell membrane'], answer: 'Ribosome', hint: 'Ribosomes read mRNA and build proteins.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Which body system fights infection?', options: ['Digestive','Immune','Skeletal','Endocrine'], answer: 'Immune', hint: 'The immune system uses white blood cells and antibodies to fight pathogens.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Keystone species are important because:', options: ['They are the most numerous','Their presence or absence dramatically affects the ecosystem','They produce the most food','They are the largest animals'], answer: 'Their presence or absence dramatically affects the ecosystem', hint: 'Removing a keystone species causes disproportionate changes to the ecosystem.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A mutation in DNA:', options: ['Always causes disease','Is always beneficial','Is a change in the DNA sequence that may or may not affect the organism','Cannot be inherited'], answer: 'Is a change in the DNA sequence that may or may not affect the organism', hint: 'Mutations range from neutral to harmful to occasionally beneficial.' },
+    ],
+  },
+  'science-9-chemistry': {
+    id: 'science-9-chemistry', subject: 'science', grade: '9',
+    title: 'Chemistry', description: 'Balancing equations, acids and bases, stoichiometry',
+    explanation: 'Chemical equations describe how matter transforms in reactions.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'In a balanced chemical equation, the number of each type of atom:', options: ['Increases on the right','Decreases on the left','Is equal on both sides','Can differ'], answer: 'Is equal on both sides', hint: 'Law of Conservation of Mass: matter is neither created nor destroyed.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'An acid has a pH:', options: ['Greater than 7','Less than 7','Equal to 7','Greater than 14'], answer: 'Less than 7', hint: 'pH < 7 = acid; pH 7 = neutral; pH > 7 = base.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The mole is a unit that represents:', options: ['6.022 × 10²³ particles','1,000 grams','1 liter of gas','One molecule'], answer: '6.022 × 10²³ particles', hint: 'Avogadro\'s number allows chemists to count atoms in bulk.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'In the reaction H₂ + Cl₂ → 2HCl, what is the mole ratio of H₂ to HCl?', options: ['1:1','1:2','2:1','2:2'], answer: '1:2', hint: '1 mole of H₂ produces 2 moles of HCl.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Stoichiometry is used to calculate:', options: ['Temperature of reactions','Amounts of reactants and products in a chemical reaction','Atomic number of elements','Speed of a reaction'], answer: 'Amounts of reactants and products in a chemical reaction', hint: 'Stoichiometry uses mole ratios from balanced equations.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A neutralization reaction between an acid and base produces:', options: ['Only water','Salt and water','Only gas','A new acid'], answer: 'Salt and water', hint: 'Acid + Base → Salt + Water (e.g., HCl + NaOH → NaCl + H₂O).' },
+    ],
+  },
+
+  'science-10-biology': {
+    id: 'science-10-biology', subject: 'science', grade: '10',
+    title: 'Biology II', description: 'Cellular respiration, immune system, biotechnology',
+    explanation: 'Advanced biology explores how cells generate energy and how we harness biology.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Cellular respiration primarily occurs in the:', options: ['Nucleus','Ribosome','Mitochondria','Cell wall'], answer: 'Mitochondria', hint: 'The mitochondria is where most ATP is produced.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Aerobic respiration requires:', options: ['No oxygen','Carbon dioxide','Oxygen','Only glucose'], answer: 'Oxygen', hint: 'Aerobic = with air (oxygen). Anaerobic = without oxygen.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Antibodies are produced by:', options: ['Red blood cells','B lymphocytes (B cells)','Platelets','Neurons'], answer: 'B lymphocytes (B cells)', hint: 'B cells produce antibodies that target specific antigens.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'CRISPR-Cas9 is a biotechnology tool used for:', options: ['Cloning animals','Editing specific DNA sequences','Making vaccines','Producing insulin only'], answer: 'Editing specific DNA sequences', hint: 'CRISPR acts as "molecular scissors" that can cut and edit DNA.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Glycolysis produces a net gain of __ ATP molecules.', options: ['36','2','38','0'], answer: '2', hint: 'Glycolysis in the cytoplasm produces 2 net ATP; the rest comes from the mitochondria.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A vaccine works by:', options: ['Killing bacteria with chemicals','Introducing an antigen to train the immune system','Directly destroying viruses','Replacing white blood cells'], answer: 'Introducing an antigen to train the immune system', hint: 'Vaccines expose the immune system to a harmless antigen so it can recognize it later.' },
+    ],
+  },
+  'science-10-chemistry': {
+    id: 'science-10-chemistry', subject: 'science', grade: '10',
+    title: 'Chemistry II', description: 'Thermodynamics, reaction rates, electrochemistry',
+    explanation: 'Advanced chemistry explores energy changes and how reactions can power devices.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'An exothermic reaction:', options: ['Absorbs energy from surroundings','Releases energy to surroundings','Has no energy change','Only occurs with light'], answer: 'Releases energy to surroundings', hint: 'Exo = out. Combustion and respiration are exothermic.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Increasing temperature generally __ reaction rate.', options: ['Decreases','Has no effect on','Increases','Eliminates'], answer: 'Increases', hint: 'More heat = more kinetic energy = more successful collisions.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'At chemical equilibrium:', options: ['The reaction stops completely','Forward and reverse reaction rates are equal','Only forward reaction occurs','Only reverse reaction occurs'], answer: 'Forward and reverse reaction rates are equal', hint: 'Equilibrium = dynamic balance, not a stopped reaction.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Oxidation is defined as:', options: ['Gaining electrons','Losing electrons','Gaining protons','Forming ionic bonds'], answer: 'Losing electrons', hint: 'OIL RIG: Oxidation Is Loss, Reduction Is Gain (of electrons).' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'In an electrochemical cell, the anode is where:', options: ['Reduction occurs','Oxidation occurs','No reaction occurs','Protons are stored'], answer: 'Oxidation occurs', hint: 'AN OX: Anode = Oxidation; RED CAT: Reduction at Cathode.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A catalyst speeds up a reaction by:', options: ['Increasing the temperature','Providing more reactants','Lowering the activation energy','Adding more products'], answer: 'Lowering the activation energy', hint: 'Catalysts are not consumed — they just make it easier for reactions to occur.' },
+    ],
+  },
+
+  'science-11-physics': {
+    id: 'science-11-physics', subject: 'science', grade: '11',
+    title: 'Physics', description: 'Kinematics, circular motion, waves and sound',
+    explanation: 'Physics describes motion, forces, and energy at a mathematical level.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Velocity differs from speed because velocity includes:', options: ['Magnitude only','Direction as well as magnitude','Only direction','Acceleration'], answer: 'Direction as well as magnitude', hint: 'Speed is scalar; velocity is vector (has direction).' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'A projectile follows what type of path?', options: ['Straight line','Parabolic curve','Circular arc','Spiral'], answer: 'Parabolic curve', hint: 'Horizontal velocity is constant; vertical velocity changes due to gravity.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Centripetal acceleration always points:', options: ['Away from the center','Tangent to the circle','Toward the center of the circular path','Downward'], answer: 'Toward the center of the circular path', hint: 'Centripetal = "center-seeking."' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Frequency and wavelength are:', options: ['Directly proportional','Inversely proportional','Unrelated','Equal for all waves'], answer: 'Inversely proportional', hint: 'v = fλ — if frequency increases, wavelength decreases.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Doppler effect explains why a siren sounds higher as it approaches. This is because:', options: ['The siren gets louder','Sound waves compress in front of the moving source','The observer moves','Air temperature changes'], answer: 'Sound waves compress in front of the moving source', hint: 'Approaching = compressed waves = higher frequency = higher pitch.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'An object in free fall accelerates at approximately:', options: ['5 m/s²','9.8 m/s²','1 m/s²','20 m/s²'], answer: '9.8 m/s²', hint: 'g ≈ 9.8 m/s² near Earth\'s surface.' },
+    ],
+  },
+  'science-11-chemistry': {
+    id: 'science-11-chemistry', subject: 'science', grade: '11',
+    title: 'Advanced Chemistry', description: 'Organic chemistry, nuclear chemistry',
+    explanation: 'Organic chemistry studies carbon compounds — the basis of all life and many materials.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Organic chemistry primarily studies compounds containing:', options: ['Only oxygen','Carbon atoms','Only nitrogen','Ionic bonds'], answer: 'Carbon atoms', hint: 'Organic = carbon-based. Life is built on carbon chemistry.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Hydrocarbons contain only:', options: ['Carbon and oxygen','Carbon and hydrogen','Hydrogen and nitrogen','Carbon, hydrogen, and oxygen'], answer: 'Carbon and hydrogen', hint: 'Methane (CH₄), ethane (C₂H₆) are simple hydrocarbons.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Nuclear fission involves:', options: ['Combining light nuclei','Splitting a heavy nucleus to release energy','Radioactive decay only','Electron transfer'], answer: 'Splitting a heavy nucleus to release energy', hint: 'Uranium-235 is split in nuclear power plants.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Polymers are:', options: ['Single atoms','Small molecules','Long chains of repeating monomer units','Ionic compounds'], answer: 'Long chains of repeating monomer units', hint: 'DNA, proteins, and plastics are all polymers.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Radioactive half-life is:', options: ['The total life of a radioactive element','The time for half the atoms in a sample to decay','The time for a reaction to complete','The energy released per decay'], answer: 'The time for half the atoms in a sample to decay', hint: 'After one half-life, 50% remains; after two, 25%; and so on.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'A functional group in organic chemistry determines:', options: ['The number of carbon atoms','The compound\'s physical and chemical properties','The molecular weight only','The color of the compound'], answer: 'The compound\'s physical and chemical properties', hint: 'Hydroxyl (-OH), carboxyl (-COOH), and amino (-NH₂) are functional groups.' },
+    ],
+  },
+
+  'science-12-physics': {
+    id: 'science-12-physics', subject: 'science', grade: '12',
+    title: 'Advanced Physics', description: 'Electromagnetism, quantum mechanics, special relativity',
+    explanation: 'Advanced physics explores the universe at its most fundamental scales.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Electric current is measured in:', options: ['Volts','Amperes','Ohms','Watts'], answer: 'Amperes', hint: 'Amperes (A) measure the flow of electric charge.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Ohm\'s Law states V = IR, where R is:', options: ['Reaction force','Resistance','Resonance','Relative velocity'], answer: 'Resistance', hint: 'V = Voltage, I = Current, R = Resistance.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The photoelectric effect showed that light:', options: ['Travels as a wave only','Consists of particles called photons','Has no energy','Is slower than sound'], answer: 'Consists of particles called photons', hint: 'Einstein\'s photoelectric effect earned him the Nobel Prize and proved light\'s particle nature.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'According to special relativity, as an object approaches the speed of light, its mass:', options: ['Decreases','Stays constant','Increases','Becomes zero'], answer: 'Increases', hint: 'Relativistic mass increases as velocity approaches c.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Heisenberg\'s uncertainty principle states:', options: ['Electrons orbit at fixed distances','You cannot know both position and momentum of a particle with perfect precision simultaneously','Light always travels at c','Energy is quantized'], answer: 'You cannot know both position and momentum of a particle with perfect precision simultaneously', hint: 'The more precisely you know position, the less precisely you know momentum, and vice versa.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'E = mc² means:', options: ['Energy equals mass times the speed of light','Energy equals mass times the speed of light squared','Mass equals energy divided by the speed of light','Energy and mass are unrelated'], answer: 'Energy equals mass times the speed of light squared', hint: 'A tiny amount of mass converts to enormous energy.' },
+    ],
+  },
+  'science-12-environment': {
+    id: 'science-12-environment', subject: 'science', grade: '12',
+    title: 'Environmental Science', description: 'Climate change, sustainability, biodiversity',
+    explanation: 'Environmental science addresses humanity\'s biggest challenges — preserving life on Earth.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The primary cause of current global warming is:', options: ['Volcanic eruptions','Natural solar cycles','Greenhouse gas emissions from human activities','Deforestation alone'], answer: 'Greenhouse gas emissions from human activities', hint: 'CO₂ from burning fossil fuels is the dominant cause of recent warming.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Biodiversity refers to:', options: ['Number of ecosystems on Earth','Variety of life forms in an ecosystem','Amount of clean water available','Size of a habitat'], answer: 'Variety of life forms in an ecosystem', hint: 'Higher biodiversity = more resilient ecosystems.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Renewable energy sources include:', options: ['Coal and oil','Solar, wind, and hydroelectric power','Natural gas','Nuclear power only'], answer: 'Solar, wind, and hydroelectric power', hint: 'Renewable = naturally replenished; fossil fuels are nonrenewable.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The carbon cycle involves:', options: ['Only photosynthesis','Movement of carbon through living organisms, atmosphere, oceans, and rocks','Only fossil fuel combustion','Only plant growth'], answer: 'Movement of carbon through living organisms, atmosphere, oceans, and rocks', hint: 'Carbon is continuously exchanged between biosphere, atmosphere, and geosphere.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Ocean acidification is caused by:', options: ['Plastic pollution','CO₂ dissolving in ocean water forming carbonic acid','Oil spills','Deforestation'], answer: 'CO₂ dissolving in ocean water forming carbonic acid', hint: 'Ocean pH has dropped ~0.1 units since industrialization, harming shell-forming organisms.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Habitat fragmentation threatens biodiversity by:', options: ['Creating more ecosystems','Isolating populations, reducing genetic diversity and migration','Increasing food supply','Removing invasive species'], answer: 'Isolating populations, reducing genetic diversity and migration', hint: 'Isolated populations cannot interbreed, increasing extinction risk.' },
+    ],
+  },
+
+  // ── SOCIAL STUDIES 6-12 ─────────────────────────────────────────────────────
+  'social-6-world-history': {
+    id: 'social-6-world-history', subject: 'social', grade: '6',
+    title: 'Ancient World History', description: 'Mesopotamia, Egypt, Ancient Greece',
+    explanation: 'Ancient civilizations laid the foundations for modern government, writing, and culture.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Where was the world\'s first writing system (cuneiform) developed?', options: ['Egypt','Greece','Mesopotamia','China'], answer: 'Mesopotamia', hint: 'Sumerians in Mesopotamia (modern Iraq) developed cuneiform around 3200 BCE.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Nile River was essential to ancient Egypt because:', options: ['It provided protection from invasion','Its flooding deposited fertile soil for farming','It was used for ocean trade','It was a source of gold'], answer: 'Its flooding deposited fertile soil for farming', hint: 'Annual Nile floods left rich silt, enabling agriculture in the desert.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Ancient Greece\'s most lasting political contribution was:', options: ['Feudalism','Democracy','Monarchy','Theocracy'], answer: 'Democracy', hint: 'Athens developed the concept of democracy — rule by the people.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Hammurabi\'s Code is significant because it was:', options: ['The first religion','One of the earliest written legal codes','A military strategy','A trade agreement'], answer: 'One of the earliest written legal codes', hint: 'Hammurabi\'s 282 laws established principles of justice in ancient Babylon.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Silk Road was primarily a network for:', options: ['Military conquest','Trade connecting China, Central Asia, and Europe','Religious pilgrimage','Slave trade'], answer: 'Trade connecting China, Central Asia, and Europe', hint: 'The Silk Road exchanged silk, spices, and ideas across continents.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Peloponnesian War was fought between:', options: ['Egypt and Persia','Athens and Sparta','Rome and Greece','Persia and Sparta'], answer: 'Athens and Sparta', hint: 'The Peloponnesian War (431-404 BCE) weakened both city-states.' },
+    ],
+  },
+  'social-6-geography': {
+    id: 'social-6-geography', subject: 'social', grade: '6',
+    title: 'Geography Skills', description: 'Reading maps, human-environment interaction',
+    explanation: 'Geography explains how humans interact with and adapt to their physical environment.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A physical map shows:', options: ['Political boundaries','Natural features like mountains, rivers, and elevation','Population density','Roads and cities'], answer: 'Natural features like mountains, rivers, and elevation', hint: 'Physical maps show terrain; political maps show borders.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Human-environment interaction studies:', options: ['Only natural disasters','How humans adapt to, depend on, and modify the environment','Climate patterns only','Ancient civilizations'], answer: 'How humans adapt to, depend on, and modify the environment', hint: 'One of the five themes of geography.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The prime meridian is located at:', options: ['0° latitude','90° longitude','0° longitude','180° longitude'], answer: '0° longitude', hint: 'The prime meridian passes through Greenwich, England.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Why do many ancient civilizations develop near rivers?', options: ['Rivers provided protection from sun','Rivers provided fresh water, fertile soil, and transportation','Rivers had gold','Rivers kept out enemies'], answer: 'Rivers provided fresh water, fertile soil, and transportation', hint: 'Nile, Tigris, Euphrates, Indus, Yellow River — all cradles of civilization.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The concept of "region" in geography refers to:', options: ['A single city','An area sharing common physical or human characteristics','Any area with a border','Only countries'], answer: 'An area sharing common physical or human characteristics', hint: 'Regions can be defined by climate, culture, language, or landform.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Deforestation most directly causes:', options: ['Increased biodiversity','Soil erosion and habitat loss','More rainfall','Lower temperatures'], answer: 'Soil erosion and habitat loss', hint: 'Trees hold soil in place and support entire ecosystems.' },
+    ],
+  },
+
+  'social-7-world-history': {
+    id: 'social-7-world-history', subject: 'social', grade: '7',
+    title: 'Medieval & Early Modern History', description: 'Roman Empire, Medieval Europe, Renaissance',
+    explanation: 'This era shaped modern European civilization through empire, faith, and rebirth.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The fall of the Western Roman Empire occurred in:', options: ['44 BCE','476 CE','1066 CE','1492 CE'], answer: '476 CE', hint: 'The last Western Roman emperor was deposed in 476 CE.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Feudalism was a system where:', options: ['Merchants controlled trade','Lords granted land (fiefs) to vassals in exchange for military service','The king owned nothing','Peasants voted for leaders'], answer: 'Lords granted land (fiefs) to vassals in exchange for military service', hint: 'Feudalism organized medieval society in a hierarchy: king → nobles → knights → serfs.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Renaissance began in:', options: ['France','England','Italy','Spain'], answer: 'Italy', hint: 'Florence and other Italian city-states were the birthplace of the Renaissance.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The Black Death was caused by:', options: ['A virus','Bubonic plague (bacterial infection spread by fleas on rats)','Bad air','Famine'], answer: 'Bubonic plague (bacterial infection spread by fleas on rats)', hint: 'The Black Death killed ~1/3 of Europe\'s population in the 14th century.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Protestant Reformation was sparked by:', options: ['The fall of Constantinople','Martin Luther\'s 95 Theses challenging the Catholic Church','The invention of the printing press alone','A peasant revolt'], answer: 'Martin Luther\'s 95 Theses challenging the Catholic Church', hint: 'In 1517, Luther posted his 95 Theses, challenging corruption and indulgences.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Magna Carta (1215) was significant because it:', options: ['Created the first parliament','Limited the king\'s power and established legal rights','Started the Crusades','Ended feudalism'], answer: 'Limited the king\'s power and established legal rights', hint: 'Magna Carta is a foundation of constitutional government and individual rights.' },
+    ],
+  },
+  'social-7-geography': {
+    id: 'social-7-geography', subject: 'social', grade: '7',
+    title: 'World Geography', description: 'Political geography, cultural regions',
+    explanation: 'Political and cultural geography explains how borders and cultures shape the world.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'A political map shows:', options: ['Mountain ranges','Country borders, capitals, and cities','Ocean depths','Climate zones'], answer: 'Country borders, capitals, and cities', hint: 'Political maps show human-made boundaries.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The most spoken language in the world by native speakers is:', options: ['English','Spanish','Mandarin Chinese','Hindi'], answer: 'Mandarin Chinese', hint: 'China\'s massive population makes Mandarin the most spoken native language.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A "cultural region" is defined by shared:', options: ['Climate only','Language, religion, customs, and traditions','National borders','Physical features'], answer: 'Language, religion, customs, and traditions', hint: 'Cultural regions cross political borders — e.g., the Arab World or Latin America.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Which factor most influences where people settle?', options: ['Random chance','Access to resources — especially water, fertile land, and trade routes','Distance from the equator only','Presence of mountains'], answer: 'Access to resources — especially water, fertile land, and trade routes', hint: 'Throughout history, population centers form near resources and waterways.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Globalization refers to:', options: ['Building walls between countries','Increasing interconnection of economies, cultures, and governments worldwide','Only international trade','Only immigration'], answer: 'Increasing interconnection of economies, cultures, and governments worldwide', hint: 'Globalization has accelerated with technology and international trade.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The monsoon is important to South and Southeast Asia because:', options: ['It brings cold weather','It brings seasonal rains essential for agriculture','It causes hurricanes','It creates deserts'], answer: 'It brings seasonal rains essential for agriculture', hint: 'Billions of people depend on monsoon rains for rice and other crops.' },
+    ],
+  },
+
+  'social-8-us-history': {
+    id: 'social-8-us-history', subject: 'social', grade: '8',
+    title: 'US History — Founding Era', description: 'Constitution, westward expansion, Civil War causes',
+    explanation: 'The founding era shaped American democracy and set the stage for national conflict.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The US Constitution was ratified in:', options: ['1776','1781','1788','1800'], answer: '1788', hint: 'The Constitution was ratified in 1788 and took effect in 1789.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'Manifest Destiny was the belief that:', options: ['Native Americans should lead the country','The US was destined to expand across North America','States should have more power than the federal government','The US should remain small'], answer: 'The US was destined to expand across North America', hint: 'Manifest Destiny justified westward expansion to the Pacific.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Missouri Compromise (1820) dealt with:', options: ['Trade with Britain','Whether new states would allow slavery','The purchase of Florida','Native American land rights'], answer: 'Whether new states would allow slavery', hint: 'The Missouri Compromise temporarily balanced free and slave states.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The primary cause of the Civil War was:', options: ['Tariff disputes only','States\' rights tied to the issue of slavery','Foreign invasion','Economic depression'], answer: 'States\' rights tied to the issue of slavery', hint: 'While states\' rights were cited, the core issue was the expansion of slavery.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Dred Scott decision (1857) ruled that:', options: ['Slavery was unconstitutional','African Americans were not citizens and had no legal rights','The Missouri Compromise was valid','Slaves could sue for freedom'], answer: 'African Americans were not citizens and had no legal rights', hint: 'The Dred Scott ruling inflamed tensions and pushed the country toward Civil War.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Louisiana Purchase doubled the US land area. It was purchased from:', options: ['Spain','Britain','France','Mexico'], answer: 'France', hint: 'Napoleon sold the Louisiana Territory to the US in 1803 for $15 million.' },
+    ],
+  },
+  'social-8-civics': {
+    id: 'social-8-civics', subject: 'social', grade: '8',
+    title: 'Civics & Government', description: 'Branches of government, civil rights, how laws are made',
+    explanation: 'Understanding how government works helps you participate as an informed citizen.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The US government has three branches. Which branch makes laws?', options: ['Executive','Judicial','Legislative','Administrative'], answer: 'Legislative', hint: 'Congress (Senate + House of Representatives) makes laws.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The First Amendment protects:', options: ['Right to bear arms','Freedom of speech, religion, press, assembly, and petition','Right to a fair trial','Right to vote'], answer: 'Freedom of speech, religion, press, assembly, and petition', hint: 'The First Amendment is the cornerstone of American civil liberties.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Judicial review is the power of courts to:', options: ['Write laws','Declare laws unconstitutional','Enforce laws','Veto legislation'], answer: 'Declare laws unconstitutional', hint: 'Established in Marbury v. Madison (1803).' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A bill becomes a law when:', options: ['Congress votes for it','The President signs it or a veto is overridden by 2/3 of Congress','The Supreme Court approves it','A majority of states ratify it'], answer: 'The President signs it or a veto is overridden by 2/3 of Congress', hint: 'The President can veto a bill; Congress can override with a 2/3 supermajority.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The 14th Amendment guarantees:', options: ['Right to vote for women','Equal protection under the law and due process','End of slavery','Freedom of religion'], answer: 'Equal protection under the law and due process', hint: 'The 14th Amendment (1868) is the foundation of many civil rights rulings.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Checks and balances ensure:', options: ['One branch has all the power','Each branch has powers to limit the others','The President always wins','States control the federal government'], answer: 'Each branch has powers to limit the others', hint: 'The separation of powers prevents any single branch from becoming too powerful.' },
+    ],
+  },
+
+  'social-9-world-history': {
+    id: 'social-9-world-history', subject: 'social', grade: '9',
+    title: 'Modern World History', description: 'Industrial Revolution, imperialism, World War I',
+    explanation: 'The Industrial Revolution and imperialism transformed the world and led to WWI.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Industrial Revolution began in:', options: ['France','United States','Britain','Germany'], answer: 'Britain', hint: 'Britain\'s coal, iron, and textile industries drove early industrialization.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Imperialism is the policy of:', options: ['Isolating from other nations','Extending a nation\'s power through colonization or force','Free trade between equals','Democratic governance'], answer: 'Extending a nation\'s power through colonization or force', hint: 'European nations colonized Africa, Asia, and Latin America in the 19th century.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The immediate trigger of World War I was:', options: ['German invasion of France','Assassination of Archduke Franz Ferdinand','Sinking of the Lusitania','Russian Revolution'], answer: 'Assassination of Archduke Franz Ferdinand', hint: 'Franz Ferdinand\'s assassination in Sarajevo in 1914 set off the alliance system.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The MAIN causes of WWI can be remembered as:', options: ['FLAG — France, Leaders, Alliances, Germany','MAIN — Militarism, Alliances, Imperialism, Nationalism','WARS — Weapons, Alliances, Revolution, Socialism','RICE — Rivals, Imperialism, Colonialism, Economy'], answer: 'MAIN — Militarism, Alliances, Imperialism, Nationalism', hint: 'MAIN is the standard acronym for WWI causes.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Treaty of Versailles blamed WWI entirely on Germany through the:', options: ['Monroe Doctrine','War Guilt Clause','14 Points','Triple Alliance'], answer: 'War Guilt Clause', hint: 'Article 231 forced Germany to accept blame and pay reparations, fueling resentment.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Berlin Conference (1884-85) was significant because:', options: ['It ended WWI','European powers divided Africa among themselves without African input','It started the Industrial Revolution','Germany united'], answer: 'European powers divided Africa among themselves without African input', hint: 'The "Scramble for Africa" carved up the continent, ignoring African peoples and cultures.' },
+    ],
+  },
+  'social-9-geography': {
+    id: 'social-9-geography', subject: 'social', grade: '9',
+    title: 'Global Geography', description: 'Geopolitics, population distribution, migration',
+    explanation: 'Geography shapes political power and human movement across the globe.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Population density refers to:', options: ['Total population of a country','Number of people per unit area','Speed of population growth','Percentage of urban population'], answer: 'Number of people per unit area', hint: 'Population density = total population ÷ land area.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Push factors in migration are:', options: ['Attractive conditions in a new country','Conditions forcing people to leave their homeland','Better job opportunities abroad','Family ties elsewhere'], answer: 'Conditions forcing people to leave their homeland', hint: 'Push = repel from origin (war, poverty, disaster); Pull = attract to destination.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Geopolitics studies:', options: ['Only geography','How geography influences political power and international relations','Geological formations','Population growth'], answer: 'How geography influences political power and international relations', hint: 'Control of resources, trade routes, and strategic land shapes geopolitical power.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'The most densely populated region on Earth is:', options: ['North America','South Asia and East Asia','Sub-Saharan Africa','Europe'], answer: 'South Asia and East Asia', hint: 'China, India, Bangladesh, and surrounding areas contain over 3 billion people.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Which factor does NOT typically cause migration?', options: ['War and conflict','Economic opportunity','Environmental disaster','Strong local economy'], answer: 'Strong local economy', hint: 'A strong local economy is a "pull factor" that attracts people to stay or come.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The demographic transition model describes:', options: ['How climate changes over time','How birth and death rates shift as countries develop economically','How borders change over time','Population density patterns'], answer: 'How birth and death rates shift as countries develop economically', hint: 'Pre-industrial → industrial → post-industrial stages change birth/death rate patterns.' },
+    ],
+  },
+
+  'social-10-world-history': {
+    id: 'social-10-world-history', subject: 'social', grade: '10',
+    title: '20th Century World History', description: 'WWII, Cold War, decolonization',
+    explanation: 'The 20th century was shaped by total war, superpower rivalry, and global independence movements.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Hitler\'s Germany invaded which country in 1939, triggering WWII?', options: ['France','Soviet Union','Poland','Britain'], answer: 'Poland', hint: 'Germany\'s invasion of Poland on September 1, 1939 started WWII.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'The Cold War was primarily a conflict between:', options: ['USA and Germany','USA and USSR','Britain and France','China and Japan'], answer: 'USA and USSR', hint: 'The Cold War (1947-1991) was an ideological and geopolitical rivalry between capitalism and communism.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Holocaust refers to:', options: ['The atomic bombing of Japan','The systematic genocide of six million Jews and others by Nazi Germany','The firebombing of Dresden','Allied invasion of Normandy'], answer: 'The systematic genocide of six million Jews and others by Nazi Germany', hint: 'The Holocaust was the deliberate murder of 6 million Jews and millions of others.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Decolonization was the process of:', options: ['European countries gaining more colonies','Former colonies achieving independence','Europeans colonizing the Americas','Cultural assimilation'], answer: 'Former colonies achieving independence', hint: 'After WWII, dozens of Asian and African nations gained independence.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Marshall Plan was:', options: ['A military strategy in the Pacific','US economic aid to rebuild Western Europe after WWII','A treaty ending WWII','A nuclear weapons program'], answer: 'US economic aid to rebuild Western Europe after WWII', hint: 'The Marshall Plan ($13 billion) helped rebuild European economies and resist communism.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Cuban Missile Crisis (1962) nearly caused nuclear war because:', options: ['Cuba invaded the US','Soviet missiles were discovered in Cuba aimed at the United States','The US invaded Cuba','Cuba built its own nuclear weapons'], answer: 'Soviet missiles were discovered in Cuba aimed at the United States', hint: 'Thirteen days of tension ended when the USSR removed missiles in exchange for US promises.' },
+    ],
+  },
+  'social-10-economics': {
+    id: 'social-10-economics', subject: 'social', grade: '10',
+    title: 'Economics', description: 'Supply and demand, market vs command economies, personal finance',
+    explanation: 'Economics explains how societies produce, distribute, and consume goods and services.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'When demand increases and supply stays the same, price will:', options: ['Fall','Stay the same','Rise','Become impossible to predict'], answer: 'Rise', hint: 'More buyers competing for the same goods pushes prices up.' },
+      { id: 'q2', type: 'mcq', difficulty: 1, prompt: 'A market economy is primarily driven by:', options: ['Government planning','Supply, demand, and private enterprise','Tradition','Religious law'], answer: 'Supply, demand, and private enterprise', hint: 'The "invisible hand" — price signals coordinate decisions in a market economy.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'A command economy is one where:', options: ['Consumers make all decisions','The government controls production and prices','Corporations control everything','Supply and demand set all prices'], answer: 'The government controls production and prices', hint: 'The Soviet Union was an example of a command economy.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'Compound interest means:', options: ['Interest paid only on the principal','Interest paid on both the principal and previously earned interest','Interest that decreases over time','A fixed annual payment'], answer: 'Interest paid on both the principal and previously earned interest', hint: 'Compound interest accelerates growth — or debt, if you owe it.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'GDP (Gross Domestic Product) measures:', options: ['Government spending only','Total value of all goods and services produced in a country in a year','Population of a country','Imports and exports only'], answer: 'Total value of all goods and services produced in a country in a year', hint: 'GDP is the most common measure of a country\'s economic output.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Opportunity cost is:', options: ['The price of a product','The value of the next best alternative you give up when making a choice','The total cost of production','A government tax'], answer: 'The value of the next best alternative you give up when making a choice', hint: 'Every decision has an opportunity cost — what you could have done instead.' },
+    ],
+  },
+
+  'social-11-us-history': {
+    id: 'social-11-us-history', subject: 'social', grade: '11',
+    title: 'US History — Modern Era', description: 'Great Depression, Civil Rights, Vietnam War',
+    explanation: 'Modern US history encompasses economic collapse, social transformation, and foreign conflict.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Great Depression began with:', options: ['WWI armistice','Stock market crash of 1929','Election of FDR','Dust Bowl'], answer: 'Stock market crash of 1929', hint: 'Black Tuesday, October 29, 1929, triggered the Great Depression.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'The New Deal was FDR\'s program to:', options: ['Enter WWII','Provide relief, recovery, and reform during the Great Depression','Expand the military','Combat communism'], answer: 'Provide relief, recovery, and reform during the Great Depression', hint: 'The New Deal created jobs, reformed banking, and established Social Security.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Brown v. Board of Education (1954) ruled that:', options: ['Segregation in schools is constitutional','Racial segregation in public schools is unconstitutional','Prayer in schools is allowed','School funding is equal'], answer: 'Racial segregation in public schools is unconstitutional', hint: 'This overturned Plessy v. Ferguson\'s "separate but equal" doctrine.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'The Civil Rights Act of 1964:', options: ['Gave women the right to vote','Prohibited discrimination based on race, color, religion, sex, or national origin','Ended the Vietnam War','Created the Great Society programs'], answer: 'Prohibited discrimination based on race, color, religion, sex, or national origin', hint: 'The Civil Rights Act banned discrimination in public accommodations and employment.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The Gulf of Tonkin Resolution gave the President authority to:', options: ['Declare war on Vietnam through Congress','Use military force in Southeast Asia without a formal declaration of war','Negotiate peace in Vietnam','Draft soldiers'], answer: 'Use military force in Southeast Asia without a formal declaration of war', hint: 'The Gulf of Tonkin Resolution (1964) dramatically escalated US involvement in Vietnam.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The Watergate scandal resulted in:', options: ['Nixon\'s assassination','Nixon\'s resignation from the presidency','Nixon\'s impeachment','Nixon being acquitted'], answer: 'Nixon\'s resignation from the presidency', hint: 'Facing certain impeachment, Nixon resigned in August 1974 — the only president to do so.' },
+    ],
+  },
+  'social-11-government': {
+    id: 'social-11-government', subject: 'social', grade: '11',
+    title: 'US Government', description: 'Electoral system, federalism, Supreme Court cases',
+    explanation: 'Advanced civics examines how elections, federalism, and landmark rulings shape America.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The Electoral College chooses the:', options: ['US Senators','President and Vice President','Supreme Court justices','Governors'], answer: 'President and Vice President', hint: 'Each state gets electoral votes equal to its total congressional representation.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Federalism divides power between:', options: ['The President and Congress','The federal government and state governments','The House and the Senate','Civilians and the military'], answer: 'The federal government and state governments', hint: 'The 10th Amendment reserves powers not given to the federal government to the states.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'Miranda v. Arizona (1966) required:', options: ['Schools to integrate','Police to inform suspects of their rights before interrogation','Prayer to be removed from schools','Equal pay for women'], answer: 'Police to inform suspects of their rights before interrogation', hint: '"You have the right to remain silent..." — Miranda rights must be read at arrest.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'Roe v. Wade (1973) was significant because it:', options: ['Desegregated schools','Ruled on abortion rights under the right to privacy','Ended the Vietnam War','Legalized same-sex marriage'], answer: 'Ruled on abortion rights under the right to privacy', hint: 'Roe v. Wade was one of the most controversial Supreme Court decisions in US history.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'The filibuster in the US Senate is a tactic used to:', options: ['Speed up legislation','Delay or block legislation by prolonged debate','Remove a Supreme Court justice','Override a Presidential veto'], answer: 'Delay or block legislation by prolonged debate', hint: 'A filibuster can be ended with a cloture vote requiring 60 senators.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'The 17th Amendment changed how US Senators are selected by requiring:', options: ['Presidential appointment','Direct election by the people of each state','State legislature selection','Electoral college vote'], answer: 'Direct election by the people of each state', hint: 'Before 1913, senators were chosen by state legislatures, not voters.' },
+    ],
+  },
+
+  'social-12-economics': {
+    id: 'social-12-economics', subject: 'social', grade: '12',
+    title: 'Economics', description: 'Macroeconomics, fiscal and monetary policy, global trade',
+    explanation: 'Advanced economics connects national policy decisions to global economic outcomes.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'Inflation means:', options: ['Rising unemployment','General increase in prices over time','Decrease in government spending','Falling interest rates'], answer: 'General increase in prices over time', hint: 'Inflation reduces purchasing power — the same money buys less.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'Fiscal policy refers to:', options: ['Central bank interest rate decisions','Government spending and taxation decisions','Trade tariffs','Regulation of banks'], answer: 'Government spending and taxation decisions', hint: 'Fiscal policy = government\'s budget decisions; monetary policy = central bank decisions.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Federal Reserve controls the economy by:', options: ['Setting taxes','Adjusting interest rates and money supply','Creating jobs directly','Setting prices for goods'], answer: 'Adjusting interest rates and money supply', hint: 'The Fed\'s monetary policy tools include the federal funds rate and quantitative easing.' },
+      { id: 'q4', type: 'mcq', difficulty: 2, prompt: 'A trade deficit means a country:', options: ['Exports more than it imports','Imports more than it exports','Has equal imports and exports','Has no international trade'], answer: 'Imports more than it exports', hint: 'Trade deficit = buying more from abroad than you sell abroad.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'During a recession, a Keynesian economist would recommend:', options: ['Cutting government spending','Raising interest rates','Increasing government spending to stimulate demand','Reducing money supply'], answer: 'Increasing government spending to stimulate demand', hint: 'Keynesian theory: government stimulus can offset private sector contraction.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Comparative advantage means a country should produce:', options: ['Everything it can','Only what it produces more efficiently than others relative to its opportunity costs','Only what other countries cannot produce','Only luxury goods'], answer: 'Only what it produces more efficiently than others relative to its opportunity costs', hint: 'Comparative advantage is the basis for international trade theory.' },
+    ],
+  },
+  'social-12-government': {
+    id: 'social-12-government', subject: 'social', grade: '12',
+    title: 'Government & Citizenship', description: 'US foreign policy, international relations, global issues',
+    explanation: 'Senior government connects domestic policy to America\'s role in the world.',
+    questions: [
+      { id: 'q1', type: 'mcq', difficulty: 1, prompt: 'The United Nations was founded after:', options: ['WWI','WWII','The Cold War','The Korean War'], answer: 'WWII', hint: 'The UN was founded in 1945 to prevent future world wars.' },
+      { id: 'q2', type: 'mcq', difficulty: 2, prompt: 'NATO is a:', options: ['Trade agreement','Military alliance among North American and European countries','United Nations body','Economic union'], answer: 'Military alliance among North American and European countries', hint: 'NATO (1949): an attack on one member is considered an attack on all.' },
+      { id: 'q3', type: 'mcq', difficulty: 2, prompt: 'The Monroe Doctrine stated that the US would:', options: ['Join all European alliances','Oppose European intervention in the Western Hemisphere','Colonize Latin America','Create a naval blockade of Europe'], answer: 'Oppose European intervention in the Western Hemisphere', hint: 'The Monroe Doctrine (1823) declared Latin America off-limits to European colonization.' },
+      { id: 'q4', type: 'mcq', difficulty: 3, prompt: 'The policy of "containment" during the Cold War aimed to:', options: ['Destroy the Soviet Union','Prevent the spread of communism to new countries','Promote free trade','Create nuclear weapons'], answer: 'Prevent the spread of communism to new countries', hint: 'Containment was articulated by diplomat George Kennan and guided US Cold War strategy.' },
+      { id: 'q5', type: 'mcq', difficulty: 3, prompt: 'Climate change is considered a global issue primarily because:', options: ['It only affects wealthy countries','Its causes and effects cross national borders and require international cooperation','It only affects the environment','Only scientists care about it'], answer: 'Its causes and effects cross national borders and require international cooperation', hint: 'No single country can solve climate change alone — it requires global action.' },
+      { id: 'q6', type: 'mcq', difficulty: 3, prompt: 'Soft power in international relations refers to:', options: ['Military force','Influence through culture, diplomacy, and values rather than coercion','Economic sanctions','Nuclear deterrence'], answer: 'Influence through culture, diplomacy, and values rather than coercion', hint: 'Joseph Nye coined "soft power" — America\'s movies, universities, and values all project soft power.' },
     ],
   },
 
@@ -1771,7 +2509,7 @@ function Header({ user, view, onHome, onLearning, onSignIn, onRoleChange, onPrac
           ))}
           <div style={hStyles.mobileDivider} />
           <button onClick={() => closeMenu(onSignIn)}    style={hStyles.mobileLink}>{isSignedIn ? firstName : 'Sign In'}</button>
-          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#525AFF' }}>Membership</button>
+          <button onClick={() => closeMenu(onSubscribe)} style={{ ...hStyles.mobileLink, fontWeight: 700, color: '#3F7D58' }}>Membership</button>
         </nav>
       )}
     </header>
@@ -1819,8 +2557,8 @@ function LoginScreen({ onLogin }) {
           <label style={{ ...styles.fieldLabel, marginTop: 16 }}>I'm a...</label>
           <div style={styles.roleGrid} className="role-grid">
             {[
-              { id: 'student', label: 'Student', icon: GraduationCap, color: '#525AFF' },
-              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#525AFF' },
+              { id: 'student', label: 'Student', icon: GraduationCap, color: '#3F7D58' },
+              { id: 'parent',  label: 'Parent',  icon: Heart, color: '#3F7D58' },
               { id: 'teacher', label: 'Teacher', icon: Users, color: '#6D8BC0' },
               { id: 'admin',   label: 'Admin',   icon: Settings, color: '#475569' },
             ].map(r => {
@@ -1855,10 +2593,10 @@ function LoginScreen({ onLogin }) {
       </div>
 
       <div style={styles.loginBg}>
-        <FloatingShape style={{ top: '10%', left: '8%', background: '#525AFF', size: 80 }} delay={0} />
-        <FloatingShape style={{ top: '20%', right: '12%', background: '#8FD9FB', size: 110 }} delay={1.5} />
-        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#A78BFA', size: 70 }} delay={0.8} />
-        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#6D8BC0', size: 95 }} delay={2.2} />
+        <FloatingShape style={{ top: '10%', left: '8%', background: '#3F7D58', size: 80 }} delay={0} />
+        <FloatingShape style={{ top: '20%', right: '12%', background: '#C5DDBB', size: 110 }} delay={1.5} />
+        <FloatingShape style={{ bottom: '15%', left: '15%', background: '#7FB069', size: 70 }} delay={0.8} />
+        <FloatingShape style={{ bottom: '25%', right: '8%', background: '#C4693A', size: 95 }} delay={2.2} />
       </div>
     </div>
   );
@@ -1918,7 +2656,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
             and track your mastery on every skill.
           </p>
           <div style={styles.heroStats}>
-            <HeroStat value={stats.points} label="Total Points" color="#525AFF" />
+            <HeroStat value={stats.points} label="Total Points" color="#3F7D58" />
             <HeroStat value={`${accuracy}%`} label="Accuracy" color="#059669" />
             <HeroStat value={stats.streak} label="Day Streak" color="#6D8BC0" />
           </div>
@@ -1978,7 +2716,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
       {/* Motivational strip */}
       <section style={styles.motivStrip}>
         <div style={styles.motivItem}>
-          <Trophy size={28} color="#525AFF" />
+          <Trophy size={28} color="#3F7D58" />
           <div>
             <div style={styles.motivLabel}>{BADGES.length} Badges to Earn</div>
             <div style={styles.motivSub}>Unlock by hitting milestones</div>
@@ -1992,7 +2730,7 @@ function HomeScreen({ user, stats, progress, onSelectGrade, onDashboard, onSignI
           </div>
         </div>
         <div style={styles.motivItem}>
-          <Crown size={28} color="#525AFF" />
+          <Crown size={28} color="#3F7D58" />
           <div>
             <div style={styles.motivLabel}>Skill Mastery</div>
             <div style={styles.motivSub}>Reach 85%+ to fully master a skill</div>
@@ -2062,7 +2800,7 @@ function WelcomePopup({ onSignIn, onClose }) {
         animation: 'popupSlideUp 0.45s cubic-bezier(0.34,1.56,0.64,1) both',
       }}>
         {/* decorative top bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #525AFF, #6D8BC0, #A78BFA)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: 'linear-gradient(90deg, #3F7D58, #7FB069, #C4693A)' }} />
 
         {/* close button */}
         <button
@@ -2096,7 +2834,7 @@ function WelcomePopup({ onSignIn, onClose }) {
             color: '#1a1a2e', lineHeight: 1.15,
           }}>
             Learn at Your Own Pace.<br />
-            <span style={{ color: '#525AFF', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>
+            <span style={{ color: '#3F7D58', fontStyle: 'italic', fontFamily: FONT_DISPLAY }}>
               Practice Until You Master It.
             </span>
           </h2>
@@ -2133,7 +2871,7 @@ function WelcomePopup({ onSignIn, onClose }) {
           onClick={onSignIn}
           className="popup-trial-btn"
           style={{
-            width: '100%', background: 'linear-gradient(135deg, #525AFF, #6D8BC0)',
+            width: '100%', background: 'linear-gradient(135deg, #3F7D58, #7FB069)',
             color: 'white', border: 'none', borderRadius: 999,
             padding: '16px 24px', fontSize: 17, fontWeight: 900, cursor: 'pointer',
             animation: 'pulseGlow 2.4s ease-in-out infinite, trailBounce 3s ease-in-out infinite',
@@ -2171,67 +2909,67 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
   const handleTrial = () => { closePopup(); if (onSignIn) onSignIn(); };
 
   const artS = {
-    page: { background: '#F5FBFF', color: '#1C1215', width: '100%', overflowX: 'hidden' },
-    hero: { background: '#E0F6FE', padding: '72px 0 80px', width: '100%', display: 'flex', justifyContent: 'center' },
+    page: { background: '#F6F4EE', color: '#1C1215', width: '100%', overflowX: 'hidden' },
+    hero: { background: '#FFF4E6', padding: '72px 0 80px', width: '100%', display: 'flex', justifyContent: 'center' },
     heroInner: { maxWidth: 1200, width: '100%', margin: '0 auto', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 56, flexWrap: 'wrap', boxSizing: 'border-box' },
     heroLeft: { maxWidth: 560, flex: '0 1 480px', minWidth: 280 },
-    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E0F4FF', color: '#3A41CC', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
+    welcomePill: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#E8F2E4', color: '#3A5A33', borderRadius: 999, padding: '6px 16px', fontSize: 13, fontWeight: 700, marginBottom: 20 },
     h1: { fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, margin: '0 0 8px', color: '#1C1215' },
-    h1em: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#525AFF' },
+    h1em: { fontStyle: 'italic', fontFamily: FONT_DISPLAY, color: '#3F7D58' },
     heroPara: { fontSize: 17, color: '#6B5E55', margin: '16px 0 28px', lineHeight: 1.6 },
-    heroBtn: { background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' },
+    heroBtn: { background: '#3F7D58', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(63,125,88,0.32)' },
     tagsRow: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 24 },
     tag: { borderRadius: 999, padding: '5px 14px', fontSize: 13, fontWeight: 700 },
     heroVisual: { position: 'relative', flex: '0 1 580px', maxWidth: 620, minWidth: 280, minHeight: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' },
     subjectStack: { width: 300, position: 'relative', userSelect: 'none', zIndex: 2 },
-    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#E0F4FF', border: '5px solid #525AFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(82,90,255,0.18)', flexShrink: 0 },
-    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#F0FAFF', color: '#3A41CC', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
-    programSec: { background: '#F5FBFF', padding: '64px 24px' },
+    avatarRing: { width: 220, height: 220, borderRadius: '50%', background: '#E8F2E4', border: '5px solid #3F7D58', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 96, position: 'relative', boxShadow: '0 12px 40px rgba(63,125,88,0.18)', flexShrink: 0 },
+    badgePill: { position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)', background: '#EEF5EB', color: '#3A5A33', borderRadius: 999, padding: '6px 18px', fontSize: 12, fontWeight: 900, letterSpacing: 1, whiteSpace: 'nowrap' },
+    programSec: { background: '#F6F4EE', padding: '64px 24px' },
     secWrap: { maxWidth: 1100, margin: '0 auto' },
-    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#525AFF', marginBottom: 8 },
+    secLabel: { fontSize: 12, fontWeight: 900, letterSpacing: 1.5, textTransform: 'uppercase', color: '#3F7D58', marginBottom: 8 },
     secTitle: { fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
-    secEm: { fontStyle: 'italic', fontFamily: 'Georgia, serif', color: '#525AFF' },
+    secEm: { fontStyle: 'italic', fontFamily: FONT_DISPLAY, color: '#3F7D58' },
     secDesc: { fontSize: 16, color: '#6B5E55', margin: '0 0 40px', maxWidth: 560 },
     cardsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 },
     card: { borderRadius: 20, padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer', border: 'none', textAlign: 'left', minHeight: 240 },
     cardGradeTag: { display: 'inline-block', background: 'rgba(255,255,255,0.55)', borderRadius: 999, padding: '4px 12px', fontSize: 12, fontWeight: 700, alignSelf: 'flex-start' },
     cardTitle: { fontSize: 22, fontWeight: 900, margin: 0, color: '#1C1215' },
-    cardSub: { fontSize: 14, color: '#6B5E55', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif' },
+    cardSub: { fontSize: 14, color: '#6B5E55', margin: 0, fontStyle: 'italic', fontFamily: FONT_DISPLAY },
     cardArrow: { width: 36, height: 36, borderRadius: '50%', background: '#1C1215', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, alignSelf: 'flex-start', marginTop: 'auto', pointerEvents: 'none' },
     cardEmoji: { position: 'absolute', right: 20, bottom: 16, fontSize: 56, opacity: 0.28, pointerEvents: 'none' },
     gradesSec: { background: '#fff', padding: '56px 24px' },
     gradesRow: { display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 28 },
     gradeChip: { borderRadius: 999, padding: '8px 20px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    whySec: { background: '#F5FBFF', padding: '64px 24px' },
+    whySec: { background: '#F6F4EE', padding: '64px 24px' },
     whyGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginTop: 40 },
-    whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12, border: '1px solid #F0E6D6' },
+    whyCard: { background: '#fff', borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', gap: 12, border: '1px solid #C5DDBB' },
     whyIcon: { width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 },
     whyTitle: { fontSize: 18, fontWeight: 800, margin: 0, color: '#1C1215' },
     whyText: { fontSize: 14, color: '#6B5E55', margin: 0, lineHeight: 1.6 },
     startSec: { background: '#fff', padding: '64px 24px' },
     startInner: { maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' },
     statsGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 28 },
-    statCard: { background: '#F0FAFF', borderRadius: 14, padding: '20px 18px', border: '1px solid #E0F4FF' },
-    statVal: { fontSize: 28, fontWeight: 900, color: '#525AFF', margin: 0 },
+    statCard: { background: '#EEF5EB', borderRadius: 14, padding: '20px 18px', border: '1px solid #C5DDBB' },
+    statVal: { fontSize: 28, fontWeight: 900, color: '#3F7D58', margin: 0 },
     statLabel: { fontSize: 13, color: '#6B5E55', margin: '4px 0 0' },
-    readCard: { background: 'linear-gradient(135deg, #E0F4FF 0%, #F0FAFF 100%)', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid #B8E4FB' },
+    readCard: { background: 'linear-gradient(135deg, #E8F2E4 0%, #EEF5EB 100%)', borderRadius: 20, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 16, border: '1px solid #C5DDBB' },
     readTitle: { fontSize: 26, fontWeight: 900, margin: 0, color: '#1C1215' },
     readSub: { fontSize: 14, color: '#6B5E55', margin: 0, lineHeight: 1.6 },
     readBtn: { alignSelf: 'flex-start', background: '#1C1215', color: '#fff', border: 'none', borderRadius: 999, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-    ctaSec: { background: '#F5FBFF', padding: '64px 24px' },
-    ctaCard: { maxWidth: 680, margin: '0 auto', background: 'linear-gradient(135deg, #F0FAFF 0%, #FFF7ED 100%)', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' },
+    ctaSec: { background: '#F6F4EE', padding: '64px 24px' },
+    ctaCard: { maxWidth: 680, margin: '0 auto', background: 'linear-gradient(135deg, #E8F2E4 0%, #F6F4EE 100%)', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #C5DDBB' },
     ctaTitle: { fontSize: 'clamp(22px, 4vw, 34px)', fontWeight: 900, margin: 0, color: '#1C1215' },
     ctaSub: { fontSize: 15, color: '#6B5E55', margin: 0 },
-    ctaBtn: { background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' },
+    ctaBtn: { background: '#3F7D58', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 32px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(63,125,88,0.32)' },
     contactSec: { background: '#fff', padding: '64px 24px', textAlign: 'center' },
     avatarsRow: { fontSize: 36, display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16 },
     contactTitle: { fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 900, margin: '0 0 8px', color: '#1C1215' },
     contactSub: { fontSize: 15, color: '#6B5E55', margin: '0 0 28px' },
     contactBtns: { display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' },
     contactBtn: { borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer' },
-    faqSec: { background: '#F5FBFF', padding: '64px 24px 80px' },
+    faqSec: { background: '#F6F4EE', padding: '64px 24px 80px' },
     faqInner: { maxWidth: 720, margin: '40px auto 0' },
-    faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden', border: '1px solid #F0E6D6' },
+    faqItem: { background: '#fff', borderRadius: 14, marginBottom: 10, overflow: 'hidden', border: '1px solid #C5DDBB' },
     faqQ: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 15, color: '#1C1215', background: 'none', border: 'none', width: '100%', textAlign: 'left', gap: 12 },
     faqA: { padding: '0 20px 16px', fontSize: 14, color: '#6B5E55', lineHeight: 1.7, margin: 0 },
     photosSec: { background: '#fff', padding: '72px 24px' },
@@ -2240,7 +2978,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
     photoImg: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' },
     photoOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 20px 16px', background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)' },
     photoCaption: { color: '#fff', fontWeight: 800, fontSize: 16, margin: 0, lineHeight: 1.3 },
-    photoTag: { display: 'inline-block', background: '#525AFF', color: '#fff', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 800, letterSpacing: 0.5, marginBottom: 6 },
+    photoTag: { display: 'inline-block', background: '#3F7D58', color: '#fff', borderRadius: 999, padding: '3px 10px', fontSize: 11, fontWeight: 800, letterSpacing: 0.5, marginBottom: 6 },
   };
 
   const gradeColors = ['#FDE8BB','#FEF3C7','#D1FAE5','#CFFAFE','#E0F4FF','#FCE7F3','#FFE4E6','#FDE8BB','#FEF3C7','#D1FAE5','#E0F4FF','#FCE7F3','#FDE8BB','#CFFAFE'];
@@ -2270,7 +3008,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <span style={{ fontSize: 72, lineHeight: 0.8, color: '#4AB5B5', flexShrink: 0, fontFamily: 'Georgia, serif', fontWeight: 900, marginTop: 6 }}>"</span>
             <p style={{ margin: 0, fontSize: 17, color: '#3D3580', lineHeight: 1.7, fontStyle: 'italic', fontWeight: 600 }}>
               When learning feels like play, kids absorb more and develop a lasting love for discovery.{' '}
-              <button onClick={onAbout} style={{ background: 'none', border: 'none', padding: 0, color: '#525AFF', fontWeight: 700, fontSize: 17, cursor: 'pointer', textDecoration: 'underline', fontStyle: 'normal' }}>Read our story →</button>
+              <button onClick={onAbout} style={{ background: 'none', border: 'none', padding: 0, color: '#3F7D58', fontWeight: 700, fontSize: 17, cursor: 'pointer', textDecoration: 'underline', fontStyle: 'normal' }}>Read our story →</button>
             </p>
           </div>
 
@@ -2440,7 +3178,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           </div>
           <div style={artS.readCard}>
             <div style={{ fontSize: 40 }}>🎓</div>
-            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>explore</em> skills?</h3>
+            <h3 style={artS.readTitle}>Ready to <em style={{ fontStyle: 'italic', fontFamily: FONT_DISPLAY, color: '#3F7D58' }}>explore</em> skills?</h3>
             <p style={artS.readSub}>Pick a grade level to see all available practice skills and begin your learning journey.</p>
             <button onClick={() => onSelectGrade(GRADES[0])} style={artS.readBtn}>Browse all grades ↗</button>
           </div>
@@ -2448,26 +3186,26 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── Sign Up CTA + Contact (same row) ── */}
-      <section style={{ background: '#F5FBFF', padding: '64px 24px' }} className="art-section">
+      <section style={{ background: '#F6F4EE', padding: '64px 24px' }} className="art-section">
         <div className="art-cta-contact-row" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 24, alignItems: 'stretch' }}>
 
           {/* CTA card */}
           <div style={{ ...artS.ctaCard, flex: 1, margin: 0 }} className="art-cta-card">
             <div style={{ fontSize: 52 }}>👧</div>
-            <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>Free Practice</em></h2>
+            <h2 style={artS.ctaTitle}>Sign up for <em style={{ fontStyle: 'italic', fontFamily: FONT_DISPLAY, color: '#3F7D58' }}>Free Practice</em></h2>
             <p style={artS.ctaSub}>Join thousands of students already learning with WIJS.</p>
             <button onClick={onDashboard} style={artS.ctaBtn}>Get started ↗</button>
           </div>
 
           {/* Contact card */}
-          <div style={{ flex: 1, background: '#fff', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #E8D5C4' }}>
+          <div style={{ flex: 1, background: '#fff', borderRadius: 24, padding: '52px 40px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, border: '1px solid #C5DDBB' }}>
             <div style={artS.avatarsRow}><span>👩‍🏫</span><span>👦</span><span>👧</span></div>
-            <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: 'Georgia,serif', color: '#525AFF' }}>to talking</em></h2>
+            <h2 style={artS.contactTitle}>We are open <em style={{ fontStyle: 'italic', fontFamily: FONT_DISPLAY, color: '#3F7D58' }}>to talking</em></h2>
             <p style={artS.contactSub}>Have questions about WIJS? Reach out — we're here to help.</p>
             <div style={artS.contactBtns}>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#525AFF', color: '#fff' }}>Contact us</button>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F0FAFF', color: '#3A41CC' }}>Call us</button>
-              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#F0FAFF', color: '#525AFF' }}>Video chat</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#3F7D58', color: '#fff' }}>Contact us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EEF5EB', color: '#3A5A33' }}>Call us</button>
+              <button onClick={onDashboard} style={{ ...artS.contactBtn, background: '#EEF5EB', color: '#3F7D58' }}>Video chat</button>
             </div>
           </div>
 
@@ -2475,14 +3213,14 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
       </section>
 
       {/* ── About Us punchline ── */}
-      <section style={{ background: '#F0FAFF', padding: '64px 24px', textAlign: 'center' }} className="art-section">
+      <section style={{ background: '#EEF5EB', padding: '64px 24px', textAlign: 'center' }} className="art-section">
         <div style={artS.secWrap}>
           <div style={artS.secLabel}>Our Story</div>
           <h2 style={artS.secTitle}>Built by a <em style={artS.secEm}>parent</em>, for every child</h2>
           <p style={{ fontSize: 16, color: '#6B5E55', maxWidth: 600, margin: '16px auto 28px', lineHeight: 1.7 }}>
             "When learning feels like play, kids absorb more and develop a lasting love for discovery." — A WIJS parent
           </p>
-          <button onClick={onAbout} style={{ background: 'none', border: '2px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
+          <button onClick={onAbout} style={{ background: 'none', border: '2px solid #3F7D58', color: '#3F7D58', borderRadius: 999, padding: '12px 28px', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
             Read →
           </button>
         </div>
@@ -2499,7 +3237,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
             <div key={i} style={artS.faqItem}>
               <button style={artS.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                 <span>{faq.q}</span>
-                <ChevronRight size={20} style={{ flexShrink: 0, color: openFaq === i ? '#525AFF' : '#9CA3AF', transform: openFaq === i ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease, color 0.2s ease' }} />
+                <ChevronRight size={20} style={{ flexShrink: 0, color: openFaq === i ? '#3F7D58' : '#9CA3AF', transform: openFaq === i ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease, color 0.2s ease' }} />
               </button>
               {openFaq === i && <p style={artS.faqA}>{faq.a}</p>}
             </div>
@@ -2507,7 +3245,7 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
           <div style={{ textAlign: 'center', marginTop: 20 }}>
             <button
               onClick={() => { setFaqExpanded(e => !e); setOpenFaq(null); }}
-              style={{ background: 'none', border: '1.5px solid #525AFF', color: '#525AFF', borderRadius: 999, padding: '10px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+              style={{ background: 'none', border: '1.5px solid #3F7D58', color: '#3F7D58', borderRadius: 999, padding: '10px 28px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
             >
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                 {faqExpanded ? 'Show less' : `Show ${faqs.length - 3} more questions`}
@@ -2525,19 +3263,19 @@ function RedesignedHomeScreen({ user, stats, progress, accuracy, onSelectGrade, 
 // ---------- ABOUT US ----------
 function AboutScreen({ onBack }) {
   return (
-    <div style={{ background: '#F5FBFF', minHeight: '100vh', padding: '0 0 80px' }}>
+    <div style={{ background: '#F6F4EE', minHeight: '100vh', padding: '0 0 80px' }}>
       {/* Hero banner */}
-      <div style={{ background: 'linear-gradient(135deg, #525AFF 0%, #4AB5B5 100%)', padding: '64px 24px 72px', textAlign: 'center', color: '#fff' }}>
+      <div style={{ background: 'linear-gradient(135deg, #1B2B22 0%, #1B3526 50%, #3F7D58 100%)', padding: '64px 24px 72px', textAlign: 'center', color: '#fff' }}>
         <div style={{ fontSize: 12, fontWeight: 900, letterSpacing: 2, textTransform: 'uppercase', opacity: 0.8, marginBottom: 12 }}>Our Story</div>
-        <h1 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 900, margin: '0 0 16px', lineHeight: 1.1 }}>About <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, serif' }}>WIJS</em></h1>
+        <h1 style={{ fontSize: 'clamp(28px, 5vw, 52px)', fontWeight: 900, margin: '0 0 16px', lineHeight: 1.1, fontFamily: FONT_DISPLAY }}>About <em style={{ fontStyle: 'italic' }}>WIJS</em></h1>
         <p style={{ fontSize: 16, opacity: 0.9, maxWidth: 520, margin: '0 auto' }}>A platform born from a parent's belief that every child deserves to love learning.</p>
       </div>
 
       {/* Content */}
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '56px 24px 0' }}>
         {/* Quote block */}
-        <div style={{ background: '#E0F4FF', borderLeft: '4px solid #525AFF', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40 }}>
-          <p style={{ fontSize: 18, fontWeight: 700, color: '#1C1215', margin: 0, fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: 1.5 }}>
+        <div style={{ background: '#E8F2E4', borderLeft: '4px solid #3F7D58', borderRadius: '0 12px 12px 0', padding: '20px 24px', marginBottom: 40 }}>
+          <p style={{ fontSize: 18, fontWeight: 700, color: '#1C1215', margin: 0, fontStyle: 'italic', fontFamily: FONT_DISPLAY, lineHeight: 1.5 }}>
             "When learning feels like play, kids absorb more and develop a lasting love for discovery."
           </p>
         </div>
@@ -2554,8 +3292,8 @@ function AboutScreen({ onBack }) {
         {/* Stats row */}
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '40px 0', justifyContent: 'center' }}>
           {[['500+', 'Skills available'], ['13', 'Grade levels'], ['4', 'Core subjects'], ['K–12', 'Coverage']].map(([val, label]) => (
-            <div key={label} style={{ background: '#fff', border: '1px solid #B8E4FB', borderRadius: 16, padding: '24px 32px', textAlign: 'center', flex: '1 1 130px', minWidth: 120 }}>
-              <div style={{ fontSize: 28, fontWeight: 900, color: '#525AFF' }}>{val}</div>
+            <div key={label} style={{ background: '#fff', border: '1px solid #C5DDBB', borderRadius: 16, padding: '24px 32px', textAlign: 'center', flex: '1 1 130px', minWidth: 120 }}>
+              <div style={{ fontSize: 28, fontWeight: 900, color: '#3F7D58', fontFamily: FONT_DISPLAY }}>{val}</div>
               <div style={{ fontSize: 13, color: '#6B7280', marginTop: 4 }}>{label}</div>
             </div>
           ))}
@@ -2563,7 +3301,7 @@ function AboutScreen({ onBack }) {
 
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <button onClick={onBack} style={{ background: '#525AFF', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(82,90,255,0.32)' }}>
+          <button onClick={onBack} style={{ background: '#3F7D58', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(63,125,88,0.32)' }}>
             Start learning ↗
           </button>
         </div>
@@ -2599,13 +3337,13 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
   };
 
   const features = [
-    { icon: '🌐', color: '#525AFF', title: 'Comprehensive K-12 Curriculum',
+    { icon: '🌐', color: '#3F7D58', title: 'Comprehensive K-12 Curriculum',
       text: 'More than 17,000 adaptive skills designed to support and challenge every learner' },
-    { icon: '📊', color: '#8FD9FB', title: 'Real-Time Diagnostic',
+    { icon: '📊', color: '#7FB069', title: 'Real-Time Diagnostic',
       text: "Up-to-date, accurate assessment of students' knowledge levels in math and language arts" },
-    { icon: '🎯', color: '#525AFF', title: 'Personalized Guidance',
+    { icon: '🎯', color: '#3F7D58', title: 'Personalized Guidance',
       text: 'Targeted skill recommendations help address learning gaps and accelerate growth' },
-    { icon: '📈', color: '#6D8BC0', title: 'Actionable Analytics',
+    { icon: '📈', color: '#C4693A', title: 'Actionable Analytics',
       text: 'Easy-to-use reports provide real-time insight into student progress' },
   ];
 
@@ -2662,9 +3400,9 @@ function SignInScreen({ onSignIn, onCreateAccount, onJoin, onBack }) {
                       style={{
                         padding: '10px 8px',
                         borderRadius: 10,
-                        border: role === option ? '2px solid #525AFF' : '1px solid #D1D5DB',
-                        background: role === option ? '#F0FAFF' : 'white',
-                        color: role === option ? '#525AFF' : '#334155',
+                        border: role === option ? '2px solid #3F7D58' : '1px solid #D1D5DB',
+                        background: role === option ? '#EEF5EB' : 'white',
+                        color: role === option ? '#3F7D58' : '#334155',
                         fontWeight: 800,
                         textTransform: 'capitalize',
                         cursor: 'pointer',
@@ -2803,12 +3541,19 @@ function LearningCatalogScreen({ progress, onGoToSubject }) {
   }, []);
 
   const GRADE_DISPLAY = {
-    k:    { name: 'Kindergarten', badge: 'K'  },
-    '1':  { name: 'First grade',  badge: '1'  },
-    '2':  { name: 'Second grade', badge: '2'  },
-    '3':  { name: 'Third grade',  badge: '3'  },
-    '4':  { name: 'Fourth grade', badge: '4'  },
-    '5':  { name: 'Fifth grade',  badge: '5'  },
+    k:    { name: 'Kindergarten',  badge: 'K'  },
+    '1':  { name: 'First grade',   badge: '1'  },
+    '2':  { name: 'Second grade',  badge: '2'  },
+    '3':  { name: 'Third grade',   badge: '3'  },
+    '4':  { name: 'Fourth grade',  badge: '4'  },
+    '5':  { name: 'Fifth grade',   badge: '5'  },
+    '6':  { name: 'Sixth grade',   badge: '6'  },
+    '7':  { name: 'Seventh grade', badge: '7'  },
+    '8':  { name: 'Eighth grade',  badge: '8'  },
+    '9':  { name: 'Ninth grade',   badge: '9'  },
+    '10': { name: 'Tenth grade',   badge: '10' },
+    '11': { name: 'Eleventh grade',badge: '11' },
+    '12': { name: 'Twelfth grade', badge: '12' },
   };
 
   const subjectTabs = [
@@ -3084,7 +3829,7 @@ function DashboardPreview({ stats, progress, onClick }) {
         </div>
         <div style={styles.dashStatRow}>
           <span style={{ color: '#6B7280', fontSize: 13 }}>Best run</span>
-          <strong style={{ color: '#525AFF' }}>{stats.bestStreak} in a row</strong>
+          <strong style={{ color: '#3F7D58' }}>{stats.bestStreak} in a row</strong>
         </div>
       </div>
       <div style={styles.dashCTA}>View full dashboard <ChevronRight size={14} /></div>
@@ -3181,65 +3926,102 @@ function GradeScreen({ grade, onBack, onSelectSubject, progress }) {
 // ---------- SUBJECT SCREEN ----------
 function GradeSidebarItem({ g, isActive, label, fullLabel, onNavigate }) {
   const [hovered, setHovered] = useState(false);
-  const expanded = hovered;
   return (
     <button
       onClick={onNavigate}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       title={fullLabel}
+      aria-label={fullLabel}
       style={{
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
+        width: 42,
         height: 36,
         border: 'none',
         cursor: 'pointer',
         background: 'none',
-        padding: 0,
-        zIndex: expanded ? 10 : 1,
+        padding: '0 3px',
+        zIndex: hovered ? 20 : isActive ? 8 : 1,
       }}
     >
-      {/* Expanding pill behind circle */}
+      {/* Active rail marker */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: 0,
+          width: 4,
+          height: isActive ? 24 : hovered ? 16 : 0,
+          borderRadius: 999,
+          background: isActive ? g.color : '#CBD5E1',
+          boxShadow: isActive ? `0 0 14px ${g.color}66` : 'none',
+          transition: 'height 0.18s ease, background 0.18s ease',
+        }}
+      />
+
+      {/* Fixed bead */}
       <div style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        height: 36,
-        borderRadius: 18,
-        background: isActive ? '#2D1B69' : hovered ? g.color : 'transparent',
-        width: expanded ? 'calc(100% + 0px)' : 36,
-        minWidth: expanded ? 130 : 36,
-        transition: 'min-width 0.18s ease, background 0.15s ease',
+        width: isActive ? 34 : 30,
+        height: isActive ? 34 : 30,
+        borderRadius: '50%',
+        flexShrink: 0,
+        background: g.color,
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        paddingRight: expanded ? 14 : 0,
+        justifyContent: 'center',
+        fontWeight: 900,
+        fontSize: 12,
+        color: 'white',
+        border: '3px solid white',
+        boxShadow: isActive
+          ? `0 7px 18px ${g.color}55, 0 0 0 4px ${g.color}24`
+          : hovered
+            ? `0 6px 16px ${g.color}44, 0 0 0 4px #F8FAFC`
+            : '0 2px 8px rgba(15,23,42,0.10)',
+        transform: hovered ? 'translateX(3px) scale(1.04)' : 'translateX(0) scale(1)',
+        transition: 'width 0.18s ease, height 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease',
       }}>
-        {/* Circle dot */}
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-          background: g.color,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 900, fontSize: 13, color: 'white',
-          boxShadow: isActive ? `0 2px 10px ${g.color}80` : 'none',
-          position: 'relative', zIndex: 1,
-        }}>
-          {label}
-        </div>
-        {/* Grade name text */}
-        <span style={{
-          fontSize: 13, fontWeight: 700, color: 'white',
-          paddingLeft: 8, opacity: expanded ? 1 : 0,
-          transition: 'opacity 0.12s ease 0.05s',
-          pointerEvents: 'none',
-        }}>
-          {fullLabel}
-        </span>
+        {label}
       </div>
-      {/* Invisible spacer so button has correct width */}
-      <div style={{ width: 36, height: 36, flexShrink: 0 }} />
+
+      {/* Floating label, separate from the button footprint */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: 48,
+          top: '50%',
+          transform: hovered ? 'translateY(-50%) translateX(0)' : 'translateY(-50%) translateX(-6px)',
+          opacity: hovered ? 1 : 0,
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          background: '#111827',
+          color: 'white',
+          borderRadius: 10,
+          padding: '7px 10px 7px 12px',
+          fontSize: 12,
+          fontWeight: 800,
+          lineHeight: 1,
+          boxShadow: '0 12px 28px rgba(15,23,42,0.22)',
+          transition: 'opacity 0.16s ease, transform 0.16s ease',
+        }}
+      >
+        <span style={{
+          position: 'absolute',
+          left: -4,
+          top: '50%',
+          width: 8,
+          height: 8,
+          background: '#111827',
+          transform: 'translateY(-50%) rotate(45deg)',
+        }} />
+        {fullLabel}
+      </span>
     </button>
   );
 }
@@ -3260,7 +4042,7 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress, onSele
     }
   };
 
-  const gradeShort = { k: 'K', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5' };
+  const gradeShort = { k: 'K', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9', '10':'10', '11':'11', '12':'12' };
   const gradeFull  = { k: 'Kindergarten', '1':'First grade', '2':'Second grade', '3':'Third grade', '4':'Fourth grade', '5':'Fifth grade', '6':'Sixth grade', '7':'Seventh grade', '8':'Eighth grade', '9':'Ninth grade', '10':'Tenth grade', '11':'Eleventh grade', '12':'Twelfth grade' };
 
   return (
@@ -3277,8 +4059,8 @@ function SubjectScreen({ grade, subject, onBack, onSelectSkill, progress, onSele
           {['Grades', 'Topics', 'Week by week', 'Skill plans'].map(v => (
             <button key={v} onClick={() => setViewBy(v.toLowerCase())} style={{
               background: 'none', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', padding: '8px 4px',
-              color: viewBy === v.toLowerCase() ? '#525AFF' : '#6D8BC0',
-              borderBottom: viewBy === v.toLowerCase() ? '3px solid #525AFF' : '3px solid transparent',
+              color: viewBy === v.toLowerCase() ? '#3F7D58' : '#6D8BC0',
+              borderBottom: viewBy === v.toLowerCase() ? '3px solid #3F7D58' : '3px solid transparent',
               marginBottom: -3,
             }}>{v}</button>
           ))}
@@ -3528,7 +4310,7 @@ function Mascot({ state, visible }) {
         display:'flex', alignItems:'center', justifyContent:'center',
         fontSize:30,
         boxShadow:'0 4px 18px rgba(0,0,0,0.13)',
-        border:'3px solid #525AFF',
+        border:'3px solid #3F7D58',
         animation: faceAnim,
       }}>
         {pip.face}
@@ -3565,7 +4347,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
   const [feedback, setFeedback] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
-  const [questionsToAnswer] = useState(5);
+  const [questionsToAnswer] = useState(skill.questions?.length || 20);
   const [elapsed, setElapsed] = useState(0);
   const [smartScore, setSmartScore] = useState(() => Math.round(progress?.mastery || 0));
   const [scoreDelta, setScoreDelta] = useState(null);
@@ -3794,7 +4576,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
 
             {/* SmartScore */}
             <div style={{ borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div style={{ background: '#D97706', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+              <div style={{ background: '#C4693A', color: 'white', fontSize: 11, fontWeight: 800, textAlign: 'center', padding: '6px 8px', letterSpacing: 0.3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                 <span>SmartScore</span>
                 <span style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(0,0,0,0.2)', fontSize: 9, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'default' }} title="SmartScore increases when you answer correctly and decreases for wrong answers">?</span>
               </div>
@@ -3823,7 +4605,7 @@ function SkillScreen({ skill, progress, onBack, onAnswer, onComplete }) {
                 <div style={{ margin: '6px 8px 0', height: 5, borderRadius: 999, background: '#E2E8F0', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%', borderRadius: 999,
-                    background: smartScore >= 80 ? '#059669' : smartScore >= 60 ? '#6D8BC0' : '#D97706',
+                    background: smartScore >= 80 ? '#059669' : smartScore >= 60 ? '#6D8BC0' : '#C4693A',
                     width: `${smartScore}%`,
                     transition: 'width 0.4s ease',
                   }} />
@@ -4084,7 +4866,7 @@ function ResultsScreen({ stats, skill, color, onRestart, onBack }) {
       <div style={{ margin:'12px 0 24px', background:'#F3F4F6', borderRadius:999, height:10, overflow:'hidden' }}>
         <div style={{
           height:'100%', borderRadius:999,
-          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#525AFF' : accuracy >= 60 ? '#6D8BC0' : '#DC2626',
+          background: accuracy === 100 ? '#059669' : accuracy >= 80 ? '#3F7D58' : accuracy >= 60 ? '#C4693A' : '#DC2626',
           width:`${accuracy}%`,
           animation:'growBar 1s cubic-bezier(0.22,1,0.36,1) 0.35s both',
         }} />
@@ -4177,10 +4959,10 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
   const accuracy = stats.totalAnswered ? Math.round((stats.totalCorrect / stats.totalAnswered) * 100) : 0;
   const activeSkills = Object.keys(progress).length;
   const weeklyRows = [
-    ['Mon', 12, '#F97316'],
-    ['Tue', 18, '#525AFF'],
+    ['Mon', 12, '#7FB069'],
+    ['Tue', 18, '#3F7D58'],
     ['Wed', 8,  '#4AB5B5'],
-    ['Thu', 24, '#D97706'],
+    ['Thu', 24, '#C4693A'],
     ['Fri', 15, '#EC4899'],
   ];
 
@@ -4202,10 +4984,10 @@ function ParentDashboard({ stats, progress, onReports, onPractice }) {
       </div>
 
       <div style={styles.dashHeroStats}>
-        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#525AFF" />
+        <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#3F7D58" />
         <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Accuracy" color="#059669" />
         <BigStat icon={<BookOpen size={22}/>} value={activeSkills} label="Skills practiced" color="#8FD9FB" />
-        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#525AFF" />
+        <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Mastered" color="#3F7D58" />
       </div>
 
       <section style={{ marginTop: 36 }}>
@@ -4258,10 +5040,10 @@ function ProgressReports({ stats, progress, onPractice }) {
           <span>{new Date().toLocaleDateString()}</span>
         </div>
         <div style={styles.dashHeroStats}>
-          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#525AFF" />
+          <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Answered" color="#3F7D58" />
           <BigStat icon={<CheckCircle2 size={22}/>} value={stats.totalCorrect} label="Correct" color="#059669" />
           <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#6D8BC0" />
-          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#525AFF" />
+          <BigStat icon={<AwardIcon />} value={stats.earnedBadges.length} label="Badges" color="#3F7D58" />
         </div>
       </div>
 
@@ -4299,7 +5081,7 @@ const FALLBACK_PLANS = [
 
 const SUB_STATUS_COLORS = {
   ACTIVE:     { background: '#DCFCE7', color: '#166534' },
-  TRIALING:   { background: '#E0F4FF', color: '#3A41CC' },
+  TRIALING:   { background: '#E8F2E4', color: '#3A5A33' },
   PAST_DUE:   { background: '#FEF9C3', color: '#854D0E' },
   CANCELED:   { background: '#F3F4F6', color: '#6B7280' },
   INCOMPLETE: { background: '#FEE2E2', color: '#991B1B' },
@@ -4408,7 +5190,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
           {isSignedIn && activeSub && (
             <div style={{
               background: 'white',
-              border: '1.5px solid #F0E6D6',
+              border: '1.5px solid #C5DDBB',
               borderRadius: 18,
               padding: '20px 24px',
               marginBottom: 24,
@@ -4421,7 +5203,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#525AFF', fontWeight: 900 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, color: '#3F7D58', fontWeight: 900 }}>
                     {activeSub.plan?.name ?? 'Subscription'}
                   </span>
                   <span style={{
@@ -4468,7 +5250,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                 <div key={plan.id} style={{ ...styles.planCard, ...(plan.featured ? styles.planFeatured : {}), position: 'relative' }}>
                   {plan.featured && <div style={styles.planBadge}>Best value</div>}
                   {isCurrent && !isCanceling && (
-                    <div style={{ ...styles.planBadge, background: '#525AFF', right: 'auto', left: 14 }}>Current</div>
+                    <div style={{ ...styles.planBadge, background: '#3F7D58', right: 'auto', left: 14 }}>Current</div>
                   )}
                   <h2 style={styles.planName}>{plan.name}</h2>
                   <div style={styles.planPrice}>
@@ -4523,7 +5305,7 @@ function SubscriptionScreen({ onBack, user, pushToast }) {
                     </span>
                     <span>
                       {inv.pdfUrl
-                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#525AFF', fontWeight: 700, fontSize: 13 }}>Download</a>
+                        ? <a href={inv.pdfUrl} target="_blank" rel="noreferrer" style={{ color: '#3F7D58', fontWeight: 700, fontSize: 13 }}>Download</a>
                         : '—'}
                     </span>
                   </div>
@@ -4574,7 +5356,7 @@ function AdminContentManagement({ onPractice, onReports }) {
             icon={[<GraduationCap size={22}/>, <BookOpen size={22}/>, <Target size={22}/>, <CheckCircle2 size={22}/>][idx]}
             value={value}
             label={label}
-            color={['#525AFF', '#8FD9FB', '#525AFF', '#6D8BC0'][idx]}
+            color={['#3F7D58', '#7FB069', '#3F7D58', '#C4693A'][idx]}
           />
         ))}
       </div>
@@ -4677,7 +5459,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
     <div style={styles.container} className="resp-container">
       <div style={styles.dashHero}>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#525AFF', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#3F7D58', letterSpacing: 1 }}>YOUR LEARNING JOURNEY</div>
           <h1 style={styles.dashHeroTitle} className="dash-hero-title">
             {firstName ? `Welcome back, ${firstName}!` : title}
           </h1>
@@ -4690,7 +5472,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
         <div style={styles.dashHeroStats}>
           <BigStat icon={<Target size={22}/>} value={stats.totalAnswered} label="Questions answered" color="#6D8BC0" />
           <BigStat icon={<TrendingUp size={22}/>} value={`${accuracy}%`} label="Overall accuracy" color="#059669" />
-          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#525AFF" />
+          <BigStat icon={<Crown size={22}/>} value={stats.masteredSkills} label="Skills mastered" color="#3F7D58" />
           <BigStat icon={<Flame size={22}/>} value={stats.bestStreak} label="Best streak" color="#6D8BC0" />
         </div>
       </div>
@@ -4874,7 +5656,7 @@ function Dashboard({ title = 'Dashboard', user, stats, progress, onPickSkill }) 
           <SectionHeader
             title={`All Quiz Records (${allActivity.length})`}
             subtitle="Every skill you've ever practiced, sorted by most recent"
-            icon={<BarChart3 size={20} color="#525AFF" />}
+            icon={<BarChart3 size={20} color="#3F7D58" />}
           />
           <div style={styles.activityTable}>
             {allActivity.map(({ skill, p, mastery }) => {
@@ -4932,7 +5714,7 @@ function BadgesScreen({ stats, onBack }) {
     <div style={styles.container} className="resp-container">
       <BackBtn onClick={onBack} label="Back home" />
       <div style={styles.badgesHero} className="badges-hero">
-        <Trophy size={48} color="#525AFF" />
+        <Trophy size={48} color="#3F7D58" />
         <div>
           <h1 style={styles.dashHeroTitle} className="dash-hero-title">Badges & Achievements</h1>
           <p style={styles.dashHeroSub}>
@@ -4948,7 +5730,7 @@ function BadgesScreen({ stats, onBack }) {
             <div key={b.id} style={{
               ...styles.badgeCard,
               background: earned ? 'linear-gradient(135deg, #FFF8E1, #FFE082)' : '#F9FAFB',
-              borderColor: earned ? '#525AFF' : '#E5E7EB',
+              borderColor: earned ? '#3F7D58' : '#E5E7EB',
             }}>
               <div style={{
                 ...styles.badgeEmoji,
@@ -5060,16 +5842,11 @@ function randomCheer() {
 function StyleInjector() {
   return (
     <style>{`
-      @font-face {
-        font-family: 'Mona Sans';
-        src: url('https://github.githubassets.com/assets/mona-sans.woff2') format('woff2-variations');
-        font-weight: 200 900;
-        font-stretch: 75% 125%;
-        font-display: swap;
-      }
-
       html { overflow-x: hidden; width: 100%; }
-      body { margin: 0; padding: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; width: 100%; }
+      body { margin: 0; padding: 0; overflow-x: hidden; -webkit-text-size-adjust: 100%; width: 100%;
+             font-family: 'DM Sans', system-ui, sans-serif; }
+      h1, h2, h3, .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+      strong { font-weight: 700; }
       #root { width: 100%; }
       *, *::before, *::after { box-sizing: border-box; }
       img, video, iframe, svg { max-width: 100%; height: auto; }
@@ -5172,9 +5949,9 @@ function StyleInjector() {
 
       @keyframes searchFocusRing {
         0%   { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
-        25%  { border-color: #525AFF; box-shadow: 0 0 0 3px rgba(82,90,255,0.18); }
+        25%  { border-color: #3F7D58; box-shadow: 0 0 0 3px rgba(63,125,88,0.18); }
         50%  { border-color: #0EA5E9; box-shadow: 0 0 0 3px rgba(14,165,233,0.18); }
-        75%  { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.18); }
+        75%  { border-color: #7FB069; box-shadow: 0 0 0 3px rgba(127,176,105,0.18); }
         100% { border-color: #EA4C89; box-shadow: 0 0 0 3px rgba(234,76,137,0.18); }
       }
       .h-search-focus {
@@ -5185,7 +5962,7 @@ function StyleInjector() {
       .mega-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; color: #374151; font-weight: 500; transition: background 0.15s, color 0.15s; }
       .mega-link:hover { background: #f0fdf4; color: #166534; }
       .mega-sub-link { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 3px 10px; border-radius: 6px; font-size: 12.5px; color: #6B7280; font-weight: 500; transition: background 0.15s, color 0.15s; }
-      .mega-sub-link:hover { background: #F0FAFF; color: #525AFF; }
+      .mega-sub-link:hover { background: #EEF5EB; color: #3F7D58; }
       .nav-learning-wrap { position: relative; }
 
       .popup-close:hover { background: #fee2e2 !important; color: #dc2626 !important; transform: scale(1.12); }
@@ -5216,10 +5993,18 @@ function StyleInjector() {
       .skill-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
       .lc-grade-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
 
-      input:focus, button:focus-visible { outline: 3px solid #525AFF44; outline-offset: 2px; }
+      input:focus, button:focus-visible { outline: 3px solid rgba(63,125,88,0.35); outline-offset: 2px; }
       .h-search input:focus { outline: none; }
       button { font-family: inherit; }
       input, select, textarea { max-width: 100%; }
+
+      /* ── CARD & BUTTON MICRO-INTERACTIONS ── */
+      .action-card-hover { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+      .action-card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(27,43,34,0.1) !important; }
+      .primary-action-hover { transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease; }
+      .primary-action-hover:hover { transform: translateY(-1px) scale(1.02); filter: brightness(1.06); box-shadow: 0 8px 22px rgba(63,125,88,0.38) !important; }
+      .catalog-card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+      .catalog-card-hover:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(27,43,34,0.1) !important; border-color: #C5DDBB !important; }
 
       /* ── HEADER RESPONSIVE ── */
       .h-hamburger { display: flex !important; }
@@ -5442,7 +6227,7 @@ function StyleInjector() {
       .test-stack span {
         position: absolute; top: 8px; width: 58px; height: 76px;
         border-radius: 6px;
-        background: linear-gradient(160deg, #A78BFA, #525AFF);
+        background: linear-gradient(160deg, #7FB069, #3F7D58);
         color: white; display: flex; align-items: center; justify-content: center;
         font-weight: 900; box-shadow: 0 8px 14px rgba(0,0,0,0.15); border: 3px solid white;
       }
@@ -5464,8 +6249,8 @@ function StyleInjector() {
         font-size: 13px; font-weight: 800; color: #334155;
       }
       label input, label select, label textarea {
-        width: 100%; border: 2px solid #F0E6D6; border-radius: 10px;
-        padding: 11px 12px; font-family: ${FONT_BODY}; font-size: 14px; background: #F8FBFF;
+        width: 100%; border: 2px solid #C5DDBB; border-radius: 10px;
+        padding: 11px 12px; font-family: ${FONT_BODY}; font-size: 14px; background: #F6F4EE;
       }
       label textarea { min-height: 92px; resize: vertical; }
     `}</style>
@@ -5473,15 +6258,15 @@ function StyleInjector() {
 }
 
 // ---------- STYLES ----------
-const FONT_BODY    = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif';
-const FONT_DISPLAY = '"Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif';
+const FONT_BODY    = '"DM Sans", system-ui, sans-serif';
+const FONT_DISPLAY = '"Cormorant Garamond", Georgia, "Times New Roman", serif';
 
 const styles = {
   app: {
     minHeight: '100vh',
     width: '100%',
     fontFamily: FONT_BODY,
-    background: '#F5FBFF',
+    background: '#F6F4EE',
     color: '#1C1215',
     display: 'flex',
     flexDirection: 'column',
@@ -5495,17 +6280,17 @@ const styles = {
     alignItems: 'center',
     gap: 24,
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 16,
     padding: 24,
-    boxShadow: '0 12px 30px rgba(82,90,255,0.07)',
+    boxShadow: '0 12px 30px rgba(63,125,88,0.07)',
     flexWrap: 'wrap',
   },
   eyebrow: {
     fontSize: 12,
     fontWeight: 900,
     letterSpacing: 1.2,
-    color: '#525AFF',
+    color: '#3F7D58',
     textTransform: 'uppercase',
   },
   heroMiniPanel: {
@@ -5514,11 +6299,11 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    background: '#F0FAFF',
-    border: '1px solid #B8E4FB',
+    background: '#EEF5EB',
+    border: '1px solid #C5DDBB',
     borderRadius: 14,
     padding: 16,
-    color: '#4C1D95',
+    color: '#3A5A33',
   },
   responsiveGrid: {
     display: 'grid',
@@ -5527,7 +6312,7 @@ const styles = {
   },
   actionCard: {
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 14,
     padding: 16,
     display: 'flex',
@@ -5535,7 +6320,7 @@ const styles = {
     gap: 14,
     cursor: 'pointer',
     textAlign: 'left',
-    boxShadow: '0 8px 18px rgba(82,90,255,0.06)',
+    boxShadow: '0 8px 18px rgba(63,125,88,0.06)',
   },
   actionIcon: {
     width: 44,
@@ -5560,7 +6345,7 @@ const styles = {
   },
   actionMeta: {
     fontSize: 12,
-    color: '#525AFF',
+    color: '#3F7D58',
     fontWeight: 800,
   },
   actionCta: {
@@ -5568,7 +6353,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 4,
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 12,
     fontWeight: 900,
     whiteSpace: 'nowrap',
@@ -5577,7 +6362,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    background: '#F0FAFF',
+    background: '#EEF5EB',
     borderRadius: 14,
     padding: 14,
     minWidth: 240,
@@ -5586,7 +6371,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: '50%',
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -5595,10 +6380,10 @@ const styles = {
   },
   reportPanel: {
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 16,
     padding: 20,
-    boxShadow: '0 8px 22px rgba(82,90,255,0.06)',
+    boxShadow: '0 8px 22px rgba(63,125,88,0.06)',
   },
   reportHeader: {
     display: 'flex',
@@ -5633,7 +6418,7 @@ const styles = {
     marginTop: 24,
   },
   primaryAction: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 10,
@@ -5645,12 +6430,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    boxShadow: '0 4px 12px rgba(82,90,255,0.28)',
+    boxShadow: '0 4px 12px rgba(63,125,88,0.3)',
+    transition: 'transform 0.15s, box-shadow 0.15s',
   },
   secondaryAction: {
     background: 'white',
-    color: '#525AFF',
-    border: '2px solid #B8E4FB',
+    color: '#3F7D58',
+    border: '2px solid #C5DDBB',
     borderRadius: 10,
     padding: '10px 16px',
     fontSize: 14,
@@ -5663,10 +6449,10 @@ const styles = {
   },
   reportTable: {
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 16,
     overflow: 'hidden',
-    boxShadow: '0 8px 22px rgba(82,90,255,0.06)',
+    boxShadow: '0 8px 22px rgba(63,125,88,0.06)',
   },
   reportRow: {
     display: 'grid',
@@ -5679,8 +6465,8 @@ const styles = {
   },
   reportRowHead: {
     borderTop: 'none',
-    background: '#F0FAFF',
-    color: '#525AFF',
+    background: '#EEF5EB',
+    color: '#3F7D58',
     fontWeight: 900,
   },
   pricingGrid: {
@@ -5692,23 +6478,23 @@ const styles = {
   planCard: {
     position: 'relative',
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 18,
     padding: 24,
-    boxShadow: '0 8px 24px rgba(82,90,255,0.07)',
+    boxShadow: '0 8px 24px rgba(63,125,88,0.07)',
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
   },
   planFeatured: {
-    border: '2px solid #525AFF',
+    border: '2px solid #3F7D58',
     transform: 'translateY(-4px)',
   },
   planBadge: {
     position: 'absolute',
     top: 14,
     right: 14,
-    background: '#D97706',
+    background: '#C4693A',
     color: 'white',
     borderRadius: 999,
     padding: '4px 10px',
@@ -5719,7 +6505,7 @@ const styles = {
     margin: 0,
     fontFamily: FONT_DISPLAY,
     fontSize: 28,
-    color: '#525AFF',
+    color: '#3F7D58',
   },
   planPrice: {
     fontSize: 42,
@@ -5738,7 +6524,7 @@ const styles = {
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 14,
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 16,
     padding: 20,
   },
@@ -5747,7 +6533,7 @@ const styles = {
     gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: 14,
     background: 'white',
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
     borderRadius: 16,
     padding: 20,
   },
@@ -5764,12 +6550,12 @@ const styles = {
 
   // Header
   header: {
-    background: '#2D1B69',
+    background: '#1B2B22',
     borderBottom: 'none',
     position: 'sticky',
     top: 0,
     zIndex: 50,
-    boxShadow: '0 2px 16px rgba(45,27,105,0.45)',
+    boxShadow: '0 2px 20px rgba(27,43,34,0.55)',
   },
   headerInner: {
     maxWidth: 1120, margin: '0 auto', padding: '10px 20px 0',
@@ -5795,7 +6581,7 @@ const styles = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.28)',
   },
   logoCapSection: {
-    background: '#1E0F4A',
+    background: '#111C17',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: '0 9px',
     fontSize: 18,
@@ -5803,10 +6589,10 @@ const styles = {
     flexShrink: 0,
   },
   logoWordmark: {
-    background: 'linear-gradient(135deg, #3B1F5E 0%, #525AFF 100%)',
+    background: 'linear-gradient(135deg, #1B2B22 0%, #3F7D58 100%)',
     display: 'flex', alignItems: 'center',
     padding: '0 14px 0 9px',
-    color: '#E0F4FF',
+    color: '#FFEEDD',
     fontWeight: 900, fontSize: 17,
     fontFamily: FONT_DISPLAY,
     letterSpacing: '-0.01em',
@@ -5814,10 +6600,10 @@ const styles = {
   },
   logoIcon: {
     width: 40, height: 40, borderRadius: 12,
-    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
+    background: 'linear-gradient(135deg, #3F7D58 0%, #7FB069 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 4px 12px rgba(82,90,255,0.4)',
+    boxShadow: '0 4px 12px rgba(63,125,88,0.4)',
   },
   logoText: { fontFamily: FONT_BODY, fontSize: 14, fontWeight: 800, color: 'white', lineHeight: 1 },
   logoTag: { fontSize: 11, color: '#6B7280', marginTop: 2, fontWeight: 500 },
@@ -5870,7 +6656,7 @@ const styles = {
   searchIcon: {
     width: 38,
     height: 36,
-    background: '#525AFF',
+    background: '#3F7D58',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -5924,12 +6710,12 @@ const styles = {
   },
   topRoleBtnActive: {
     background: 'white',
-    color: '#525AFF',
+    color: '#3F7D58',
     borderColor: 'white',
   },
   iconBtn: {
     width: 34, height: 34, borderRadius: 5,
-    background: '#525AFF', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
+    background: '#3F7D58', border: '1px solid rgba(255,255,255,0.5)', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white', transition: 'all 0.15s',
   },
@@ -5952,7 +6738,7 @@ const styles = {
   },
   mobileMenu: {
     display: 'flex', flexDirection: 'column',
-    background: '#1E0F4A',
+    background: '#111C17',
     borderTop: '1px solid rgba(255,255,255,0.15)',
     paddingBottom: 8,
   },
@@ -5976,7 +6762,7 @@ const styles = {
     padding: '0 18px',
     border: 'none',
     borderRadius: 6,
-    background: '#D97706',
+    background: '#C4693A',
     color: 'white',
     display: 'inline-flex',
     alignItems: 'center',
@@ -5985,7 +6771,7 @@ const styles = {
     fontWeight: 700,
     cursor: 'pointer',
     letterSpacing: 0.1,
-    boxShadow: '0 2px 8px rgba(217,119,6,0.35)',
+    boxShadow: '0 2px 8px rgba(196,105,58,0.35)',
   },
   membershipBtn: {
     height: 36,
@@ -6006,7 +6792,7 @@ const styles = {
   },
   avatar: {
     width: 20, height: 20, borderRadius: '50%',
-    background: '#D97706',
+    background: '#C4693A',
     color: 'white', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
@@ -6016,7 +6802,7 @@ const styles = {
     minHeight: '100vh',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 24, position: 'relative', overflow: 'hidden',
-    background: 'linear-gradient(135deg, #F0FAFF 0%, #E0F4FF 45%, #FFF7ED 100%)',
+    background: 'linear-gradient(135deg, #EEF5EB 0%, #D8EDD1 45%, #F6F4EE 100%)',
   },
   loginBg: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 },
   loginCard: {
@@ -6028,10 +6814,10 @@ const styles = {
   loginHero: { textAlign: 'center' },
   loginLogo: {
     width: 72, height: 72, margin: '0 auto', borderRadius: 20,
-    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
+    background: 'linear-gradient(135deg, #3F7D58 0%, #7FB069 100%)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     color: 'white',
-    boxShadow: '0 8px 24px rgba(82,90,255,0.4)',
+    boxShadow: '0 8px 24px rgba(63,125,88,0.4)',
   },
   loginTitle: {
     fontFamily: FONT_DISPLAY, fontSize: 42, fontWeight: 900,
@@ -6042,7 +6828,7 @@ const styles = {
   input: {
     width: '100%', padding: '14px 16px', borderRadius: 12,
     border: '2px solid #E5E7EB', fontSize: 16, fontFamily: FONT_BODY,
-    transition: 'border-color 0.15s', background: '#FAFBFF',
+    transition: 'border-color 0.15s', background: '#F6F4EE',
   },
   roleGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 8 },
   roleBtn: {
@@ -6052,12 +6838,12 @@ const styles = {
   },
   primaryBtn: {
     width: '100%', marginTop: 24, padding: '14px 20px',
-    background: 'linear-gradient(135deg, #525AFF 0%, #8FD9FB 100%)',
+    background: 'linear-gradient(135deg, #3F7D58 0%, #7FB069 100%)',
     color: 'white', border: 'none', borderRadius: 14,
     fontSize: 16, fontWeight: 700, cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-    boxShadow: '0 8px 20px rgba(82,90,255,0.38)',
-    transition: 'transform 0.1s',
+    boxShadow: '0 8px 20px rgba(63,125,88,0.38)',
+    transition: 'transform 0.12s, box-shadow 0.12s',
   },
   loginNote: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 16 },
 
@@ -6070,8 +6856,8 @@ const styles = {
   heroBadge: {
     display: 'inline-flex', alignItems: 'center', gap: 6,
     padding: '6px 12px', borderRadius: 999,
-    background: 'linear-gradient(135deg, #E0F4FF 0%, #FDE8BB 100%)',
-    fontSize: 12, fontWeight: 700, color: '#3A41CC',
+    background: 'linear-gradient(135deg, #E8F2E4 0%, #C5DDBB 100%)',
+    fontSize: 12, fontWeight: 700, color: '#3A5A33',
     marginBottom: 16,
   },
   heroTitle: {
@@ -6080,13 +6866,13 @@ const styles = {
     margin: 0, color: '#1F2937',
   },
   heroName: {
-    background: 'linear-gradient(135deg, #525AFF 0%, #EC4899 100%)',
+    background: 'linear-gradient(135deg, #3F7D58 0%, #EC4899 100%)',
     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
   },
   heroEmphasis: {
     fontStyle: 'italic',
-    color: '#525AFF',
+    color: '#3F7D58',
   },
   heroDesc: { fontSize: 17, color: '#4B5563', marginTop: 16, lineHeight: 1.6, maxWidth: 540 },
   heroStats: { display: 'flex', gap: 12, marginTop: 28, flexWrap: 'wrap' },
@@ -6102,7 +6888,7 @@ const styles = {
   redesignHero: {
     position: 'relative',
     minHeight: 398,
-    background: 'linear-gradient(180deg, #FFF7ED 0%, #FECBA1 48%, #FCA572 68%, #F97316 80%, #525AFF 85%, #4C1D95 100%)',
+    background: 'linear-gradient(180deg, #F6F4EE 0%, #EEF5EB 48%, #C5DDBB 68%, #7FB069 80%, #1B3526 88%, #1B2B22 100%)',
     overflow: 'hidden',
     borderBottom: 'none',
   },
@@ -6113,8 +6899,8 @@ const styles = {
     width: '38%',
     height: 120,
     opacity: 1,
-    background: 'linear-gradient(120deg, transparent 0 22%, #FECBA1 22% 30%, transparent 30%), linear-gradient(90deg, #FDE8BB 0 22%, transparent 22% 28%, #FDE8BB 28% 50%, transparent 50% 56%, #FDE8BB 56% 78%, transparent 78%)',
-    borderBottom: '12px solid #525AFF',
+    background: 'linear-gradient(120deg, transparent 0 22%, #7FB069 22% 30%, transparent 30%), linear-gradient(90deg, #C5DDBB 0 22%, transparent 22% 28%, #C5DDBB 28% 50%, transparent 50% 56%, #C5DDBB 56% 78%, transparent 78%)',
+    borderBottom: '12px solid #1B3526',
   },
   heroHills: {
     position: 'absolute',
@@ -6122,7 +6908,7 @@ const styles = {
     right: -90,
     bottom: -54,
     height: 150,
-    background: 'radial-gradient(ellipse at 20% 68%, #4C1D95 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #3A41CC 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #525AFF 0 28%, transparent 29%)',
+    background: 'radial-gradient(ellipse at 20% 68%, #1A2E20 0 28%, transparent 29%), radial-gradient(ellipse at 66% 74%, #1B3526 0 31%, transparent 32%), radial-gradient(ellipse at 94% 66%, #1B3526 0 28%, transparent 29%)',
   },
   heroBalloon: {
     position: 'absolute',
@@ -6131,9 +6917,9 @@ const styles = {
     width: 88,
     height: 136,
     borderRadius: '50% 50% 45% 45%',
-    background: 'radial-gradient(circle at 30% 30%, #FEF3C7 0 10%, transparent 11%), repeating-linear-gradient(90deg, #FCA5A5 0 15px, #F97316 15px 18px)',
-    border: '2px solid #F97316',
-    boxShadow: '0 100px 0 -36px #525AFF',
+    background: 'radial-gradient(circle at 30% 30%, #FEF3C7 0 10%, transparent 11%), repeating-linear-gradient(90deg, #FCA5A5 0 15px, #7FB069 15px 18px)',
+    border: '2px solid #7FB069',
+    boxShadow: '0 100px 0 -36px #1B3526',
   },
   heroSun: {
     position: 'absolute',
@@ -6142,7 +6928,7 @@ const styles = {
     width: 70,
     height: 70,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, #FFFDE7 0 30%, #FDE68A 31% 62%, rgba(253,230,138,0.25) 63%)',
+    background: 'radial-gradient(circle, #FFFDE7 0 30%, #C5DDBB 31% 62%, rgba(253,230,138,0.25) 63%)',
     boxShadow: '0 0 0 12px rgba(251,191,36,0.22)',
   },
   heroRocket: {
@@ -6178,7 +6964,7 @@ const styles = {
   },
   heroKicker: {
     margin: '0 0 26px',
-    color: '#3A41CC',
+    color: '#1A2E20',
     fontSize: 42,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -6209,11 +6995,11 @@ const styles = {
   heroGreeting: {
     margin: '10px 0 12px',
     fontSize: 13,
-    color: '#3A41CC',
+    color: '#3A5A33',
     fontWeight: 700,
   },
   heroCta: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6221,11 +7007,11 @@ const styles = {
     fontSize: 16,
     fontWeight: 800,
     cursor: 'pointer',
-    boxShadow: '0 3px 0 #4C1D95',
+    boxShadow: '0 3px 0 #2A5C3E',
   },
   ixlHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #F5FBFF 0%, #FEF3C7 35%, #FDE8BB 70%, #FCD34D 100%)',
+    background: 'linear-gradient(180deg, #F6F4EE 0%, #EEF5EB 35%, #C5DDBB 70%, #7FB069 100%)',
     overflow: 'hidden',
     padding: '48px 220px 110px',
     minHeight: 360,
@@ -6253,7 +7039,7 @@ const styles = {
     fontFamily: FONT_DISPLAY,
     fontSize: 46,
     fontWeight: 400,
-    color: '#4C1D95',
+    color: '#1A2E20',
     textAlign: 'center',
     margin: '0 0 28px',
     letterSpacing: '-0.01em',
@@ -6261,7 +7047,7 @@ const styles = {
   ixlHeroIs: {
     fontWeight: 900,
     fontStyle: 'italic',
-    color: '#525AFF',
+    color: '#3F7D58',
   },
   ixlCloudsRow: {
     display: 'flex',
@@ -6295,7 +7081,7 @@ const styles = {
     lineHeight: 1.6,
   },
   ixlMemberBtn: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -6303,7 +7089,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 3px 0 #4C1D95',
+    boxShadow: '0 3px 0 #2A5C3E',
     position: 'relative',
     zIndex: 4,
   },
@@ -6334,12 +7120,12 @@ const styles = {
     left: '-25%',
     right: '-25%',
     height: 58,
-    background: '#D97706',
+    background: '#C4693A',
     borderRadius: '45% 45% 0 0',
     zIndex: 3,
   },
   homePromoBand: {
-    background: '#FFF7ED',
+    background: '#F6F4EE',
     borderBottom: 'none',
     padding: '30px 16px',
   },
@@ -6368,7 +7154,7 @@ const styles = {
     width: 52,
     height: 52,
     borderRadius: '50%',
-    background: '#D97706',
+    background: '#C4693A',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -6382,7 +7168,7 @@ const styles = {
     flexShrink: 0,
   },
   gradeCatalogSection: {
-    background: '#F5FBFF',
+    background: '#F6F4EE',
     padding: '0 16px 38px',
   },
   gradeCatalogGrid: {
@@ -6423,7 +7209,7 @@ const styles = {
     marginLeft: -24,
   },
   catalogTitle: {
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 30,
     fontFamily: FONT_DISPLAY,
     fontWeight: 500,
@@ -6457,18 +7243,18 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 12,
     fontWeight: 800,
   },
   skillsBand: {
-    background: '#FFF7ED',
+    background: '#F6F4EE',
     padding: '36px 16px',
     textAlign: 'center',
   },
   bandTitle: {
     margin: 0,
-    color: '#D97706',
+    color: '#C4693A',
     fontFamily: FONT_DISPLAY,
     fontSize: 28,
     fontWeight: 800,
@@ -6476,7 +7262,7 @@ const styles = {
   bandSub: {
     margin: '6px auto 20px',
     maxWidth: 620,
-    color: '#92400E',
+    color: '#3A5A33',
     fontSize: 13,
   },
   skillCarousel: {
@@ -6495,7 +7281,7 @@ const styles = {
     border: '1px solid #E8C5A0',
     borderRadius: 4,
     padding: 8,
-    boxShadow: '0 5px 10px rgba(217,119,6,0.10)',
+    boxShadow: '0 5px 10px rgba(196,105,58,0.10)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -6513,7 +7299,7 @@ const styles = {
     justifyContent: 'center',
   },
   greenCta: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -6523,7 +7309,7 @@ const styles = {
     cursor: 'pointer',
   },
   supportBand: {
-    background: 'linear-gradient(180deg, #2D1B69 0%, #1E0F4A 100%)',
+    background: 'linear-gradient(180deg, #1B2B22 0%, #111C17 100%)',
     padding: '32px 16px 38px',
     textAlign: 'center',
     color: 'white',
@@ -6552,7 +7338,7 @@ const styles = {
     color: '#374151',
     minHeight: 190,
     padding: '20px 16px',
-    border: '1px solid #B8E4FB',
+    border: '1px solid #C5DDBB',
   },
   supportIcon: {
     width: 42,
@@ -6566,7 +7352,7 @@ const styles = {
   },
   supportCta: {
     marginTop: 18,
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 3,
@@ -6576,7 +7362,7 @@ const styles = {
     cursor: 'pointer',
   },
   impactBand: {
-    background: 'linear-gradient(180deg, #525AFF 0%, #3A41CC 100%)',
+    background: 'linear-gradient(180deg, #1B2B22 0%, #1B3526 100%)',
     padding: '28px 16px 42px',
     textAlign: 'center',
     color: 'white',
@@ -6606,15 +7392,15 @@ const styles = {
     width: 66,
     height: 66,
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #FDE68A, #FCA5A5)',
+    background: 'linear-gradient(135deg, #C5DDBB, #7FB069)',
     border: '3px solid white',
-    color: '#525AFF',
+    color: '#3F7D58',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   impactButton: {
-    background: '#D97706',
+    background: '#C4693A',
     color: 'white',
     border: '1px solid rgba(255,255,255,0.5)',
     borderRadius: 2,
@@ -6656,8 +7442,8 @@ const styles = {
   },
   dashCTA: {
     marginTop: 12, padding: '10px 14px', borderRadius: 10,
-    background: 'linear-gradient(135deg, #E0F4FF, #F0FAFF)',
-    color: '#525AFF', fontWeight: 700, fontSize: 13,
+    background: 'linear-gradient(135deg, #E8F2E4, #EEF5EB)',
+    color: '#3F7D58', fontWeight: 700, fontSize: 13,
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
 
@@ -6677,7 +7463,7 @@ const styles = {
   gradeCard: {
     position: 'relative', overflow: 'hidden',
     background: 'white', borderRadius: 18, padding: 20,
-    border: '1px solid #F0E6D6', cursor: 'pointer', textAlign: 'left',
+    border: '1px solid #C5DDBB', cursor: 'pointer', textAlign: 'left',
     transition: 'transform 0.2s, box-shadow 0.2s',
     minHeight: 140,
   },
@@ -6778,14 +7564,14 @@ const styles = {
   },
   grade8Tab: {
     padding: '11px 18px',
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 14,
     whiteSpace: 'nowrap',
   },
   grade8TabActive: {
     padding: '11px 24px',
     color: 'white',
-    background: '#525AFF',
+    background: '#3F7D58',
     fontSize: 14,
     fontWeight: 800,
     clipPath: 'polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%)',
@@ -6889,7 +7675,7 @@ const styles = {
     fontSize: 12,
   },
   grade8Mastery: {
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 11,
     whiteSpace: 'nowrap',
   },
@@ -6897,7 +7683,7 @@ const styles = {
   skillList: { display: 'flex', flexDirection: 'column', gap: 12 },
   skillCard: {
     background: 'white', borderRadius: 16, padding: 20,
-    border: '1px solid #F0E6D6', cursor: 'pointer',
+    border: '1px solid #C5DDBB', cursor: 'pointer',
     display: 'flex', alignItems: 'center', gap: 20,
     transition: 'transform 0.15s, box-shadow 0.15s',
   },
@@ -6929,8 +7715,8 @@ const styles = {
   skillIntro: {
     background: 'white', borderRadius: 24, padding: '48px 32px',
     textAlign: 'center', maxWidth: 720, margin: '24px auto 0',
-    boxShadow: '0 12px 32px rgba(82,90,255,0.06)',
-    border: '1px solid #F0E6D6',
+    boxShadow: '0 12px 32px rgba(63,125,88,0.06)',
+    border: '1px solid #C5DDBB',
   },
   skillIntroIcon: {
     width: 72, height: 72, borderRadius: 20, margin: '0 auto',
@@ -6944,9 +7730,9 @@ const styles = {
   skillIntroDesc: { fontSize: 16, color: '#6B7280', margin: '0 auto', maxWidth: 480 },
   explainBox: {
     marginTop: 32, padding: 20, borderRadius: 14,
-    background: '#FFFBEB', border: '1px solid #FDE68A', textAlign: 'left',
+    background: '#EEF5EB', border: '1px solid #C5DDBB', textAlign: 'left',
   },
-  explainHead: { display: 'flex', alignItems: 'center', gap: 8, color: '#92400E', marginBottom: 8 },
+  explainHead: { display: 'flex', alignItems: 'center', gap: 8, color: '#3A5A33', marginBottom: 8 },
   explainText: { margin: 0, fontSize: 15, color: '#374151', lineHeight: 1.6 },
   skillMetaRow: {
     display: 'flex', justifyContent: 'center', gap: 24, marginTop: 24, flexWrap: 'wrap',
@@ -6971,8 +7757,8 @@ const styles = {
 
   questionCard: {
     background: 'white', borderRadius: 20, padding: 32,
-    border: '1px solid #F0E6D6',
-    boxShadow: '0 8px 24px rgba(82,90,255,0.05)',
+    border: '1px solid #C5DDBB',
+    boxShadow: '0 8px 24px rgba(63,125,88,0.05)',
     animation: 'slideUp 0.3s ease',
   },
   questionMeta: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 },
@@ -7002,9 +7788,9 @@ const styles = {
 
   hintBox: {
     marginTop: 16, padding: '12px 16px', borderRadius: 10,
-    background: '#FFFBEB', border: '1px solid #FDE68A',
+    background: '#EEF5EB', border: '1px solid #C5DDBB',
     display: 'flex', alignItems: 'center', gap: 10,
-    fontSize: 14, color: '#92400E', fontWeight: 500,
+    fontSize: 14, color: '#3A5A33', fontWeight: 500,
   },
 
   feedback: {
@@ -7024,8 +7810,8 @@ const styles = {
     marginTop: 24, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap',
   },
   hintBtn: {
-    padding: '10px 16px', borderRadius: 10, border: '2px solid #FDE68A',
-    background: '#FFFBEB', color: '#92400E', fontWeight: 700, fontSize: 14,
+    padding: '10px 16px', borderRadius: 10, border: '2px solid #C5DDBB',
+    background: '#EEF5EB', color: '#3A5A33', fontWeight: 700, fontSize: 14,
     cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
   },
 
@@ -7033,8 +7819,8 @@ const styles = {
   resultWrap: {
     maxWidth: 600, margin: '40px auto 0',
     background: 'white', borderRadius: 24, padding: 48,
-    textAlign: 'center', border: '1px solid #F0E6D6',
-    boxShadow: '0 12px 32px rgba(82,90,255,0.08)',
+    textAlign: 'center', border: '1px solid #C5DDBB',
+    boxShadow: '0 12px 32px rgba(63,125,88,0.08)',
     animation: 'pop 0.5s ease',
   },
   resultEmoji: { fontSize: 80 },
@@ -7068,7 +7854,7 @@ const styles = {
   bigStat: {
     display: 'flex', alignItems: 'center', gap: 14,
     background: 'white', padding: 18, borderRadius: 16,
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
   },
   bigStatIcon: {
     width: 48, height: 48, borderRadius: 12,
@@ -7082,7 +7868,7 @@ const styles = {
   },
   subjectAnalyticCard: {
     background: 'white', padding: 20, borderRadius: 16,
-    border: '1px solid #F0E6D6',
+    border: '1px solid #C5DDBB',
   },
   analyticHead: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 },
   analyticIcon: {
@@ -7098,7 +7884,7 @@ const styles = {
   recList: { display: 'flex', flexDirection: 'column', gap: 10 },
   recCard: {
     background: 'white', padding: 18, borderRadius: 14,
-    border: '1px solid #F0E6D6', cursor: 'pointer',
+    border: '1px solid #C5DDBB', cursor: 'pointer',
     display: 'flex', alignItems: 'center', gap: 16,
     transition: 'all 0.15s',
   },
@@ -7107,7 +7893,7 @@ const styles = {
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     flexShrink: 0,
   },
-  recReason: { fontSize: 11, fontWeight: 700, color: '#525AFF', textTransform: 'uppercase', letterSpacing: 0.5 },
+  recReason: { fontSize: 11, fontWeight: 700, color: '#3F7D58', textTransform: 'uppercase', letterSpacing: 0.5 },
   recTitle: { fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 800, color: '#1F2937', marginTop: 2 },
   recMeta: { fontSize: 12, color: '#6B7280', marginTop: 4 },
 
@@ -7116,7 +7902,7 @@ const styles = {
   },
   recentCard: {
     background: 'white', padding: 18, borderRadius: 14,
-    border: '1px solid #F0E6D6', cursor: 'pointer', textAlign: 'left',
+    border: '1px solid #C5DDBB', cursor: 'pointer', textAlign: 'left',
     transition: 'all 0.15s',
   },
   recentIcon: {
@@ -7132,9 +7918,9 @@ const styles = {
   // Badges
   badgesHero: {
     display: 'flex', alignItems: 'center', gap: 20,
-    background: 'linear-gradient(135deg, #FFF7ED 0%, #E0F4FF 100%)',
+    background: 'linear-gradient(135deg, #F6F4EE 0%, #E0F4FF 100%)',
     padding: 32, borderRadius: 24, marginTop: 16, marginBottom: 32,
-    border: '2px solid #FDE8BB',
+    border: '2px solid #C5DDBB',
   },
   badgeGrid: {
     display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16,
@@ -7149,7 +7935,7 @@ const styles = {
   badgeEarned: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
     padding: '4px 10px', borderRadius: 999,
-    background: '#525AFF', color: 'white', fontSize: 11, fontWeight: 700,
+    background: '#3F7D58', color: 'white', fontSize: 11, fontWeight: 700,
   },
   badgeLocked: {
     marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -7200,7 +7986,7 @@ const styles = {
   // Sign In page
   siHero: {
     position: 'relative',
-    background: 'linear-gradient(180deg, #F0FAFF 0%, #E0F4FF 55%, #525AFF 100%)',
+    background: 'linear-gradient(180deg, #EEF5EB 0%, #D8EDD1 55%, #1B2B22 100%)',
     minHeight: 320,
     display: 'flex',
     alignItems: 'center',
@@ -7227,7 +8013,7 @@ const styles = {
   },
   siCardTitle: {
     textAlign: 'center',
-    color: '#525AFF',
+    color: '#3F7D58',
     fontFamily: FONT_DISPLAY,
     fontSize: 26,
     fontWeight: 700,
@@ -7270,7 +8056,7 @@ const styles = {
     margin: '18px 0 0',
   },
   siBtn: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7278,7 +8064,7 @@ const styles = {
     fontSize: 15,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #4C1D95',
+    boxShadow: '0 2px 0 #2A5C3E',
   },
   siRemember: {
     display: 'flex',
@@ -7305,7 +8091,7 @@ const styles = {
     left: '-10%',
     right: '-10%',
     height: 56,
-    background: '#4C1D95',
+    background: '#1B2B22',
     borderRadius: '60% 60% 0 0',
   },
   siMemberSection: {
@@ -7314,7 +8100,7 @@ const styles = {
     textAlign: 'center',
   },
   siNotMemberTitle: {
-    color: '#525AFF',
+    color: '#3F7D58',
     fontFamily: FONT_DISPLAY,
     fontSize: 30,
     fontWeight: 700,
@@ -7364,7 +8150,7 @@ const styles = {
     margin: '0 0 22px',
   },
   siJoinBtn: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7372,7 +8158,7 @@ const styles = {
     fontSize: 16,
     fontWeight: 700,
     cursor: 'pointer',
-    boxShadow: '0 2px 0 #3A41CC',
+    boxShadow: '0 2px 0 #2A5C3E',
   },
   siFooter: {
     background: '#F9FAFB',
@@ -7479,9 +8265,9 @@ const styles = {
   },
   testimonialLink: {
     background: 'transparent',
-    border: '1.5px solid #525AFF',
+    border: '1.5px solid #3F7D58',
     borderRadius: 4,
-    color: '#525AFF',
+    color: '#3F7D58',
     fontSize: 13,
     fontWeight: 700,
     padding: '7px 18px',
@@ -7524,7 +8310,7 @@ const styles = {
     maxWidth: 180,
   },
   footerJoinBtn: {
-    background: '#525AFF',
+    background: '#3F7D58',
     color: 'white',
     border: 'none',
     borderRadius: 4,
@@ -7820,7 +8606,7 @@ const styles = {
   },
 
   footer: {
-    background: '#0F1A2B',
+    background: '#111C17',
     borderTop: 'none',
   },
 };
